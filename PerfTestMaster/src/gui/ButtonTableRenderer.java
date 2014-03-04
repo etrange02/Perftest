@@ -6,6 +6,12 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class ButtonTableRenderer extends JButton implements TableCellRenderer {
 
 	private static final long serialVersionUID = 7480573914113345938L;

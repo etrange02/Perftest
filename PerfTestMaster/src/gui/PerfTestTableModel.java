@@ -2,6 +2,12 @@ package gui;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class PerfTestTableModel extends AbstractTableModel {
 	
 	private static final long serialVersionUID = -6144226754812127470L;

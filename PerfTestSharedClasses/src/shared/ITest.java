@@ -5,50 +5,41 @@ package shared;
 
 import java.util.List;
 
-/** 
- * <!-- begin-UML-doc -->
- * <!-- end-UML-doc -->
- * @author Etrange02
- * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
  */
 public interface ITest {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+
+	/**
+	 * Returns the delay in ms between two launched instructions
+	 * @return the delay
 	 */
 	public int getInstructionDelay();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the test name
+	 * @return the name
 	 */
 	public String getName();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the test status
+	 * @return the status
 	 */
 	public Status getStatus();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of all instructions handled by the test
+	 * @return the list of instructions
 	 */
 	public List<IInstruction> getInstructions();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Turns the test into a JSON string
+	 * @return the JSON string
 	 */
 	public String writeJSONString();
 

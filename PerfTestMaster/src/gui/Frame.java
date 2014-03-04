@@ -17,6 +17,12 @@ import javax.swing.JPanel;
 
 import tools.GUIConstants;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class Frame extends JFrame {
 
 	private static final long serialVersionUID = 4743270606172960944L;

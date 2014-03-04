@@ -10,8 +10,9 @@ import java.util.List;
 
 /**
  * 
- * @author Etrange02
- *
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
  */
 public abstract class AbstractTest implements ITest, Serializable {
 
@@ -26,65 +27,49 @@ public abstract class AbstractTest implements ITest, Serializable {
 		this.instructionDelay = 0;
 	}
 
-	/** 
-	 * @return instructionDelay
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public int getInstructionDelay() {
 		return instructionDelay;
 	}
 
-	/** 
-	 * @param instructionDelay instructionDelay � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the delay in ms between two launched instructions
+	 * @param instructionDelay the delay in ms
 	 */
 	public void setInstructionDelay(int instructionDelay) {
 		this.instructionDelay = instructionDelay;
 	}
 
-	/** 
-	 * @return status
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public Status getStatus() {
 		return status;
 	}
 
-	/** 
-	 * @param status status � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modfiies the test status 
+	 * @param status a status
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
 	}
 
-	/** 
-	 * @return name
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/** 
-	 * @param name name � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the name of the test
+	 * @param name a name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/** 
-	 * @return instruction
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public List<IInstruction> getInstruction() {
 		return instruction;
 	}
 
-	/** 
-	 * @param instruction instruction � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of instructions
+	 * @param instruction a list of instructions
 	 */
 	public void setInstruction(List<IInstruction> instruction) {
 		this.instruction = instruction;

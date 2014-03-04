@@ -14,6 +14,12 @@ import javax.swing.JTable;
 
 import tools.GUIConstants;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class SlavesPanel extends JPanel {
 
 	private static final long serialVersionUID = 5462235546989652245L;

@@ -22,6 +22,12 @@ import javax.swing.text.MaskFormatter;
 import tools.GUIConstants;
 import tools.protocols.ldap.LDAPConstants;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class LDAPTestPlanPanel extends AbstractTestPlanPanel {
 
 	private static final long serialVersionUID = -2136761593193064428L;

@@ -7,6 +7,12 @@ import javax.swing.JTextArea;
 
 import tools.GUIConstants;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class TestPanel extends JPanel {
 
 	private static final long serialVersionUID = -288280364414876606L;

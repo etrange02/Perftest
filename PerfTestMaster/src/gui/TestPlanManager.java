@@ -6,6 +6,12 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+/**
+ * 
+ * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class TestPlanManager extends JPanel {
 
 	private static final long serialVersionUID = 4272011867794858445L;
