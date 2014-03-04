@@ -12,125 +12,52 @@ import shared.AbstractTest;
  * @version 1.0
  */
 public abstract class Comparator {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	private Integer successNumber = 0;
 
-	/** 
-	 * @return successNumber
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public Integer getSuccessNumber() {
-		// begin-user-code
-		return successNumber;
-		// end-user-code
+	private int successNumber;
+	private int missNumber;
+	
+	public Comparator() {
+		this.successNumber = 0;
+		this.missNumber = 0;
 	}
 
-	/** 
-	 * @param successNumber successNumber � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public void setSuccessNumber(Integer successNumber) {
-		// begin-user-code
-		this.successNumber = successNumber;
-		// end-user-code
+	public boolean compare(Scenario scenario, AbstractTest abstractTest) {
+		return false;
 	}
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	private Integer missNumber = 0;
-
-	/** 
-	 * @return missNumber
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public Integer getMissNumber() {
-		// begin-user-code
-		return missNumber;
-		// end-user-code
-	}
-
-	/** 
-	 * @param missNumber missNumber � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public void setMissNumber(Integer missNumber) {
-		// begin-user-code
-		this.missNumber = missNumber;
-		// end-user-code
-	}
-
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param scenario
-	 * @param abstractTest
+	/**
+	 * Returns the number of successes
 	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
 	 */
-	public Boolean compare(Scenario scenario, AbstractTest abstractTest) {
-		// begin-user-code
-		// TODO Module de remplacement de m�thode auto-g�n�r�
-		return null;
-		// end-user-code
+	public int getSuccess() {
+		return this.successNumber;
 	}
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
+	/**
+	 * Returns the number of misses
 	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
 	 */
-	public Integer getSuccess() {
-		// begin-user-code
-		// TODO Module de remplacement de m�thode auto-g�n�r�
-		return null;
-		// end-user-code
+	public int getMiss() {
+		return this.missNumber;
 	}
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Processes the comparison between pre-calculated responses and responses given by the server
+	 * @param binaryResponse the pre-calculated response
+	 * @param serverBinaryResponse the response given by the server
 	 */
-	public Integer getMiss() {
-		// begin-user-code
-		// TODO Module de remplacement de m�thode auto-g�n�r�
-		return null;
-		// end-user-code
-	}
+	protected abstract void processCompare(byte[] binaryResponse, byte[] serverBinaryResponse);
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param binaryResponse
-	 * @param serverBinaryResponse
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Tests if the given protocol name is the one implemented by the comparator
+	 * @param protocolName a protocol name
+	 * @return true if it is implemented, false otherwise
 	 */
-	protected abstract void processCompare(byte[] binaryResponse,
-			byte[] serverBinaryResponse);
+	public abstract boolean isConcernedComparator(String protocolName);
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param protocolName
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public abstract Boolean isConcernedComparator(String protocolName);
-
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns a TCPConnectionToTestedServer which corresponds to the implemented protocol
+	 * @return a new TCPConnectionToTestedServer
 	 */
 	public abstract TCPConnectionToTestedServer createNewTCPConnectionToTestedServer();
 }

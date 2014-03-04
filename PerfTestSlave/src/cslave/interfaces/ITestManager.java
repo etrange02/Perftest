@@ -12,18 +12,15 @@ import cslave.Comparator;
  * @version 1.0
  */
 public interface ITestManager {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param comparator
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+
+	/**
+	 * Adds a comparator to the testManager
+	 * @param comparator a protocol comparator
 	 */
 	public void addComparator(Comparator comparator);
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * 
 	 */
 	public void start();
 }

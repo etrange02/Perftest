@@ -12,20 +12,17 @@ import java.util.List;
  * @version 1.0
  */
 public interface IScenario {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param binaryResponse
-	 * @param delay
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	
+	/**
+	 * Adds a new response given by the target server and the time to respond
+	 * @param binaryResponse the response
+	 * @param delay the answer delay
 	 */
 	public void addResponse(byte[] binaryResponse, List<Integer> delay);
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list responses handled by the scenario
+	 * @return a list of responses
 	 */
 	public List<IResponse> getResponses();
 }

@@ -11,12 +11,11 @@ import cslave.Scenario;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ITCPConnecitonToTestedServer {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param scenario
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+public interface ITCPConnectionToTestedServer {
+
+	/**
+	 * Modifies the scenario associated. It must be empty
+	 * @param scenario an empty scenario
 	 */
 	public void setScenario(Scenario scenario);
 }

@@ -7,19 +7,16 @@ package cslave.interfaces;
  * @version 1.0
  */
 public interface IResponse {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+
+	/**
+	 * Returns the time between instruction sent and response received
+	 * @return the time
 	 */
 	public int getDelay();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the response given by the server
+	 * @return the binary response
 	 */
 	public byte[] getServerBinaryResponse();
 }

@@ -10,30 +10,26 @@ package cslave;
  * @version 1.0
  */
 public class TCPConnectionToMaster {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	private TestManager testManager;
 
-	/** 
-	 * @return testManager
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public TestManager getTestManager() {
-		// begin-user-code
-		return testManager;
-		// end-user-code
+	private TestManager testManager;
+	
+	public TCPConnectionToMaster() {
+		this.testManager = null;
 	}
 
-	/** 
-	 * @param testManager testManager � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * returns the TestManager associated
+	 * @return the TestManager
+	 */
+	public TestManager getTestManager() {
+		return testManager;
+	}
+
+	/**
+	 * Modifies the associated testManager
+	 * @param testManager a TestManager
 	 */
 	public void setTestManager(TestManager testManager) {
-		// begin-user-code
 		this.testManager = testManager;
-		// end-user-code
 	}
 }

@@ -18,36 +18,28 @@ public class Response implements IResponse {
 	
 	public Response() {
 		this.delay = 0;
-		this.serverBinaryResponse = new byte[1024];
+		this.serverBinaryResponse = new byte[0];
 	}
 
-	/** 
-	 * @return delay
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public int getDelay() {
 		return delay;
 	}
 
-	/** 
-	 * @param delay delay � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the time of response received
+	 * @param delay the delay
 	 */
 	public void setDelay(int delay) {
 		this.delay = delay;
 	}
 
-	/** 
-	 * @return serverBinaryResponse
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public byte[] getServerBinaryResponse() {
 		return serverBinaryResponse;
 	}
 
-	/** 
-	 * @param serverBinaryResponse serverBinaryResponse � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the response given by the server
+	 * @param serverBinaryResponse the response
 	 */
 	public void setServerBinaryResponse(byte[] serverBinaryResponse) {
 		this.serverBinaryResponse = serverBinaryResponse;

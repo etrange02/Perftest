@@ -3,8 +3,8 @@
  */
 package cslave;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import cslave.interfaces.IResponse;
 import cslave.interfaces.IScenario;
@@ -17,38 +17,24 @@ import cslave.interfaces.IScenario;
  */
 public class Scenario implements IScenario {
 
-	private List<IResponse> response;
-
-	/** 
-	 * @return response
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public List<IResponse> getResponse() {
-		return response;
+	private List<IResponse> responses;
+	
+	public Scenario() {
+		this.responses = new ArrayList<>();
 	}
 
-	/** 
-	 * @param response response � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of responses
+	 * @param response a list of responses
 	 */
-	public void setResponse(List<IResponse> response) {
-		this.response = response;
+	public void setResponse(List<IResponse> responses) {
+		this.responses = responses;
 	}
 
-	/** 
-	 * (non-Javadoc)
-	 * @see IScenario#addResponse(byte[] binaryResponse, Set delay)
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public void addResponse(byte[] binaryResponse, List<Integer> delay) {
 	}
 
-	/** 
-	 * (non-Javadoc)
-	 * @see IScenario#getResponses()
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public List<IResponse> getResponses() {
-		return null;
+		return this.responses;
 	}
 }

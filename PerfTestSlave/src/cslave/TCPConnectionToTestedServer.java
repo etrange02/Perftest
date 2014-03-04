@@ -3,7 +3,7 @@
  */
 package cslave;
 
-import cslave.interfaces.ITCPConnecitonToTestedServer;
+import cslave.interfaces.ITCPConnectionToTestedServer;
 
 /**
  * 
@@ -11,32 +11,23 @@ import cslave.interfaces.ITCPConnecitonToTestedServer;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public abstract class TCPConnectionToTestedServer implements
-		ITCPConnecitonToTestedServer {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	private Scenario scenario;
+public abstract class TCPConnectionToTestedServer implements ITCPConnectionToTestedServer {
 
-	/** 
-	 * @return scenario
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
-	public Scenario getScenario() {
-		// begin-user-code
-		return scenario;
-		// end-user-code
+	private Scenario scenario;
+	
+	public TCPConnectionToTestedServer() {
+		this.scenario = null;
 	}
 
-	/** 
-	 * @param scenario scenario � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the scenario associated
+	 * @return the scenario
 	 */
+	public Scenario getScenario() {
+		return scenario;
+	}
+
 	public void setScenario(Scenario scenario) {
-		// begin-user-code
 		this.scenario = scenario;
-		// end-user-code
 	}
 }
