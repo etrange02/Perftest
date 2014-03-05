@@ -5,7 +5,7 @@ package controls.ctestplanmanagement;
 
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
@@ -13,17 +13,17 @@ public abstract class TCPProxy {
 
 	private TestPlanManagementFacade testPlanManagementFacade;
 
-	/** 
-	 * @return testPlanManagementFacade
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the associated TestPlan manager
+	 * @return a testPlan manager
 	 */
 	public TestPlanManagementFacade getTestPlanManagementFacade() {
 		return testPlanManagementFacade;
 	}
 
-	/** 
-	 * @param testPlanManagementFacade testPlanManagementFacade � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the associated TestPlan manager
+	 * @param testPlanManagementFacade a testPlan manager
 	 */
 	public void setTestPlanManagementFacade( TestPlanManagementFacade testPlanManagementFacade) {
 		this.testPlanManagementFacade = testPlanManagementFacade;

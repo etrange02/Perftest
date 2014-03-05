@@ -4,78 +4,80 @@
 package controls.ctestplanmanagement;
 
 import shared.AbstractInstruction;
-import shared.AbstractTest;
 
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
 public abstract class ProtocolParser {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param protocolName
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+
+	/**
+	 * Indicates whether the implemented protocol is the given protocol name
+	 * @param protocolName a protocol name
+	 * @return true on success, false otherwise
 	 */
 	public boolean isImplementedProtocol(String protocolName) {
 		return this.getProtocolName().equals(protocolName);
 	}
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the implemented protocol name
+	 * @return a protocol name
 	 */
 	public abstract String getProtocolName();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns a new instance of Instruction which is specified to the implemented
+	 * protocol
+	 * @return a new instruction
 	 */
 	public abstract AbstractInstruction createNewInstruction();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Useless ?? Returns a new instance of Test which is specified to the implemented
+	 * protocol
+	 * @return a new test
 	 */
-	public abstract AbstractTest createNewTest();
+	public abstract AbstractMonitoredTest createNewTest();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns a new instance of plan test which is specified to the implemented
+	 * protocol
+	 * @return a new plan test
 	 */
 	public abstract AbstractTestPlan createNewPlanTest();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns a new instance of TCPProxy which is specified to the implemented
+	 * protocol. It is used to run a white test
+	 * @return a new TCPProxy
 	 */
 	public abstract TCPProxy createNewTCPProxy();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @param url
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns a TestPlan which has been decoded from a JSON object and which 
+	 * implements the implemented protocol
+	 * @param values a JSON object
+	 * @return a TestPlan on success, null otherwise
 	 */
-	public abstract AbstractTestPlan readJSONFileTestPlan(String url);
+	public abstract AbstractTestPlan readJSONFileTestPlan(Object values);
 	
-	public AbstractTest readJSONStringTest(Object values) {
+	/**
+	 * Returns a test which has been decoded from a JSON object
+	 * @param values a JSON object
+	 * @return a test on success, null otherwise
+	 */
+	public AbstractMonitoredTest readJSONStringTest(Object values) {
 		return null;
 	}
 	
+	/**
+	 * Returns an instruction which has been decoded from a JSON object and which
+	 * implements the implemented protocol
+	 * @param values a JSON Object
+	 * @return an Instruction on success, null otherwise
+	 */
 	public abstract AbstractInstruction readJSONStringInstruction(Object values);
 }

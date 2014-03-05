@@ -9,24 +9,22 @@ import controls.cslavemanagement.TCPDataBuffer;
 
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
 public interface IDataBuffer {
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	
+	/**
+	 * Returns the list of TCPDataBuffer handled by the DataBuffer. A new list 
+	 * is created on internal
+	 * @return a list
 	 */
 	public List<TCPDataBuffer> getTCPDataBuffer();
 
-	/** 
-	 * <!-- begin-UML-doc -->
-	 * <!-- end-UML-doc -->
-	 * @return
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the number of received instructions
+	 * @return the count
 	 */
 	public int countReceivedInstructions();
 }

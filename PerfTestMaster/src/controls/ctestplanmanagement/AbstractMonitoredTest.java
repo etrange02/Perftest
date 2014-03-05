@@ -3,9 +3,10 @@ package controls.ctestplanmanagement;
 import controls.ctestplanmanagement.interfaces.IMonitored;
 
 import shared.AbstractTest;
+
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */

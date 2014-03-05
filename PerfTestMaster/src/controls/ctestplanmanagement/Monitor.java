@@ -5,6 +5,7 @@ package controls.ctestplanmanagement;
 
 import gui.IGUIMonitor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.IDataBuffer;
@@ -12,7 +13,7 @@ import controls.ctestplanmanagement.interfaces.IMonitor;
 
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
@@ -20,35 +21,35 @@ public abstract class Monitor implements IMonitor {
 
 	private List<IGUIMonitor> guiMonitors;
 	private IDataBuffer dataBuffer;
+	
+	public Monitor() {
+		this.guiMonitors = new ArrayList<>();
+	}
 
-	/** 
-	 * @return guiMonitors
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of GUIMonitors
+	 * @return a list
 	 */
 	public List<IGUIMonitor> getGuiMonitors() {
 		return guiMonitors;
 	}
 
-	/** 
-	 * @param guiMonitors guiMonitors � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of GUIMonitor
+	 * @param guiMonitors a list
 	 */
 	public void setGuiMonitors(List<IGUIMonitor> guiMonitors) {
 		this.guiMonitors = guiMonitors;
 	}
 
-	/** 
-	 * @return dataBuffer
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the associated DataBuffer
+	 * @return the dataBuffer
 	 */
 	public IDataBuffer getDataBuffer() {
 		return dataBuffer;
 	}
 
-	/** 
-	 * @param dataBuffer dataBuffer � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
-	 */
 	public void setDataBuffer(IDataBuffer dataBuffer) {
 		this.dataBuffer = dataBuffer;
 	}

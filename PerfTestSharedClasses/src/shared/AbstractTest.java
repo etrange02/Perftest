@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * 
- * @author David Lecoconnier davi.lecoconnier@gmail.com
+ * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
@@ -20,10 +20,10 @@ public abstract class AbstractTest implements ITest, Serializable {
 	private int instructionDelay;
 	private Status status;
 	private String name;
-	private List<IInstruction> instruction;
+	private List<IInstruction> instructions;
 	
 	public AbstractTest() {
-		this.instruction = new ArrayList<IInstruction>();
+		this.instructions = new ArrayList<IInstruction>();
 		this.instructionDelay = 0;
 	}
 
@@ -63,16 +63,16 @@ public abstract class AbstractTest implements ITest, Serializable {
 		this.name = name;
 	}
 
-	public List<IInstruction> getInstruction() {
-		return instruction;
+	public List<IInstruction> getInstructions() {
+		return instructions;
 	}
 
 	/**
 	 * Modifies the list of instructions
 	 * @param instruction a list of instructions
 	 */
-	public void setInstruction(List<IInstruction> instruction) {
-		this.instruction = instruction;
+	public void setInstructions(List<IInstruction> instructions) {
+		this.instructions = instructions;
 	}
 
 }
