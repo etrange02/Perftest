@@ -15,6 +15,7 @@ import gui.IGUIMonitor;
 public class WorkloadMonitor extends Monitor {
 
 	public void addGUIMonitor(IGUIMonitor guiMonitor) {
+		this.getGuiMonitors().add(guiMonitor);
 	}
 
 	public void process() {

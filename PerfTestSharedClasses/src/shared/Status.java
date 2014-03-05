@@ -9,6 +9,6 @@ package shared;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface Status {
-	int WAITING = 0, DEPLOYED = 1, RUNNING = 2;
+public enum Status {
+	WAITING, DEPLOYED, RUNNING;
 }

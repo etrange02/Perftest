@@ -3,6 +3,7 @@
  */
 package controls.ctestplanmanagement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controls.ctestplanmanagement.interfaces.ITestPlan;
@@ -21,6 +22,10 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private List<ProtocolParser> protocolParser;
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
+	
+	public TestPlanManagementFacade() {
+		this.protocolParser = new ArrayList<ProtocolParser>();
+	}
 
 	/**
 	 * Returns the associated test plan

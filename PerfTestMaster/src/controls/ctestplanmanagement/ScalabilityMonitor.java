@@ -15,6 +15,7 @@ import controls.cslavemanagement.DataBuffer;
 public class ScalabilityMonitor extends Monitor {
 
 	public void addGUIMonitor(IGUIMonitor guiMonitor) {
+		this.getGuiMonitors().add(guiMonitor);
 	}
 
 	public void process() {

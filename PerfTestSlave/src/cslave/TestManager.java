@@ -3,6 +3,7 @@
  */
 package cslave;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cslave.interfaces.IScenario;
@@ -23,6 +24,13 @@ public class TestManager implements ITestManager {
 	private AbstractTest abstractTest;
 	private List<TCPConnectionToTestedServer> TCPConnectionToTestedServer;
 	private List<Comparator> comparator;
+	
+	public TestManager() {
+		this.TCPConnectionToMaster = new TCPConnectionToMaster[2];
+		this.scenario = new ArrayList<>();
+		this.TCPConnectionToTestedServer = new ArrayList<>();
+		this.comparator = new ArrayList<>();
+	}
 
 	/**
 	 * Returns the TestParameter associated

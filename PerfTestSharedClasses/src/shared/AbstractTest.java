@@ -25,6 +25,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 	public AbstractTest() {
 		this.instructions = new ArrayList<IInstruction>();
 		this.instructionDelay = 0;
+		this.status = Status.WAITING;
 	}
 
 	public int getInstructionDelay() {

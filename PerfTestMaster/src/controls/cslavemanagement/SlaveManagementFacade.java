@@ -3,6 +3,7 @@
  */
 package controls.cslavemanagement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
@@ -20,6 +21,12 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private List<Slave> slave;
 	private List<TCPConnection> TCPConnection;
 	private List<DataBuffer> dataBuffer;
+	
+	public SlaveManagementFacade() {
+		this.slave = new ArrayList<Slave>();
+		this.TCPConnection = new ArrayList<TCPConnection>();
+		this.dataBuffer = new ArrayList<DataBuffer>();
+	}
 
 	/** 
 	 * @return slave
