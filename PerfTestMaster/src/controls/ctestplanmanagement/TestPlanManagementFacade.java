@@ -4,11 +4,13 @@
 package controls.ctestplanmanagement;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.IInstruction;
+import tools.Factory;
 
 /**
  * 
@@ -96,21 +98,73 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public ITestPlan addNewTestPlan(String protocolName) {
-		return null;
+		if (null == getTestPlan())
+			return null;
+		Iterator<ProtocolParser> iter = this.protocolParser.iterator();
+		ProtocolParser parser = null;
+		boolean continu = true;
+		while (iter.hasNext() && continu) {
+			parser = iter.next();
+			if (protocolName.equals(parser.getProtocolName())) {
+				this.usedProtocolParser = parser;
+				continu = false;
+			}
+		}
+		if (null == this.usedProtocolParser) {
+			setTestPlan(this.usedProtocolParser.createNewPlanTest());
+		}
+		return getTestPlan();
 	}
 
 	public ScalabilityTest addNewScalabilityTest(String testName) {
-		return null;
+		ScalabilityTest test = null;
+		if (canAddNewMonitoredTest(testName)) {
+			test = Factory.createScalabilityTest(testName);
+			this.testPlan.getTests().add(test);
+		}
+		return test;
 	}
 
 	public WorkloadTest addNewWorkloadTest(String testName) {
-		return null;
+		WorkloadTest test = null;
+		if (canAddNewMonitoredTest(testName)) {
+			test = Factory.createWorkloadTest(testName);
+			this.testPlan.getTests().add(test);
+		}
+		return test;
+	}
+	
+	/**
+	 * Indicates if it is possible to add a monitored test
+	 * @param testName a test name
+	 * @return true if the name is available and a test plan exist, false otherwise
+	 */
+	private boolean canAddNewMonitoredTest(String testName) {
+		if (null == this.testPlan || null == this.usedProtocolParser)
+			return false;
+		Iterator<AbstractMonitoredTest> iter = this.testPlan.getTests().iterator();
+		while (iter.hasNext()) {
+			if (testName.equals(iter.next().getName()))
+				return false;
+		}
+		return true;
 	}
 
 	public void addProtocolParser(ProtocolParser protocolParser) {
+		Iterator<ProtocolParser> iter = this.protocolParser.iterator();
+		while (iter.hasNext()) {
+			if (iter.next().isImplementedProtocol(protocolParser.getProtocolName()))
+				return;
+		}
+		this.protocolParser.add(protocolParser);
 	}
 
 	public void addTarget(String target) {
+		if (null == this.testPlan)
+			return;
+		if (this.testPlan.getTargets().contains(target)) {
+			this.testPlan.getTargets().add(target);
+		}
 	}
 
 	public boolean deployTest(String name) {
@@ -118,10 +172,16 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public List<String> getAvailableProtocols() {
-		return null;
+		List<String> list = new ArrayList<String>();
+		Iterator<ProtocolParser> iter = this.protocolParser.iterator();
+		while (iter.hasNext()) {
+			list.add(iter.next().getProtocolName());
+		}
+		return list;
 	}
 
 	public boolean openPlanTest(String path) {
+		System.out.println(path);
 		return false;
 	}
 
@@ -130,16 +190,35 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public void removeTarget(String target) {
+		if (null == this.testPlan)
+			return;
+		this.testPlan.getTargets().remove(target);
 	}
 	
 	public boolean removeTest(String testName) {
+		if (null == this.testPlan)
+			return false;
+		Iterator<AbstractMonitoredTest> iter = this.testPlan.getTests().iterator();
+		AbstractMonitoredTest test = null;
+		while (iter.hasNext()) {
+			test = iter.next();
+			if (testName.equals(test.getName())) {
+				this.testPlan.getTests().remove(test);
+				return true;
+			}
+		}
 		return false;
 	}
 
 	public boolean savePlanTest(String planTestName) {
+		if (null == this.testPlan)
+			return false;
+		String res = this.testPlan.writeJSONString();
+		System.out.println(res);
 		return false;
 	}
 
 	public void setPort(int port) {
+		this.testPlan.setPort(port);
 	}
 }

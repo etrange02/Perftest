@@ -55,5 +55,6 @@ public abstract class Monitor implements IMonitor {
 	}
 	
 	public void addGUIMonitor(IGUIMonitor guiMonitor) {
+		this.guiMonitors.add(guiMonitor);
 	}
 }

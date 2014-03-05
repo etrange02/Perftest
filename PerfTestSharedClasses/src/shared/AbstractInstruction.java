@@ -26,7 +26,7 @@ public abstract class AbstractInstruction implements IInstruction, Serializable 
 	}
 
 	public String getReadableRequest() {
-		return readableRequest;
+		return this.readableRequest;
 	}
 
 	public void setReadableRequest(String readableRequest) {
@@ -34,7 +34,7 @@ public abstract class AbstractInstruction implements IInstruction, Serializable 
 	}
 
 	public byte[] getBinaryRequest() {
-		return binaryRequest;
+		return this.binaryRequest;
 	}
 
 	public void setBinaryRequest(byte[] binaryRequest) {
@@ -42,7 +42,7 @@ public abstract class AbstractInstruction implements IInstruction, Serializable 
 	}
 
 	public byte[] getBinaryResponse() {
-		return binaryResponse;
+		return this.binaryResponse;
 	}
 
 	public void setBinaryResponse(byte[] binaryResponse) {
@@ -50,7 +50,7 @@ public abstract class AbstractInstruction implements IInstruction, Serializable 
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {

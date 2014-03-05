@@ -72,5 +72,7 @@ public class Slave implements ISlave {
 	 */
 	public void setTCPClientSlave(TCPConnection TCPClientSlave) {
 		this.TCPClientSlave = TCPClientSlave;
+		if (this.TCPClientSlave.getSlave() != this)
+			this.TCPClientSlave.setSlave(this);
 	}
 }

@@ -23,13 +23,18 @@ public abstract class AbstractTest implements ITest, Serializable {
 	private List<IInstruction> instructions;
 	
 	public AbstractTest() {
+		this("");
+	}
+	
+	public AbstractTest(String name) {
+		this.name = name;
 		this.instructions = new ArrayList<IInstruction>();
 		this.instructionDelay = 0;
 		this.status = Status.WAITING;
 	}
 
 	public int getInstructionDelay() {
-		return instructionDelay;
+		return this.instructionDelay;
 	}
 
 	/**
@@ -41,7 +46,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 	}
 
 	public Status getStatus() {
-		return status;
+		return this.status;
 	}
 
 	/**
@@ -53,7 +58,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
@@ -65,7 +70,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 	}
 
 	public List<IInstruction> getInstructions() {
-		return instructions;
+		return this.instructions;
 	}
 
 	/**

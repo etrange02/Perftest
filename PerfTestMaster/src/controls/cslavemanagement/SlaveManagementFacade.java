@@ -88,7 +88,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public int count() {
-		return 0;
+		return this.slave.size();
 	}
 
 	public boolean runAnotherSlave(String address, int port) {

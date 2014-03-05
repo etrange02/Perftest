@@ -13,6 +13,10 @@ public class ScalabilityTest extends AbstractMonitoredTest {
 	
 	private static final long serialVersionUID = -8919264177566199550L;
 	private ScalabilityMonitor scalabilityMonitor;
+	
+	public ScalabilityTest(String name) {
+		super(name);
+	}
 
 	/**
 	 * Returns the associated ScalabilityMonitor

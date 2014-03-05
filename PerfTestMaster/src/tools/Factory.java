@@ -1,7 +1,10 @@
 package tools;
-import shared.AbstractTest;
+import java.io.IOException;
+import java.net.UnknownHostException;
+
 import controls.cslavemanagement.TCPConnection;
 import controls.ctestplanmanagement.ScalabilityTest;
+import controls.ctestplanmanagement.WorkloadTest;
 
 /**
  * 
@@ -16,9 +19,8 @@ public class Factory {
 	 * @param name a test name
 	 * @return a ScalabilityTest
 	 */
-	public static AbstractTest createScalabilityTest(String name) {
-		ScalabilityTest test = new ScalabilityTest();
-		return test;
+	public static ScalabilityTest createScalabilityTest(String name) {
+		return new ScalabilityTest(name);
 	}
 
 	/**
@@ -26,8 +28,8 @@ public class Factory {
 	 * @param name a test name
 	 * @return a WorkloadTest
 	 */
-	public static AbstractTest createWorkloadTest(String name) {
-		return null;
+	public static WorkloadTest createWorkloadTest(String name) {
+		return new WorkloadTest(name);
 	}
 
 	/**
@@ -35,8 +37,10 @@ public class Factory {
 	 * @param IPAddress a network address
 	 * @param port a port
 	 * @return a TCPConnection
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static TCPConnection createTCPConnection(String IPAddress, int port) {
-		return null;
+	public static TCPConnection createTCPConnection(String IPAddress, int port) throws UnknownHostException, IOException {
+		return new TCPConnection(IPAddress, port);
 	}
 }

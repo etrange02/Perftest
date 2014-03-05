@@ -4,6 +4,7 @@
 package controls.cslavemanagement;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.IDataBuffer;
@@ -28,6 +29,11 @@ public class DataBuffer implements IDataBuffer {
 	}
 
 	public int countReceivedInstructions() {
-		return 0;
+		int sum = 0;
+		Iterator<TCPDataBuffer> iter = this.tCPDataBuffer.iterator();
+		while (iter.hasNext()) {
+			sum += 0;//iter.next().;
+		}
+		return sum;
 	}
 }

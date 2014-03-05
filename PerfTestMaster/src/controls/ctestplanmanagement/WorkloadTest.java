@@ -13,6 +13,10 @@ public class WorkloadTest extends AbstractMonitoredTest {
 	
 	private static final long serialVersionUID = 4922590281574582110L;
 	private WorkloadMonitor workloadMonitor;
+	
+	public WorkloadTest (String name) {
+		super(name);
+	}
 
 	/**
 	 * Returns the associated WorkloadMonitor
