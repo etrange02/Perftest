@@ -3,8 +3,14 @@
  */
 package controls.cslavemanagement;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
@@ -99,10 +105,84 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public void detectSlaves(String ipAddress, int port) {
+		StringTokenizer tokens = new StringTokenizer(ipAddress);
+		String[] tab = new String[4];
+		int index = 0;
+		
+		tab[index++] = tokens.nextToken(".");
+		while (tokens.hasMoreTokens() && index < 4) {
+			tab[index++] = tokens.nextToken();
+		}
+		
+		if (tokens.hasMoreTokens())
+			return;
+		
+		int level = 3;
+		while ("0".equals(tab[--index])) {
+			--level;
+		}
+		level++;
+
+		String rootNetwork = "";
+		for (int i = 0; i<level; ++i) {
+			rootNetwork += tab[i] + ".";
+		}
+		System.out.println(rootNetwork);
+		recursiveAdd(rootNetwork, level, port);		
+	}
+	
+	private void recursiveAdd(final String rootNetwork, final int level, final int port) {
+		
+		//new Thread(new Runnable() {	
+		//public void run() {
+			String subNet = "";
+			for (int i = 0; i<255; ++i) {
+				subNet = rootNetwork + i;
+				if (level == 3) {
+					System.out.println(subNet);
+					addSlave(subNet, port);
+				} else {
+					subNet += ".";
+					int nextLevel = level +1;
+					recursiveAdd(subNet, nextLevel, port);
+				}
+			}
+		//}
+		//}).start();
 	}
 
 	public boolean addSlave(String ipAddress, int port) {
-		return false;
+		Iterator<Slave> iter = this.slave.iterator();
+		while (iter.hasNext()) {
+			if (ipAddress.equals(iter.next().getName())) {
+				return false;
+			}
+		}
+		TCPConnection tcpConnection = null;
+		
+		try {
+			tcpConnection = new TCPConnection();
+			tcpConnection.bind(new InetSocketAddress(ipAddress, port));
+		} catch (SocketException e) {
+			System.out.println("Echec : " + ipAddress);
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		Slave slave = new Slave();
+		slave.setAddress(ipAddress);
+		slave.setTCPClientSlave(tcpConnection);
+		System.out.println("Ajout: " + ipAddress);
+		
+		synchronized (this.TCPConnection) {
+			this.TCPConnection.add(tcpConnection);			
+		}
+		synchronized (this.slave) {
+			this.slave.add(slave);			
+		}
+		return true;
 	}
 
 	public boolean sendTest(AbstractTest test) {

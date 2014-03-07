@@ -23,7 +23,7 @@ public class Slave implements ISlave {
 	}
 
 	public String getName() {
-		return name;
+		return getAddress();//name;
 	}
 
 	/**

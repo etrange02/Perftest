@@ -17,6 +17,10 @@ public class TCPConnection extends Socket {
 
 	private Slave slave;
 	
+	public TCPConnection () {
+		super();
+	}
+	
 	public TCPConnection (String address, int port) throws UnknownHostException, IOException {
 		super(address, port);
 	}
