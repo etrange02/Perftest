@@ -5,7 +5,6 @@ package controls.cslavemanagement;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +14,8 @@ import java.util.StringTokenizer;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractTest;
+import shared.Constants;
+import tools.Factory;
 
 
 /**
@@ -104,7 +105,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		this.dataBuffer = dataBuffer;
 	}
 
-	public void detectSlaves(String ipAddress, int port) {
+	public void detectSlaves(String ipAddress) {
 		StringTokenizer tokens = new StringTokenizer(ipAddress);
 		String[] tab = new String[4];
 		int index = 0;
@@ -128,10 +129,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			rootNetwork += tab[i] + ".";
 		}
 		System.out.println(rootNetwork);
-		recursiveAdd(rootNetwork, level, port);		
+		recursiveAdd(rootNetwork, level);		
 	}
 	
-	private void recursiveAdd(final String rootNetwork, final int level, final int port) {
+	private void recursiveAdd(final String rootNetwork, final int level) {
 		
 		//new Thread(new Runnable() {	
 		//public void run() {
@@ -140,18 +141,18 @@ public class SlaveManagementFacade implements ISlaveManagement {
 				subNet = rootNetwork + i;
 				if (level == 3) {
 					System.out.println(subNet);
-					addSlave(subNet, port);
+					addSlave(subNet);
 				} else {
 					subNet += ".";
 					int nextLevel = level +1;
-					recursiveAdd(subNet, nextLevel, port);
+					recursiveAdd(subNet, nextLevel);
 				}
 			}
 		//}
 		//}).start();
 	}
 
-	public boolean addSlave(String ipAddress, int port) {
+	public boolean addSlave(String ipAddress) {
 		Iterator<Slave> iter = this.slave.iterator();
 		while (iter.hasNext()) {
 			if (ipAddress.equals(iter.next().getName())) {
@@ -161,8 +162,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		TCPConnection tcpConnection = null;
 		
 		try {
-			tcpConnection = new TCPConnection();
-			tcpConnection.bind(new InetSocketAddress(ipAddress, port));
+			tcpConnection = Factory.createTCPConnection();
+			tcpConnection.connect(ipAddress, Constants.SOCKET_INSTRUCTION_PORT, Constants.SOCKET_OBJECT_PORT);
 		} catch (SocketException e) {
 			System.out.println("Echec : " + ipAddress);
 			return false;
@@ -185,8 +186,16 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		return true;
 	}
 
-	public boolean sendTest(AbstractTest test) {
-		return false;
+	public boolean sendTest(AbstractTest test) {		
+		
+		Iterator<Slave> iter = this.slave.iterator();
+		Slave slave = null;
+		while (iter.hasNext()) {
+			slave = iter.next();
+			slave.getTCPClientSlave().send(test);
+		}
+		
+		return true;
 	}
 
 	public int count() {
@@ -211,6 +220,18 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	 * @return true on success, false otherwise
 	 */
 	public boolean removeSlave(String name) {
+		Iterator<Slave> iter = this.slave.iterator();
+		Slave slave = null;
+		
+		while (iter.hasNext()) {
+			slave = iter.next();
+			if (name.equals(slave.getAddress())) {
+				slave.getTCPClientSlave().close();
+				this.slave.remove(slave);
+				this.TCPConnection.remove(slave.getTCPClientSlave());
+				return true;
+			}
+		}
 		return false;
 	}
 

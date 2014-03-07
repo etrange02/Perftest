@@ -35,12 +35,23 @@ public class Factory {
 	/**
 	 * Returns a new TCPConnection (Socket) which communicates with Slaves applications
 	 * @param IPAddress a network address
-	 * @param port a port
+	 * @param commandPort a port for commands
+	 * @param objectPort a port for objects
 	 * @return a TCPConnection
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public static TCPConnection createTCPConnection(String IPAddress, int port) throws UnknownHostException, IOException {
-		return new TCPConnection(IPAddress, port);
+	public static TCPConnection createTCPConnection(String IPAddress, int commandPort, int objectPort) throws UnknownHostException, IOException {
+		return new TCPConnection(IPAddress, commandPort, objectPort);
+	}
+
+	/**
+	 * Returns a new TCPConnection (Socket) which communicates with Slaves applications
+	 * @return a TCPConnection
+	 * @throws IOException 
+	 * @throws UnknownHostException 
+	 */
+	public static TCPConnection createTCPConnection() throws UnknownHostException, IOException {
+		return new TCPConnection();
 	}
 }

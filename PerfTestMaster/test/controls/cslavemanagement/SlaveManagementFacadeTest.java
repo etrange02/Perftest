@@ -28,7 +28,7 @@ public class SlaveManagementFacadeTest {
 		// init
 		
 		// oper
-		getDelegate().detectSlaves("132.227.69.0", 80);
+		getDelegate().detectSlaves("132.227.69.0");
 		
 		// assert
 	}

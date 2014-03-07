@@ -22,7 +22,7 @@ public interface ISlaveManagement {
 	 * @param ipAddress the network address
 	 * @param port the port where slaves are listening
 	 */
-	public void detectSlaves(String ipAddress, int port);
+	public void detectSlaves(String ipAddress);
 
 	/**
 	 * Adds a slave defined by ipAddress
@@ -30,7 +30,7 @@ public interface ISlaveManagement {
 	 * @param port the listening port
 	 * @return true if slave found, false otherwise
 	 */
-	public boolean addSlave(String ipAddress, int port);
+	public boolean addSlave(String ipAddress);
 
 	/**
 	 * Deploys a test on every slaves applications
