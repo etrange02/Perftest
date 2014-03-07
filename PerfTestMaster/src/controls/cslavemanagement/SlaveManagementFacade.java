@@ -4,7 +4,6 @@
 package controls.cslavemanagement;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -163,7 +162,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		
 		try {
 			tcpConnection = Factory.createTCPConnection();
-			tcpConnection.connect(ipAddress, Constants.SOCKET_INSTRUCTION_PORT, Constants.SOCKET_OBJECT_PORT);
+			tcpConnection.connect(ipAddress, Constants.SOCKET_COMMAND_PORT, Constants.SOCKET_OBJECT_PORT);
 		} catch (SocketException e) {
 			System.out.println("Echec : " + ipAddress);
 			return false;

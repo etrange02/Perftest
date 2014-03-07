@@ -32,6 +32,10 @@ public class TCPConnection {
 		this.connect(address, commandPort, objectPort);
 	}
 	
+	public void finalize() {
+		this.close();
+	}
+	
 	/**
 	 * Opens connections (command and object) to a slave
 	 * @param address network address of the slave
