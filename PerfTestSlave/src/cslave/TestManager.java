@@ -3,6 +3,7 @@
  */
 package cslave;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,29 +11,67 @@ import java.util.List;
 import cslave.interfaces.IScenario;
 import cslave.interfaces.ITestManager;
 import shared.AbstractTest;
+import shared.Constants;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
 public class TestManager implements ITestManager {
 	
-	private TestParameter testRunner;
+	//datas about TCPConnectionToMaster array
+	private static final int NB_TCP_CONNECTIONS_TO_MASTER= 2;
+	private static final int CMD_TCP_CONNECTION_ID= 0;
+	private static final int OBJECTS_TCP_CONNECTION_ID= 1;
 	private TCPConnectionToMaster[] TCPConnectionToMaster;
+	
+	private TestParameter testRunner;
 	private List<IScenario> scenario;
 	private AbstractTest abstractTest;
 	private List<TCPConnectionToTestedServer> TCPConnectionToTestedServer;
 	private List<Comparator> comparator;
 	
-	public TestManager() {
-		this.TCPConnectionToMaster = new TCPConnectionToMaster[2];
+	private String lastReceivedCommand;
+	private AbstractTest lastReceivedTest;
+	
+	
+	
+	
+	
+	
+	/* *********************************************************************
+	 * CONSTRUCTORS ********************************************************
+	 * *********************************************************************/
+	
+	public TestManager() throws IOException {
+		
 		this.scenario = new ArrayList<>();
 		this.TCPConnectionToTestedServer = new ArrayList<>();
 		this.comparator = new ArrayList<>();
+		this.TCPConnectionToMaster = 
+				new TCPConnectionToMaster[NB_TCP_CONNECTIONS_TO_MASTER];
+		
+		
+		TCPConnectionToMaster[CMD_TCP_CONNECTION_ID] = 
+				new CommandTCPConnectionToMaster(Constants.SOCKET_COMMAND_PORT);
+		TCPConnectionToMaster[CMD_TCP_CONNECTION_ID].setTestManager(this);
+		
+		
+		TCPConnectionToMaster[OBJECTS_TCP_CONNECTION_ID] = 
+				new ObjectTCPConnectionToMaster(Constants.SOCKET_OBJECT_PORT);
+		TCPConnectionToMaster[OBJECTS_TCP_CONNECTION_ID].setTestManager(this);
 	}
 
+	
+	
+
+
+	
+	/* *********************************************************************
+	 * GETTERS/SETTERS *****************************************************
+	 * *********************************************************************/
+	
 	/**
 	 * Returns the TestParameter associated
 	 * @return the TestParameter
@@ -130,21 +169,51 @@ public class TestManager implements ITestManager {
 	}
 
 	/**
-	 * 
+	 * Update the last received command
 	 */
-	public void waitCMD() {
+	public void setLastReceivedCommand(String lastReceivedCommand) {
+		this.lastReceivedCommand = lastReceivedCommand;
 	}
 
 	/**
+	 *  Update the last received test
+	 */
+	public void setLastReceivedTest(AbstractTest lastReceivedTest) {
+		this.lastReceivedTest = lastReceivedTest;
+	}
+	
+	
+	
+	
+	
+	
+	/* *********************************************************************
+	 * IMPORTANT METHODS ***************************************************
+	 * *********************************************************************/
+	
+	/**
+	 * @throws InterruptedException 
 	 * 
 	 */
-	public void readTest() {
+	public void waitCMD() throws InterruptedException {
+		TCPConnectionToMaster[CMD_TCP_CONNECTION_ID].notify();
+		wait();
+	}
+
+	/**
+	 * @throws InterruptedException 
+	 * 
+	 */
+	public void readTest() throws InterruptedException {
+		TCPConnectionToMaster[OBJECTS_TCP_CONNECTION_ID].notify();
+		wait();
 	}
 
 	/**
 	 * 
 	 */
 	public void reset() {
+		
 	}
 
 	public void addComparator(Comparator comparator) {

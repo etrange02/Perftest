@@ -1,5 +1,8 @@
 package controls.protocols.ldap;
 
+import java.io.IOException;
+import java.util.List;
+
 import shared.AbstractInstruction;
 import constants.protocols.ldap.LDAPConstants;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
@@ -7,6 +10,12 @@ import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.TCPProxy;
 
+/**
+ * 
+ * @author David Lecoconnier david.lecoconnier@gmail.com
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public class LDAPProtocolParser extends ProtocolParser {
 
 	@Override
@@ -34,8 +43,11 @@ public class LDAPProtocolParser extends ProtocolParser {
 	}
 
 	@Override
-	public TCPProxy createNewTCPProxy() {
-		return new LDAP_TCPProxy();
+	public TCPProxy createNewTCPProxy(
+			String hostname, int port,
+			List<AbstractInstruction>instructions) throws IOException {
+		
+		return new LDAP_TCPProxy(hostname,port,instructions);
 	}
 
 	@Override

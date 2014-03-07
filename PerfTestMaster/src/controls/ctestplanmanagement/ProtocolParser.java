@@ -3,6 +3,9 @@
  */
 package controls.ctestplanmanagement;
 
+import java.io.IOException;
+import java.util.List;
+
 import shared.AbstractInstruction;
 
 /**
@@ -52,9 +55,14 @@ public abstract class ProtocolParser {
 	/**
 	 * Returns a new instance of TCPProxy which is specified to the implemented
 	 * protocol. It is used to run a white test
-	 * @return a new TCPProxy
+	 * @param hostname the hostname where find the tested server.
+	 * @param port the port to use to discuss with the tested server.
+	 * @param instructions the list of isntructions to complete.
+	 * @return
 	 */
-	public abstract TCPProxy createNewTCPProxy();
+	public abstract TCPProxy createNewTCPProxy(
+			String hostname, int port,
+			List<AbstractInstruction>instructions) throws IOException;
 
 	/**
 	 * Returns a TestPlan which has been decoded from a JSON object and which 
@@ -63,7 +71,7 @@ public abstract class ProtocolParser {
 	 * @return a TestPlan on success, null otherwise
 	 */
 	public abstract AbstractTestPlan readJSONFileTestPlan(Object values);
-	
+
 	/**
 	 * Returns a test which has been decoded from a JSON object
 	 * @param values a JSON object
@@ -72,7 +80,7 @@ public abstract class ProtocolParser {
 	public AbstractMonitoredTest readJSONStringTest(Object values) {
 		return null;
 	}
-	
+
 	/**
 	 * Returns an instruction which has been decoded from a JSON object and which
 	 * implements the implemented protocol
@@ -80,6 +88,6 @@ public abstract class ProtocolParser {
 	 * @return an Instruction on success, null otherwise
 	 */
 	public abstract AbstractInstruction readJSONStringInstruction(Object values);
-	
+
 	public abstract int getDefaultProtocolPort();
 }

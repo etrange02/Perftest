@@ -20,5 +20,4 @@ public class Constants {
 	 * Socket port for commands transmission
 	 */
 	public static int SOCKET_COMMAND_PORT = 2001;
-
 }

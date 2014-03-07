@@ -3,19 +3,41 @@
  */
 package cslave;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 1.1
  */
-public class TCPConnectionToMaster {
+public abstract class TCPConnectionToMaster implements Runnable {
 
 	private TestManager testManager;
+	private ServerSocket serverSocket;
 	
-	public TCPConnectionToMaster() {
+	
+	
+	
+	
+	
+	/* *********************************************************************
+	 * CONSTRUCTORS ********************************************************
+	 * *********************************************************************/
+	
+	public TCPConnectionToMaster(int port) throws IOException {
 		this.testManager = null;
+		this.serverSocket = new ServerSocket(port);
 	}
+
+	
+	
+	
+	
+	
+	/* *********************************************************************
+	 * GETTERS/SETTERS *****************************************************
+	 * *********************************************************************/
 
 	/**
 	 * returns the TestManager associated
@@ -32,4 +54,24 @@ public class TCPConnectionToMaster {
 	public void setTestManager(TestManager testManager) {
 		this.testManager = testManager;
 	}
+
+	/**
+	 * returns the ServerSocket associated
+	 * @return the ServerSocket
+	 */
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
+	
+	
+	
+	
+	
+	
+	/* *********************************************************************
+	 * IMPORTANT METHODS ***************************************************
+	 * *********************************************************************/
+	
+	@Override
+	public abstract void run();
 }
