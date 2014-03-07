@@ -60,7 +60,7 @@ public interface ISlaveManagement {
 	 * @param port port of the tested server
 	 * @return true on success, false otherwise
 	 */
-	public boolean runSlaves(int count, String address, int port);
+	public boolean runSlaves(int count, List<String> addresses, int port);
 
 	/**
 	 * Makes all slaves in running mode stops

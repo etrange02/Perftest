@@ -55,7 +55,6 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		}
 	}
 
-
 	/** 
 	 * @return slave
 	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
@@ -205,11 +204,27 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		return false;
 	}
 
-	public boolean runSlaves(int count, String address, int port) {
-		return false;
+	public boolean runSlaves(int count, List<String> addresses, int port) {
+		if (count > this.slave.size())
+			return false;
+		
+		String[] addressArray = addresses.toArray(new String[0]);
+		int index = 0;
+		
+		Iterator<Slave> iter = this.slave.iterator();
+		for (int i = 0; i < count; ++i) {
+			iter.next().getTCPClientSlave().run(addressArray[index]);
+			index = (index+1) % addressArray.length;
+		}
+		
+		return true;
 	}
 
 	public boolean stop() {
+		Iterator<Slave> iter = this.slave.iterator();
+		while (iter.hasNext()) {
+			iter.next().getTCPClientSlave().stop();
+		}
 		return false;
 	}
 

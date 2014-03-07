@@ -123,4 +123,34 @@ public class TCPConnection {
 		// return true;
 		return false;
 	}
+	
+	/**
+	 * Sends a Stop message to stop the test processing into the slave
+	 * @return true on success, false otherwise
+	 */
+	public boolean stop() {
+		if (this.objectConnection.isClosed() || this.commandConnection.isClosed())
+			return false;
+		
+		// SEND a command
+		// WAIT for a response
+		// Change Slave state
+		// return true;
+		return false;
+	}
+	
+	/**
+	 * Sends a run command to start the test scenario
+	 * @return true on success, false otherwise
+	 */
+	public boolean run(String address) {
+		if (this.objectConnection.isClosed() || this.commandConnection.isClosed())
+			return false;
+
+		// SEND a command
+		// WAIT for a response
+		// Change Slave state
+		// return true;
+		return false;
+	}
 }
