@@ -6,6 +6,7 @@ package controls.cslavemanagement.interfaces;
 import java.util.List;
 
 import controls.cslavemanagement.DataBuffer;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractTest;
 
 /**
@@ -85,4 +86,16 @@ public interface ISlaveManagement {
 	 * @return a list
 	 */
 	public List<DataBuffer> getDataBuffer();
+
+	/**
+	 * Returns the current associated TestPlanManagement
+	 * @return the TestPlanManagement
+	 */
+	public ITestPlanManagement getTestPlanManagement();
+	
+	/**
+	 * Modifies the associated TestPlanManagement
+	 * @param testPlanManagement a TestPlanManagement
+	 */
+	public void setTestPlanManagement(ITestPlanManagement testPlanManagement);
 }

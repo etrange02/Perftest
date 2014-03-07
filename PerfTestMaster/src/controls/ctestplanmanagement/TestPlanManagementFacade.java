@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.IInstruction;
@@ -24,9 +25,29 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private List<ProtocolParser> protocolParser;
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
+	private ISlaveManagement slaveManagement;
 	
 	public TestPlanManagementFacade() {
 		this.protocolParser = new ArrayList<ProtocolParser>();
+	}
+	
+	/**
+	 * Modifies the associated SlaveManagement
+	 * @param slaveManagement a SlaveManagement
+	 */
+	public void setSlaveManagement(ISlaveManagement slaveManagement) {
+		this.slaveManagement = slaveManagement;
+		if (slaveManagement.getTestPlanManagement() != this) {
+			slaveManagement.setTestPlanManagement(this);
+		}
+	}
+	
+	/**
+	 * Returns the current SlaveManagement
+	 * @return the associated SlaveManagement
+	 */
+	public ISlaveManagement getSlaveManagement() {
+		return this.slaveManagement;
 	}
 
 	/**
@@ -94,6 +115,20 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public IInstruction addNewInstruction(String testName, String instructionName) {
+		if (null == getTestPlan())
+			return null;
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+		boolean continu = true;
+		AbstractMonitoredTest test = null;
+		while (iter.hasNext() && continu) {
+			test = iter.next();
+			if (testName.equals(test.getName())) {
+				continu = false;
+			}
+		}
+		if (false == continu && null != this.usedProtocolParser) {
+			return this.usedProtocolParser.createNewInstruction();
+		}
 		return null;
 	}
 
@@ -110,7 +145,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 				continu = false;
 			}
 		}
-		if (null == this.usedProtocolParser) {
+		if (null != this.usedProtocolParser) {
 			setTestPlan(this.usedProtocolParser.createNewPlanTest());
 		}
 		return getTestPlan();
@@ -168,6 +203,20 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public boolean deployTest(String name) {
+		if (null == getSlaveManagement())
+			return false;
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+		boolean continu = true;
+		AbstractMonitoredTest test = null;
+		while (iter.hasNext() && continu) {
+			test = iter.next();
+			if (name.equals(test.getName())) {
+				continu = false;
+			}
+		}
+		if (false == continu && null != this.usedProtocolParser) {
+			return getSlaveManagement().sendTest(test);
+		}
 		return false;
 	}
 
@@ -185,7 +234,24 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		return false;
 	}
 
-	public boolean removeInstruction(String testName, String instructionName) {
+	public boolean removeInstruction(String testName, int instructionPosition) {
+		if (null == this.testPlan)
+			return false;
+		if (instructionPosition < 0)
+			return false;
+		Iterator<AbstractMonitoredTest> iter = this.testPlan.getTests().iterator();
+		AbstractMonitoredTest test = null;
+		while (iter.hasNext()) {
+			test = iter.next();
+			if (testName.equals(test.getName())) {
+				if (instructionPosition >= test.getInstructions().size()) {
+					return false;
+				} else {
+					test.getInstructions().remove(instructionPosition);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 

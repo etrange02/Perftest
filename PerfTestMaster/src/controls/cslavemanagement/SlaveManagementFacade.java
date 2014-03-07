@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractTest;
 
 
@@ -21,12 +22,33 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private List<Slave> slave;
 	private List<TCPConnection> TCPConnection;
 	private List<DataBuffer> dataBuffer;
+	private ITestPlanManagement testPlanManagement;
 	
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
 		this.TCPConnection = new ArrayList<TCPConnection>();
 		this.dataBuffer = new ArrayList<DataBuffer>();
 	}
+
+	/**
+	 * Returns the current associated TestPlanManagement
+	 * @return the TestPlanManagement
+	 */
+	public ITestPlanManagement getTestPlanManagement() {
+		return testPlanManagement;
+	}
+
+	/**
+	 * Modifies the associated TestPlanManagement
+	 * @param testPlanManagement a TestPlanManagement
+	 */
+	public void setTestPlanManagement(ITestPlanManagement testPlanManagement) {
+		this.testPlanManagement = testPlanManagement;
+		if (testPlanManagement.getSlaveManagement() != this) {
+			testPlanManagement.setSlaveManagement(this);
+		}
+	}
+
 
 	/** 
 	 * @return slave

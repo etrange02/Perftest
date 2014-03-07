@@ -1,4 +1,4 @@
-package tools.protocols.ldap;
+package constants.protocols.ldap;
 
 /**
  * 
@@ -7,6 +7,9 @@ package tools.protocols.ldap;
  * @version 1.0
  */
 public class LDAPConstants {
+	
+	//// LDAP Defaults values
+	public static final int LDAP_DEFAULT_PORT = 389;
 	
 	//// LDAP Test plan
 	public static String LDAP_TESTPLAN_LOGIN = "login";

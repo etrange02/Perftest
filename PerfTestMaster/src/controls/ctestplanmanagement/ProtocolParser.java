@@ -80,4 +80,6 @@ public abstract class ProtocolParser {
 	 * @return an Instruction on success, null otherwise
 	 */
 	public abstract AbstractInstruction readJSONStringInstruction(Object values);
+	
+	public abstract int getDefaultProtocolPort();
 }

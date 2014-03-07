@@ -17,9 +17,4 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 	public AbstractMonitoredTest(String name) {
 		super(name);
 	}
-
-	public Monitor getMonitor() {
-		return null;
-	}
-
 }

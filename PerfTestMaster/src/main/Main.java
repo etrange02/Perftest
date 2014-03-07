@@ -1,5 +1,9 @@
 package main;
 
+import controls.cslavemanagement.SlaveManagementFacade;
+import controls.ctestplanmanagement.TestPlanManagementFacade;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import controls.protocols.ldap.LDAPProtocolParser;
 import gui.Frame;
 
 /**
@@ -11,6 +15,9 @@ import gui.Frame;
 public class Main {
 
 	public static void main (String[] args) {
+		ITestPlanManagement testPlanManagement = new TestPlanManagementFacade();
+		testPlanManagement.setSlaveManagement(new SlaveManagementFacade());
+		testPlanManagement.addProtocolParser(new LDAPProtocolParser());
 		new Frame();
 	}
 }

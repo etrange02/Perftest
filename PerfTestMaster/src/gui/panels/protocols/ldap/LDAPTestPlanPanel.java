@@ -19,8 +19,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
+import constants.protocols.ldap.LDAPConstants;
 import tools.GUIConstants;
-import tools.protocols.ldap.LDAPConstants;
 
 /**
  * 

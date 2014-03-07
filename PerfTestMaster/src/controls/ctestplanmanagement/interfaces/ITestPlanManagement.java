@@ -5,6 +5,7 @@ package controls.ctestplanmanagement.interfaces;
 
 import java.util.List;
 
+import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.ScalabilityTest;
 import controls.ctestplanmanagement.WorkloadTest;
@@ -83,12 +84,12 @@ public interface ITestPlanManagement {
 	public boolean openPlanTest(String path);
 
 	/**
-	 * Removes the instruction names instruction from the testName
+	 * Removes the instructionPosition instruction from the testName
 	 * @param testName a test name
 	 * @param instructionName an instruction name
 	 * @return true on success, false otherwise
 	 */
-	public boolean removeInstruction(String testName, String instructionName);
+	public boolean removeInstruction(String testName, int instructionPosition);
 
 	/**
 	 * Removes a specified server address from the target list
@@ -115,4 +116,16 @@ public interface ITestPlanManagement {
 	 * @param port the protocol port
 	 */
 	public void setPort(int port);
+		
+	/**
+	 * Modifies the associated SlaveManagement
+	 * @param slaveManagement a SlaveManagement
+	 */
+	public void setSlaveManagement(ISlaveManagement slaveManagement);
+	
+	/**
+	 * Returns the current SlaveManagement
+	 * @return the associated SlaveManagement
+	 */
+	public ISlaveManagement getSlaveManagement();
 }
