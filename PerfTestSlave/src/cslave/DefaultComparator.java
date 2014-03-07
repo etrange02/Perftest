@@ -14,11 +14,11 @@ public class DefaultComparator extends Comparator {
 	protected void processCompare(byte[] binaryResponse, byte[] serverBinaryResponse) {
 	}
 
-	public boolean isConcernedComparator(String protocolName) {
-		return false;
-	}
-
 	public TCPConnectionToTestedServer createNewTCPConnectionToTestedServer() {
 		return null;
+	}
+
+	public String getProtocolName() {
+		return "";
 	}
 }

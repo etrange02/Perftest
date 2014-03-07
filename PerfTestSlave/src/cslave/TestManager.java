@@ -4,6 +4,7 @@
 package cslave;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cslave.interfaces.IScenario;
@@ -147,6 +148,13 @@ public class TestManager implements ITestManager {
 	}
 
 	public void addComparator(Comparator comparator) {
+		Iterator<Comparator> iter = this.comparator.iterator();
+		while (iter.hasNext()) {
+			if (comparator.isConcernedComparator(iter.next().getProtocolName())) {
+				return;
+			}
+		}
+		this.comparator.add(comparator);
 	}
 
 	public void start() {

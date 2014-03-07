@@ -11,14 +11,15 @@ public class LDAPComparator extends Comparator {
 
 	}
 
-	public boolean isConcernedComparator(String protocolName) {
-		return "LDAP".equals(protocolName);
-	}
-
 	@Override
 	public TCPConnectionToTestedServer createNewTCPConnectionToTestedServer() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getProtocolName() {
+		return "LDAP";
 	}
 
 }

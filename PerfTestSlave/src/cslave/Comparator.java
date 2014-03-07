@@ -53,7 +53,15 @@ public abstract class Comparator {
 	 * @param protocolName a protocol name
 	 * @return true if it is implemented, false otherwise
 	 */
-	public abstract boolean isConcernedComparator(String protocolName);
+	public boolean isConcernedComparator(String protocolName) {
+		return protocolName.equals(getProtocolName());
+	}
+	
+	/**
+	 * Returns the name of the implemented protocol
+	 * @return the protocol name
+	 */
+	public abstract String getProtocolName();
 
 	/**
 	 * Returns a TCPConnectionToTestedServer which corresponds to the implemented protocol
