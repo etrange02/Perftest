@@ -42,7 +42,8 @@ public abstract class AbstractTest implements ITest, Serializable {
 	 * @param instructionDelay the delay in ms
 	 */
 	public void setInstructionDelay(int instructionDelay) {
-		this.instructionDelay = instructionDelay;
+		if (instructionDelay >= 0)
+			this.instructionDelay = instructionDelay;
 	}
 
 	public Status getStatus() {

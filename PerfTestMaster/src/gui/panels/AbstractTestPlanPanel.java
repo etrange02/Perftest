@@ -29,11 +29,15 @@ public abstract class AbstractTestPlanPanel extends JPanel {
 	}
 	
 	private void initPanel() {
-		this.titleArea = new JTextArea(GUIConstants.ABSTRACTTESTPLANPANEL_DEFAULT_TITLE);
-		this.core = new JPanel();
-		
 		this.setLayout(new BorderLayout());
-		this.add(this.titleArea, BorderLayout.NORTH);
+		
+		JPanel titlePanel = new JPanel();
+		this.titleArea = new JTextArea(GUIConstants.ABSTRACTTESTPLANPANEL_DEFAULT_TITLE);
+		titlePanel.add(this.titleArea);
+		this.add(titlePanel, BorderLayout.NORTH);
+		this.titleArea.setFont(this.titleArea.getFont().deriveFont(GUIConstants.FRAME_TITLE_FONT_SIZE));
+		
+		this.core = new JPanel();		
 		this.add(this.core, BorderLayout.CENTER);
 	}
 	

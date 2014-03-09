@@ -3,6 +3,7 @@ package gui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -20,6 +21,7 @@ public class TestPlanManager extends JPanel {
 	
 	public TestPlanManager() {
 		super();
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.mapNodePanel = new HashMap<DefaultMutableTreeNode, JPanel>();
 	}
 

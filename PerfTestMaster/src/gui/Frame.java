@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -155,6 +156,7 @@ public class Frame extends JFrame {
 		this.slavesPanel = new SlavesPanel();
 		
 		JPanel center = new JPanel();
+		center.setLayout(new BoxLayout(center, BoxLayout.X_AXIS));
 		center.add(this.slavesPanel);
 		center.add(this.testPlanManager);
 		this.slavesPanel.setVisible(false);
