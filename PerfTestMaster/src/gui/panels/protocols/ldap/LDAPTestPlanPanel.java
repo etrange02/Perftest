@@ -12,10 +12,10 @@ import java.text.ParseException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
@@ -52,11 +52,11 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel {
 			e.printStackTrace();
 		}
 		
-		grid.add(new JTextArea(LDAPConstants.LDAP_TESTPLAN_LOGIN));
+		grid.add(new JLabel(LDAPConstants.LDAP_TESTPLAN_LOGIN));
 		grid.add(this.loginTestField);
-		grid.add(new JTextArea(LDAPConstants.LDAP_TESTPLAN_PASSWORD));
+		grid.add(new JLabel(LDAPConstants.LDAP_TESTPLAN_PASSWORD));
 		grid.add(this.passwordTextField);
-		grid.add(new JTextArea(LDAPConstants.LDAP_TESTPLAN_PORT));
+		grid.add(new JLabel(LDAPConstants.LDAP_TESTPLAN_PORT));
 		grid.add(this.portTextField);
 		
 		JPanel interfacesPanel = new JPanel(new BorderLayout());

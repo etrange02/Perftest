@@ -3,6 +3,8 @@
  */
 package controls.ctestplanmanagement.interfaces;
 
+import gui.interfaces.PlanTestListenable;
+
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
@@ -17,7 +19,7 @@ import shared.IInstruction;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ITestPlanManagement {
+public interface ITestPlanManagement extends PlanTestListenable {
 	
 	/**
 	 * Creates and adds an instruction to the test named testName
@@ -128,4 +130,12 @@ public interface ITestPlanManagement {
 	 * @return the associated SlaveManagement
 	 */
 	public ISlaveManagement getSlaveManagement();
+	
+	/**
+	 * returns the current used protocol parser
+	 * @return a protocol parser or null
+	 */
+	public ProtocolParser getUsedProtocolParser();
+	
+	public void renameTestPlan(String name);
 }

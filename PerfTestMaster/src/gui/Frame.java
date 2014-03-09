@@ -16,7 +16,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import tools.GUIConstants;
+import tools.GUIFactory;
+import tools.widgets.TestCreator;
+import tools.widgets.TestPlanCreator;
 
 /**
  * 
@@ -30,9 +34,11 @@ public class Frame extends JFrame {
 	private SlavesPanel slavesPanel;
 	private TestPlanManager testPlanManager;
 	private TestPlanTree testPlanTree;
+	private ITestPlanManagement testPlanManagement;
 
-	public Frame() {
+	public Frame(ITestPlanManagement testPlanManagement) {
 		super();
+		this.testPlanManagement = testPlanManagement;
 		this.initialize();
 		this.setVisible(true);
 	}
@@ -139,7 +145,7 @@ public class Frame extends JFrame {
 		});
 		
 		this.testPlanManager = new TestPlanManager();
-		this.testPlanTree = new TestPlanTree(this.testPlanManager);
+		this.testPlanTree = new TestPlanTree(this, this.testPlanManager, this.testPlanManagement);
 		this.testPlanTree.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {				
 			}
@@ -179,30 +185,42 @@ public class Frame extends JFrame {
 	}
 	
 	private void newTestPlanMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		TestPlanCreator creator = GUIFactory.testPlanCreator(this, "Test plan creation", true, this.testPlanManagement.getAvailableProtocols());
+		if (creator.showDialog()) {
+			if (null != this.testPlanManagement.addNewTestPlan(creator.getSelectedProtocol()));
+				System.out.println("newTestPlanMenuItemAction-" + creator.getSelectedProtocol());
+		}
 	}
 	
 	private void newTestMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		TestCreator creator = GUIFactory.testCreator(this, "Test creator", true);
+		if (creator.showDialog()) {
+			if (creator.isScalabilityTest()) {
+				this.testPlanManagement.addNewScalabilityTest(creator.getTestName());
+			} else {
+				this.testPlanManagement.addNewWorkloadTest(creator.getTestName());
+			}
+			System.out.println("newTestMenuItemAction");
+		}
 	}
 	
 	private void saveMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		System.out.println("saveMenuItemAction");
 	}
 	
 	private void saveAsMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		System.out.println("saveAsMenuItemAction");
 	}
 	
 	private void openMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		System.out.println("openMenuItemAction");
 	}
 	
 	private void userManualMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		System.out.println("userManualMenuItemAction");
 	}
 	
 	private void aboutMenuItemAction(ActionEvent e) {
-		System.exit(0);
+		System.out.println("aboutMenuItemAction");
 	}
 }

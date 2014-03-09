@@ -1,8 +1,9 @@
 package gui;
 
+import gui.interfaces.PlanTestListener;
+import gui.panels.AbstractTestPlanPanel;
 import gui.panels.InstructionPanel;
 import gui.panels.TestPanel;
-import gui.panels.protocols.ldap.LDAPTestPlanPanel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JFrame;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
@@ -21,7 +24,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import tools.GUIConstants;
+import tools.GUIFactory;
+import tools.widgets.TestPlanCreator;
 
 /**
  * 
@@ -29,7 +35,7 @@ import tools.GUIConstants;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class TestPlanTree extends JTree {
+public class TestPlanTree extends JTree implements PlanTestListener {
 
 	private static final long serialVersionUID = 3049618493902762703L;
 	private DefaultMutableTreeNode root;
@@ -38,10 +44,16 @@ public class TestPlanTree extends JTree {
 	private JPopupMenu popupMenuTestPlan;
 	private JPopupMenu popupMenuTest;
 	private TestPlanManager testPlanManager;
+	private ITestPlanManagement testPlanManagement;
+	private JFrame frame;
 	
-	public TestPlanTree(TestPlanManager testPlanPanel) {
+	public TestPlanTree(JFrame frame, TestPlanManager testPlanPanel, ITestPlanManagement testPlanManagement) {
 		super();
 		this.testPlanManager = testPlanPanel;
+		this.testPlanManagement = testPlanManagement;
+		this.testPlanManagement.addPlanTestListener(this);
+		this.frame = frame;
+		
 		this.initPopupMenu();
 		this.initTree();
 	}
@@ -146,13 +158,18 @@ public class TestPlanTree extends JTree {
 	}
 	
 	private void createTestPlan(ActionEvent e) {
-		this.root.setUserObject("Je suis le noeud");
-		this.setRootVisible(true);
-		this.testPlanManager.addNode(this.root, new LDAPTestPlanPanel());
+		TestPlanCreator creator = GUIFactory.testPlanCreator(this.frame, "Test plan creation", true, this.testPlanManagement.getAvailableProtocols());
+		if (creator.showDialog()) {
+			if (null != this.testPlanManagement.addNewTestPlan(creator.getSelectedProtocol()));
+				System.out.println("newTestPlanMenuItemAction");
+		}
 	}
 	
 	private void addScalabilityTest(ActionEvent e) {
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode("" + System.currentTimeMillis());
+		String input = JOptionPane.showInputDialog(null, "A test name", "Test creation", JOptionPane.PLAIN_MESSAGE);
+		if (null == input || input.isEmpty())
+			return;
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(input);
 		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
 		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
 		
@@ -161,7 +178,7 @@ public class TestPlanTree extends JTree {
 		
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Scalability test", "" + System.currentTimeMillis(), "Scalability"));
+		this.testPlanManager.addNode(test, new TestPanel("Scalability test", input, "Scalability"));
 		this.testPlanManager.addNode(instruction, new InstructionPanel());
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
@@ -171,7 +188,10 @@ public class TestPlanTree extends JTree {
 	}
 	
 	private void addWorkloadTest(ActionEvent e) {
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode("" + System.currentTimeMillis());
+		String input = JOptionPane.showInputDialog(null, "A test name", "Test creation", JOptionPane.PLAIN_MESSAGE);
+		if (null == input || input.isEmpty())
+			return;
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(input);
 		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
 		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
 		
@@ -179,7 +199,7 @@ public class TestPlanTree extends JTree {
 		test.add(monitoring);
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Workload test", "" + System.currentTimeMillis(), "Workload"));
+		this.testPlanManager.addNode(test, new TestPanel("Workload test", input, "Workload"));
 		this.testPlanManager.addNode(instruction, new InstructionPanel());
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
@@ -190,10 +210,26 @@ public class TestPlanTree extends JTree {
 	
 	private void renameTestPlan(ActionEvent e) {
 		System.out.println("renameTestPlan");
+		
+		String input = JOptionPane.showInputDialog(null, "A new name", "Rename", JOptionPane.PLAIN_MESSAGE);
+		if (null == input || input.isEmpty())
+			return;
+		this.testPlanManagement.renameTestPlan(input);
 	}
 	
 	private void renameTest(ActionEvent e) {
 		System.out.println("renameTest");
+	}
+
+	@Override
+	public void updatePlanTestName(String name) {
+		this.root.setUserObject(name);
+		
+		if (!this.isRootVisible()) {
+			this.setRootVisible(true);
+			AbstractTestPlanPanel testPlanPanel = this.testPlanManagement.getUsedProtocolParser().createNewTestPlanPanel();
+			this.testPlanManager.addNode(this.root, testPlanPanel);
+		}
 	}
 	
 }

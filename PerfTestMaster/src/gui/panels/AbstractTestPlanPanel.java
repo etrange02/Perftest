@@ -2,9 +2,8 @@ package gui.panels;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import tools.GUIConstants;
 
 /**
@@ -16,7 +15,7 @@ import tools.GUIConstants;
 public abstract class AbstractTestPlanPanel extends JPanel {
 
 	private static final long serialVersionUID = 6858271818355416805L;
-	private JTextArea titleArea;
+	private JLabel titleLabel;
 	private JPanel core;
 	
 	public AbstractTestPlanPanel() {
@@ -25,17 +24,17 @@ public abstract class AbstractTestPlanPanel extends JPanel {
 	}
 	
 	public void setTitle(String title) {
-		this.titleArea.setText(title);
+		this.titleLabel.setText(title);
 	}
 	
 	private void initPanel() {
 		this.setLayout(new BorderLayout());
 		
 		JPanel titlePanel = new JPanel();
-		this.titleArea = new JTextArea(GUIConstants.ABSTRACTTESTPLANPANEL_DEFAULT_TITLE);
-		titlePanel.add(this.titleArea);
+		this.titleLabel = new JLabel(GUIConstants.ABSTRACTTESTPLANPANEL_DEFAULT_TITLE);
+		titlePanel.add(this.titleLabel);
 		this.add(titlePanel, BorderLayout.NORTH);
-		this.titleArea.setFont(this.titleArea.getFont().deriveFont(GUIConstants.FRAME_TITLE_FONT_SIZE));
+		this.titleLabel.setFont(this.titleLabel.getFont().deriveFont(GUIConstants.FRAME_TITLE_FONT_SIZE));
 		
 		this.core = new JPanel();		
 		this.add(this.core, BorderLayout.CENTER);

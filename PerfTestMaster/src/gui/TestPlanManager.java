@@ -44,6 +44,14 @@ public class TestPlanManager extends JPanel {
 		this.mapNodePanel.put(node, panel);
 	}
 	
+	public boolean contains(DefaultMutableTreeNode treeNode) {
+		return this.mapNodePanel.containsKey(treeNode);
+	}
+	
+	public boolean contains(JPanel panel) {
+		return this.mapNodePanel.containsValue(panel);
+	}
+	
 	public void showAssociatedPanel(DefaultMutableTreeNode node) {
 		hideVisibleAssociatedPanel();		
 		if (this.mapNodePanel.containsKey(node)) {

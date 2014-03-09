@@ -1,5 +1,8 @@
 package controls.protocols.ldap;
 
+import gui.panels.AbstractTestPlanPanel;
+import gui.panels.protocols.ldap.LDAPTestPlanPanel;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -65,6 +68,11 @@ public class LDAPProtocolParser extends ProtocolParser {
 	@Override
 	public int getDefaultProtocolPort() {
 		return LDAPConstants.LDAP_DEFAULT_PORT;
+	}
+
+	@Override
+	public AbstractTestPlanPanel createNewTestPlanPanel() {
+		return new LDAPTestPlanPanel();
 	}
 
 }

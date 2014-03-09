@@ -18,6 +18,6 @@ public class Main {
 		ITestPlanManagement testPlanManagement = new TestPlanManagementFacade();
 		testPlanManagement.setSlaveManagement(new SlaveManagementFacade());
 		testPlanManagement.addProtocolParser(new LDAPProtocolParser());
-		new Frame();
+		new Frame(testPlanManagement);
 	}
 }

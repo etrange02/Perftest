@@ -3,6 +3,8 @@
  */
 package controls.ctestplanmanagement;
 
+import gui.interfaces.PlanTestListener;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,9 +28,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
 	private ISlaveManagement slaveManagement;
+	private List<PlanTestListener> planTestListenerList;
 	
 	public TestPlanManagementFacade() {
 		this.protocolParser = new ArrayList<ProtocolParser>();
+		this.planTestListenerList = new ArrayList<PlanTestListener>();
 	}
 	
 	/**
@@ -133,7 +137,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public ITestPlan addNewTestPlan(String protocolName) {
-		if (null == getTestPlan())
+		if (null != getTestPlan())
 			return null;
 		Iterator<ProtocolParser> iter = this.protocolParser.iterator();
 		ProtocolParser parser = null;
@@ -147,6 +151,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		if (null != this.usedProtocolParser) {
 			setTestPlan(this.usedProtocolParser.createNewPlanTest());
+			updatePlanTestNameList(this.usedProtocolParser.getProtocolName());
 		}
 		return getTestPlan();
 	}
@@ -280,11 +285,39 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (null == this.testPlan)
 			return false;
 		String res = this.testPlan.writeJSONString();
+		
+		updatePlanTestNameList(planTestName);
+		
 		System.out.println(res);
 		return false;
 	}
 
 	public void setPort(int port) {
 		this.testPlan.setPort(port);
+	}
+
+	@Override
+	public void addPlanTestListener(PlanTestListener planTestListener) {
+		this.planTestListenerList.add(planTestListener);
+	}
+
+	@Override
+	public void removePlanTestListener(PlanTestListener planTestListener) { 
+		this.planTestListenerList.remove(planTestListener);
+	}
+
+	private void updatePlanTestNameList(String name) {
+		Iterator<PlanTestListener> iter = this.planTestListenerList.iterator();
+		while (iter.hasNext()) {
+			iter.next().updatePlanTestName(name);
+		}
+	}
+
+	@Override
+	public void renameTestPlan(String name) {
+		if (null == this.testPlan)
+			return;
+		this.testPlan.setName(name);
+		updatePlanTestNameList(name);
 	}
 }
