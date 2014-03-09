@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cslave.interfaces.IScenario;
-import cslave.interfaces.ITestManager;
-import cslave.protocols.ldap.LDAPComparator;
 import shared.AbstractTest;
 import shared.Constants;
+import cslave.interfaces.IScenario;
+import cslave.interfaces.ITestManager;
 
 /**
  * 
