@@ -226,6 +226,7 @@ public class TestManager implements ITestManager {
 	public void reset() {
 	}
 
+	@Override
 	public void start() {
 
 		while(true) {
@@ -272,5 +273,9 @@ public class TestManager implements ITestManager {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void stop() {
+	    
 	}
 }

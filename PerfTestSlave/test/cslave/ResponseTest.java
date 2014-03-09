@@ -4,67 +4,105 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import cslave.interfaces.IResponse;
+
+/**
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
+
 public class ResponseTest {
 
-	private Response response;
+    private IResponse response;
 
-	@Before 
-	public void before() {
-		response = new Response();
-	}
+    
+    
+    
+    
+    
+    /* *********************************************************************
+     * INIT/CLEAN METHODS **************************************************
+     * *********************************************************************/
+    
+    @Before 
+    public void before() {
+	response = new Response();
+    }
+
+
+    
+    
+    
+    
+    /* *********************************************************************
+     * get/set Delay Tests *************************************************
+     * *********************************************************************/
+
+    @Test
+    public void updateDelay() {
+
+	//initialize the IResponse (implementation-dependent)
+	((Response)response).setDelay(10);
+
+	//assert
+	Assert.assertTrue(response.getDelay()==10);
+    }
+
+    @Test
+    public void nullDelay() {
+
+	//initialize the IResponse (implementation-dependent)
+	((Response)response).setDelay(0);
 	
+	//assert
+	Assert.assertTrue(response.getDelay()==0);
+    }
+
+    @Test
+    public void negativeDelay() {
+
+	//initialize the IResponse (implementation-dependent)
+	((Response)response).setDelay(-1);
 	
-	/* *********************************************************************
-	 * get/set Delay Tests *************************************************
-	 * *********************************************************************/
+	//assert
+	Assert.assertTrue(
+		"expected -1 but get "+response.getDelay(),
+		response.getDelay()==-1);
+    }
+
+
+
+
+
+
+    /* *********************************************************************
+     * get/set ServerBinaryResponse Tests **********************************
+     * *********************************************************************/
+
+    public void updateServerBinaryResponse() {
+	byte[] newServerBinaryResponse = new byte[5];
+
+	newServerBinaryResponse[0] = 0;
+	newServerBinaryResponse[1] = 1;
+	newServerBinaryResponse[2] = 2;
+	newServerBinaryResponse[3] = 3;
+	newServerBinaryResponse[4] = 4;
+
+	//initialize the IResponse (implementation-dependent)
+	((Response)response).setServerBinaryResponse(newServerBinaryResponse);
 	
-	@Test
-	public void updateDelay() {
-		
-		response.setDelay(10);
-		Assert.assertTrue(response.getDelay()==10);
-	}
+	//assert
+	Assert.assertArrayEquals(
+		newServerBinaryResponse, 
+		response.getServerBinaryResponse());
+    }
+
+    public void nullServerBinaryResponse() {
 	
-	@Test
-	public void nullDelay() {
-		
-		response.setDelay(0);
-		Assert.assertTrue(response.getDelay()==0);
-	}
+	//initialize the IResponse (implementation-dependent)
+	((Response)response).setServerBinaryResponse(null);
 	
-	@Test
-	public void negativeDelay() {
-		
-		response.setDelay(-1);
-		Assert.assertTrue(response.getDelay()==-1);
-	}
-	
-	
-	
-	
-	
-	
-	/* *********************************************************************
-	 * get/set ServerBinaryResponse Tests **********************************
-	 * *********************************************************************/
-	
-	public void updateServerBinaryResponse() {
-		byte[] newServerBinaryResponse = new byte[5];
-		
-		newServerBinaryResponse[0] = 0;
-		newServerBinaryResponse[1] = 1;
-		newServerBinaryResponse[2] = 2;
-		newServerBinaryResponse[3] = 3;
-		newServerBinaryResponse[4] = 4;
-		
-		response.setServerBinaryResponse(newServerBinaryResponse);
-		Assert.assertArrayEquals(
-				newServerBinaryResponse, 
-				response.getServerBinaryResponse());
-	}
-	
-	public void nullServerBinaryResponse() {
-		response.setServerBinaryResponse(null);
-		Assert.assertTrue(response.getServerBinaryResponse()==null);
-	}
+	//assert
+	Assert.assertTrue(response.getServerBinaryResponse()==null);
+    }
 }

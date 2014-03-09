@@ -23,4 +23,9 @@ public interface ITestManager {
 	 * 
 	 */
 	public void start();
+	
+	/**
+	 * 
+	 */
+	public void stop();
 }
