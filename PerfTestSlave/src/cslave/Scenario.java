@@ -31,7 +31,7 @@ public class Scenario implements IScenario {
 		this.responses = responses;
 	}
 
-	public void addResponse(byte[] binaryResponse, List<Integer> delay) {
+	public void addResponse(byte[] binaryResponse, Integer delay) {
 	}
 
 	public List<IResponse> getResponses() {

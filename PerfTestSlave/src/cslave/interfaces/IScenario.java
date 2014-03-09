@@ -18,7 +18,7 @@ public interface IScenario {
 	 * @param binaryResponse the response
 	 * @param delay the answer delay
 	 */
-	public void addResponse(byte[] binaryResponse, List<Integer> delay);
+	public void addResponse(byte[] binaryResponse, Integer delay);
 
 	/**
 	 * Returns the list responses handled by the scenario

@@ -1,14 +1,12 @@
 package cslave;
 
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ResponseTest {
 
-	Response response;
+	private Response response;
 
 	@Before 
 	public void before() {

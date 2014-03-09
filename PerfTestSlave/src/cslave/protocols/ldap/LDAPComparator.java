@@ -1,5 +1,6 @@
 package cslave.protocols.ldap;
 
+import shared.Constants;
 import cslave.Comparator;
 import cslave.TCPConnectionToTestedServer;
 
@@ -19,7 +20,7 @@ public class LDAPComparator extends Comparator {
 
 	@Override
 	public String getProtocolName() {
-		return "LDAP";
+		return Constants.LDAP;
 	}
 
 }
