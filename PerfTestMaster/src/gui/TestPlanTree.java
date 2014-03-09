@@ -158,17 +158,16 @@ public class TestPlanTree extends JTree {
 		
 		test.add(instruction);
 		test.add(monitoring);
-		//this.root.add(test);
-		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, 0);		
-
-		//this.expandPath(this.getPathForRow(0));
-		expandAllNodes();
 		
-		this.testPlanManager.addNode(test, new TestPanel("Scalability test"));
+		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
+		
+		this.testPlanManager.addNode(test, new TestPanel("Scalability test", "" + System.currentTimeMillis(), "Scalability"));
 		this.testPlanManager.addNode(instruction, new InstructionPanel());
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
-		this.testPlanManager.showAssociatedPanel(test);
+		TreePath testPath = new TreePath(test.getPath());
+		this.expandPath(testPath);
+		this.setSelectionPath(testPath);
 	}
 	
 	private void addWorkloadTest(ActionEvent e) {
@@ -178,17 +177,15 @@ public class TestPlanTree extends JTree {
 		
 		test.add(instruction);
 		test.add(monitoring);
-		//this.root.add(test);
-		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, 0);
+		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		//this.expandPath(this.getPathForRow(0));
-		expandAllNodes();
-		
-		this.testPlanManager.addNode(test, new TestPanel("Workload test"));
+		this.testPlanManager.addNode(test, new TestPanel("Workload test", "" + System.currentTimeMillis(), "Workload"));
 		this.testPlanManager.addNode(instruction, new InstructionPanel());
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
-		this.testPlanManager.showAssociatedPanel(test);
+		TreePath testPath = new TreePath(test.getPath());
+		this.expandPath(testPath);
+		this.setSelectionPath(testPath);
 	}
 	
 	private void renameTestPlan(ActionEvent e) {
@@ -197,12 +194,6 @@ public class TestPlanTree extends JTree {
 	
 	private void renameTest(ActionEvent e) {
 		System.out.println("renameTest");
-	}
-	
-	private void expandAllNodes() {
-		for (int i = 0; i < this.getRowCount(); ++i) {
-	         this.expandRow(i);
-		}
 	}
 	
 }

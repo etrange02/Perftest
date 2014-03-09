@@ -12,6 +12,7 @@ public class GUIConstants {
 	public static String FRAME_TITLE = "Perf Test";
 	public static int FRAME_SIZE_X = 800;
 	public static int FRAME_SIZE_Y = 600;
+	public static float FRAME_TITLE_FONT_SIZE = 20.0f;
 	
 	//// Menu parameters
 	public static String MENU_FILE = "File";

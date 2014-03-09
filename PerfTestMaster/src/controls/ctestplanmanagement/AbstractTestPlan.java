@@ -72,7 +72,8 @@ public abstract class AbstractTestPlan implements ITestPlan {
 	 * @param port the port
 	 */
 	public void setPort(int port) {
-		this.port = port;
+		if (port > 0)
+			this.port = port;
 	}
 
 }
