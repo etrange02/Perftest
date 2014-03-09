@@ -47,7 +47,7 @@ public class ObjectTCPConnectionToMaster extends TCPConnectionToMaster {
 
 					wait(); //Wait for testManager request
 
-					testManager.setLastReceivedTest(
+					testManager.setAbstractTest(
 							(AbstractTest)objectInputStream.readObject());
 					testManager.notify();
 

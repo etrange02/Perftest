@@ -26,11 +26,13 @@ public class Response implements IResponse {
 	}
 
 	/**
-	 * Modifies the time of response received
+	 * Modifies the time of response received. Should be positive.
+	 * If negative, we consider that the wanted delay is 0.
 	 * @param delay the delay
 	 */
 	public void setDelay(int delay) {
-		this.delay = delay;
+		
+		this.delay = delay < 0 ? 0 : delay;
 	}
 
 	public byte[] getServerBinaryResponse() {

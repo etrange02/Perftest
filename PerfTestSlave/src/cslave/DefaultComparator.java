@@ -11,7 +11,8 @@ package cslave;
  */
 public class DefaultComparator extends Comparator {
 
-	protected void processCompare(byte[] binaryResponse, byte[] serverBinaryResponse) {
+	protected void processCompare(
+			byte[] binaryResponse, byte[] serverBinaryResponse) {
 	}
 
 	public TCPConnectionToTestedServer createNewTCPConnectionToTestedServer() {
