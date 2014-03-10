@@ -3,7 +3,8 @@
  */
 package controls.ctestplanmanagement;
 
-import gui.interfaces.PlanTestListener;
+import gui.interfaces.TestListener;
+import gui.interfaces.TestPlanListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,11 +29,13 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
 	private ISlaveManagement slaveManagement;
-	private List<PlanTestListener> planTestListenerList;
+	private List<TestPlanListener> planTestListenerList;
+	private List<TestListener> testListenerList;
 	
 	public TestPlanManagementFacade() {
 		this.protocolParser = new ArrayList<ProtocolParser>();
-		this.planTestListenerList = new ArrayList<PlanTestListener>();
+		this.planTestListenerList = new ArrayList<TestPlanListener>();
+		this.testListenerList = new ArrayList<TestListener>();
 	}
 	
 	/**
@@ -161,6 +164,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (canAddNewMonitoredTest(testName)) {
 			test = Factory.createScalabilityTest(testName);
 			this.testPlan.getTests().add(test);
+			addScalabilityTestListenerList(testName);
 		}
 		return test;
 	}
@@ -170,6 +174,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (canAddNewMonitoredTest(testName)) {
 			test = Factory.createWorkloadTest(testName);
 			this.testPlan.getTests().add(test);
+			addWorkloadTestListener(testName);
 		}
 		return test;
 	}
@@ -297,17 +302,17 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	@Override
-	public void addPlanTestListener(PlanTestListener planTestListener) {
+	public void addPlanTestListener(TestPlanListener planTestListener) {
 		this.planTestListenerList.add(planTestListener);
 	}
 
 	@Override
-	public void removePlanTestListener(PlanTestListener planTestListener) { 
+	public void removePlanTestListener(TestPlanListener planTestListener) { 
 		this.planTestListenerList.remove(planTestListener);
 	}
 
 	private void updatePlanTestNameList(String name) {
-		Iterator<PlanTestListener> iter = this.planTestListenerList.iterator();
+		Iterator<TestPlanListener> iter = this.planTestListenerList.iterator();
 		while (iter.hasNext()) {
 			iter.next().updatePlanTestName(name);
 		}
@@ -319,5 +324,29 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		this.testPlan.setName(name);
 		updatePlanTestNameList(name);
+	}
+
+	@Override
+	public void addTestListener(TestListener testListener) {
+		this.testListenerList.add(testListener);
+	}
+
+	@Override
+	public void removeTestListener(TestListener testListener) {
+		this.testListenerList.remove(testListener);
+	}
+	
+	private void addScalabilityTestListenerList(String name) {
+		Iterator<TestListener> iter = this.testListenerList.iterator();
+		while (iter.hasNext()) {
+			iter.next().addScalabilityTestListener(name);
+		}
+	}
+	
+	private void addWorkloadTestListener(String name) {
+		Iterator<TestListener> iter = this.testListenerList.iterator();
+		while (iter.hasNext()) {
+			iter.next().addWorkloadTestListener(name);
+		}
 	}
 }

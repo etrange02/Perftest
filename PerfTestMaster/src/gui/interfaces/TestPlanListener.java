@@ -1,6 +1,6 @@
 package gui.interfaces;
 
-public interface PlanTestListener {
+public interface TestPlanListener {
 	
 	public void updatePlanTestName(String name);
 

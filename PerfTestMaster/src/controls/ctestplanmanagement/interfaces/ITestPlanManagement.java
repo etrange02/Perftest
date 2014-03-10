@@ -3,7 +3,8 @@
  */
 package controls.ctestplanmanagement.interfaces;
 
-import gui.interfaces.PlanTestListenable;
+import gui.interfaces.TestListenable;
+import gui.interfaces.TestPlanListenable;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import shared.IInstruction;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ITestPlanManagement extends PlanTestListenable {
+public interface ITestPlanManagement extends TestPlanListenable, TestListenable {
 	
 	/**
 	 * Creates and adds an instruction to the test named testName

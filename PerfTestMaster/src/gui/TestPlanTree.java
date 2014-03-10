@@ -1,6 +1,7 @@
 package gui;
 
-import gui.interfaces.PlanTestListener;
+import gui.interfaces.TestListener;
+import gui.interfaces.TestPlanListener;
 import gui.panels.AbstractTestPlanPanel;
 import gui.panels.InstructionPanel;
 import gui.panels.TestPanel;
@@ -35,7 +36,7 @@ import tools.widgets.TestPlanCreator;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class TestPlanTree extends JTree implements PlanTestListener {
+public class TestPlanTree extends JTree implements TestPlanListener, TestListener {
 
 	private static final long serialVersionUID = 3049618493902762703L;
 	private DefaultMutableTreeNode root;
@@ -52,6 +53,7 @@ public class TestPlanTree extends JTree implements PlanTestListener {
 		this.testPlanManager = testPlanPanel;
 		this.testPlanManagement = testPlanManagement;
 		this.testPlanManagement.addPlanTestListener(this);
+		this.testPlanManagement.addTestListener(this);
 		this.frame = frame;
 		
 		this.initPopupMenu();
@@ -169,43 +171,14 @@ public class TestPlanTree extends JTree implements PlanTestListener {
 		String input = JOptionPane.showInputDialog(null, "A test name", "Test creation", JOptionPane.PLAIN_MESSAGE);
 		if (null == input || input.isEmpty())
 			return;
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode(input);
-		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
-		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
-		
-		test.add(instruction);
-		test.add(monitoring);
-		
-		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
-		
-		this.testPlanManager.addNode(test, new TestPanel("Scalability test", input, "Scalability"));
-		this.testPlanManager.addNode(instruction, new InstructionPanel());
-		this.testPlanManager.addNode(monitoring, new JPanel());
-		
-		TreePath testPath = new TreePath(test.getPath());
-		this.expandPath(testPath);
-		this.setSelectionPath(testPath);
+		this.testPlanManagement.addNewScalabilityTest(input);
 	}
 	
 	private void addWorkloadTest(ActionEvent e) {
 		String input = JOptionPane.showInputDialog(null, "A test name", "Test creation", JOptionPane.PLAIN_MESSAGE);
 		if (null == input || input.isEmpty())
 			return;
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode(input);
-		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
-		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
-		
-		test.add(instruction);
-		test.add(monitoring);
-		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
-		
-		this.testPlanManager.addNode(test, new TestPanel("Workload test", input, "Workload"));
-		this.testPlanManager.addNode(instruction, new InstructionPanel());
-		this.testPlanManager.addNode(monitoring, new JPanel());
-		
-		TreePath testPath = new TreePath(test.getPath());
-		this.expandPath(testPath);
-		this.setSelectionPath(testPath);
+		this.testPlanManagement.addNewWorkloadTest(input);
 	}
 	
 	private void renameTestPlan(ActionEvent e) {
@@ -215,10 +188,15 @@ public class TestPlanTree extends JTree implements PlanTestListener {
 		if (null == input || input.isEmpty())
 			return;
 		this.testPlanManagement.renameTestPlan(input);
+		this.updateUI();
 	}
 	
 	private void renameTest(ActionEvent e) {
 		System.out.println("renameTest");
+		String input = (String) JOptionPane.showInputDialog(null, "A new name", "Rename", JOptionPane.PLAIN_MESSAGE, null, null, this.getSelectionPath().getLastPathComponent().toString());
+		if (null == input || input.isEmpty())
+			return;
+		//this.testPlanManagement.renameTestPlan(input);
 	}
 
 	@Override
@@ -230,6 +208,45 @@ public class TestPlanTree extends JTree implements PlanTestListener {
 			AbstractTestPlanPanel testPlanPanel = this.testPlanManagement.getUsedProtocolParser().createNewTestPlanPanel();
 			this.testPlanManager.addNode(this.root, testPlanPanel);
 		}
+	}
+
+	@Override
+	public void addScalabilityTestListener(String name) {
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(name);
+		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
+		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
+		
+		test.add(instruction);
+		test.add(monitoring);
+		
+		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
+		
+		this.testPlanManager.addNode(test, new TestPanel("Scalability test", name, "Scalability"));
+		this.testPlanManager.addNode(instruction, new InstructionPanel());
+		this.testPlanManager.addNode(monitoring, new JPanel());
+		
+		TreePath testPath = new TreePath(test.getPath());
+		this.expandPath(testPath);
+		this.setSelectionPath(testPath);
+	}
+
+	@Override
+	public void addWorkloadTestListener(String name) {
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(name);
+		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
+		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
+		
+		test.add(instruction);
+		test.add(monitoring);
+		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
+		
+		this.testPlanManager.addNode(test, new TestPanel("Workload test", name, "Workload"));
+		this.testPlanManager.addNode(instruction, new InstructionPanel());
+		this.testPlanManager.addNode(monitoring, new JPanel());
+		
+		TreePath testPath = new TreePath(test.getPath());
+		this.expandPath(testPath);
+		this.setSelectionPath(testPath);
 	}
 	
 }
