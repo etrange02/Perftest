@@ -3,12 +3,15 @@
  */
 package controls.cslavemanagement;
 
+import gui.interfaces.SlaveListener;
+
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
@@ -29,11 +32,13 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private List<TCPConnection> TCPConnection;
 	private List<DataBuffer> dataBuffer;
 	private ITestPlanManagement testPlanManagement;
+	private List<SlaveListener> slaveListeners;
 	
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
 		this.TCPConnection = new ArrayList<TCPConnection>();
 		this.dataBuffer = new ArrayList<DataBuffer>();
+		this.slaveListeners = new ArrayList<SlaveListener>();
 	}
 
 	/**
@@ -104,19 +109,22 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public void detectSlaves(String ipAddress) {
-		StringTokenizer tokens = new StringTokenizer(ipAddress);
-		String[] tab = new String[4];
-		int index = 0;
+		if (null == ipAddress || ipAddress.isEmpty())
+			return;
 		
-		tab[index++] = tokens.nextToken(".");
-		while (tokens.hasMoreTokens() && index < 4) {
-			tab[index++] = tokens.nextToken();
-		}
+		Pattern p = Pattern.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+		//((0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)\.){3}(0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)
+	    Matcher m = p.matcher(ipAddress);
 		
-		if (tokens.hasMoreTokens())
+		if (!m.find())
+			return;
+		
+		String[] tab = ipAddress.split("\\.");		
+		if (4 != tab.length)
 			return;
 		
 		int level = 3;
+		int index = 4;
 		while ("0".equals(tab[--index])) {
 			--level;
 		}
@@ -151,6 +159,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public boolean addSlave(String ipAddress) {
+		if (null == ipAddress || ipAddress.isEmpty())
+			return false;
 		Iterator<Slave> iter = this.slave.iterator();
 		while (iter.hasNext()) {
 			if (ipAddress.equals(iter.next().getName())) {
@@ -181,11 +191,15 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		synchronized (this.slave) {
 			this.slave.add(slave);			
 		}
+		
+		updateAllSlaveListeners();
+		
 		return true;
 	}
 
 	public boolean sendTest(AbstractTest test) {		
-		
+		if (null == test)
+			return false;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
 		while (iter.hasNext()) {
@@ -234,6 +248,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	 * @return true on success, false otherwise
 	 */
 	public boolean removeSlave(String name) {
+		if (null == name || name.isEmpty())
+			return false;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
 		
@@ -243,14 +259,33 @@ public class SlaveManagementFacade implements ISlaveManagement {
 				slave.getTCPClientSlave().close();
 				this.slave.remove(slave);
 				this.TCPConnection.remove(slave.getTCPClientSlave());
+				updateAllSlaveListeners();
 				return true;
 			}
 		}
+		updateAllSlaveListeners();
 		return false;
 	}
 
 	public boolean hasAnotherReadySlave() {
 		return false;
+	}
+
+	@Override
+	public void addSlaveListener(SlaveListener slaveListener) {
+		this.slaveListeners.add(slaveListener);
+	}
+
+	@Override
+	public void removeSlaveListener(SlaveListener slaveListener) {
+		this.slaveListeners.remove(slaveListener);
+	}
+	
+	private void updateAllSlaveListeners() {
+		Iterator<SlaveListener> iter = this.slaveListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updateData();
+		}
 	}
 	
 }

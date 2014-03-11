@@ -159,7 +159,7 @@ public class Frame extends JFrame {
 		container.add(this.testPlanTree, BorderLayout.CENTER);
 		this.add(container, BorderLayout.WEST);
 		
-		this.slavesPanel = new SlavesPanel();
+		this.slavesPanel = new SlavesPanel(this.testPlanManagement.getSlaveManagement());
 		
 		JPanel center = new JPanel();
 		center.setLayout(new BoxLayout(center, BoxLayout.X_AXIS));

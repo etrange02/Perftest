@@ -104,5 +104,9 @@ public class PerfTestTableModel extends AbstractTableModel {
 		}
 		return temp;
 	}
+	
+	public void clear() {
+		this.data = new Object[0][0];
+	}
 
 }

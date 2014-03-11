@@ -196,7 +196,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		String input = (String) JOptionPane.showInputDialog(null, "A new name", "Rename", JOptionPane.PLAIN_MESSAGE, null, null, this.getSelectionPath().getLastPathComponent().toString());
 		if (null == input || input.isEmpty())
 			return;
-		//this.testPlanManagement.renameTestPlan(input);
+		this.testPlanManagement.renameTest(this.getSelectionPath().getLastPathComponent().toString(), input, false);
 	}
 
 	@Override
@@ -208,6 +208,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 			AbstractTestPlanPanel testPlanPanel = this.testPlanManagement.getUsedProtocolParser().createNewTestPlanPanel();
 			this.testPlanManager.addNode(this.root, testPlanPanel);
 		}
+		this.updateUI();
 	}
 
 	@Override
@@ -228,6 +229,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		TreePath testPath = new TreePath(test.getPath());
 		this.expandPath(testPath);
 		this.setSelectionPath(testPath);
+		this.updateUI();
 	}
 
 	@Override
@@ -247,6 +249,14 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		TreePath testPath = new TreePath(test.getPath());
 		this.expandPath(testPath);
 		this.setSelectionPath(testPath);
+		this.updateUI();
+	}
+
+	@Override
+	public void renameTest(String oldName, String newName, boolean cascade) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.getLastSelectedPathComponent();
+		node.setUserObject(newName);
+		this.updateUI();
 	}
 	
 }

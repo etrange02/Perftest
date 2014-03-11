@@ -138,5 +138,11 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable 
 	 */
 	public ProtocolParser getUsedProtocolParser();
 	
+	/**
+	 * Modifies the name of the current test plan if it exists
+	 * @param name a new name
+	 */
 	public void renameTestPlan(String name);
+	
+	public void renameTest(String oldName, String newName, boolean cascade);
 }

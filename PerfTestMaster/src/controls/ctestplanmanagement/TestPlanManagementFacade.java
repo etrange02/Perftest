@@ -13,6 +13,7 @@ import java.util.List;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import shared.AbstractTest;
 import shared.IInstruction;
 import tools.Factory;
 
@@ -347,6 +348,31 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
 			iter.next().addWorkloadTestListener(name);
+		}
+	}
+
+	@Override
+	public void renameTest(String oldName, String newName, boolean cascade) {
+		if (null == oldName || null == newName || newName.isEmpty())
+			return;
+		AbstractMonitoredTest test = null, tmp = null;
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+		while (iter.hasNext()) {
+			tmp = iter.next();
+			if (newName.equals(tmp.getName()))
+				return;
+			else if (oldName.equals(tmp.getName()))
+				test = tmp;
+		}
+		
+		if (null == test)
+			return;
+		
+		test.setName(newName);
+		
+		Iterator<TestListener> iter2 = this.testListenerList.iterator();
+		while (iter2.hasNext()) {
+			iter2.next().renameTest(oldName, newName, cascade);
 		}
 	}
 }

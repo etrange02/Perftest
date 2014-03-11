@@ -3,9 +3,12 @@
  */
 package controls.cslavemanagement.interfaces;
 
+import gui.interfaces.SlaveListenable;
+
 import java.util.List;
 
 import controls.cslavemanagement.DataBuffer;
+import controls.cslavemanagement.Slave;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractTest;
 
@@ -15,7 +18,7 @@ import shared.AbstractTest;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ISlaveManagement {
+public interface ISlaveManagement extends SlaveListenable {
 
 	/**
 	 * Detects slaves applications on network defined by ipAddress
@@ -98,4 +101,10 @@ public interface ISlaveManagement {
 	 * @param testPlanManagement a TestPlanManagement
 	 */
 	public void setTestPlanManagement(ITestPlanManagement testPlanManagement);
+
+	/** 
+	 * @return slaves
+	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	 */
+	public List<Slave> getSlave();
 }
