@@ -45,4 +45,12 @@ public interface ITestPlan {
 	 * @return a list
 	 */
 	public List<String> getTargets();
+	
+	/**
+	 * Generic method to send particular data to specified test plan
+	 * @param key a key
+	 * @param value an object value
+	 */
+	public void set(String key, Object value);
+	
 }

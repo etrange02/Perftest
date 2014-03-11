@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,6 +42,12 @@ public class SlavesPanel extends JPanel implements SlaveListener {
 	private void initPanel() {
 		this.setLayout(new BorderLayout());
 		
+		JPanel titlePanel = new JPanel();
+		JLabel titleLabel = new JLabel("Slaves");
+		titlePanel.add(titleLabel);
+		titleLabel.setFont(titleLabel.getFont().deriveFont(GUIConstants.FRAME_TITLE_FONT_SIZE));
+		
+		JPanel slavesPanel = new JPanel(new BorderLayout());
 		JPanel northGrid = new JPanel(new GridLayout(1, 3));
 		
 		JButton addButton= new JButton(GUIConstants.SLAVES_ADD);
@@ -66,14 +73,15 @@ public class SlavesPanel extends JPanel implements SlaveListener {
 		northGrid.add(addButton);
 		northGrid.add(removeButton);
 		northGrid.add(autodetectButton);
-		this.add(northGrid, BorderLayout.NORTH);
 		
 		Object[][] data = {};
-				/*{"213.254.132.132", "389"},
-				{"123.123.123.123", "389"}
-		};*/
 		this.table = new JTable(new PerfTestTableModel(new String[]{GUIConstants.SLAVES_ID, GUIConstants.SLAVES_IP_ADDRESS, GUIConstants.SLAVES_PORT}, data));
-		this.add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		slavesPanel.add(northGrid, BorderLayout.NORTH);
+		slavesPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		this.add(titlePanel, BorderLayout.NORTH);
+		this.add(slavesPanel, BorderLayout.CENTER);
 	}
 
 	private void addAction(ActionEvent e) {

@@ -8,6 +8,7 @@ import gui.panels.AbstractTestPlanPanel;
 import java.io.IOException;
 import java.util.List;
 
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractInstruction;
 
 /**
@@ -93,5 +94,5 @@ public abstract class ProtocolParser {
 
 	public abstract int getDefaultProtocolPort();
 	
-	public abstract AbstractTestPlanPanel createNewTestPlanPanel();
+	public abstract AbstractTestPlanPanel createNewTestPlanPanel(ITestPlanManagement testPlanManagement);
 }

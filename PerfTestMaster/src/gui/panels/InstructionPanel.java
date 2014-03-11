@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -34,6 +35,12 @@ public class InstructionPanel extends JPanel {
 	private void initPanel() {
 		this.setLayout(new BorderLayout());
 		
+		JPanel titlePanel = new JPanel();
+		JLabel titleLabel = new JLabel("Instructions");
+		titlePanel.add(titleLabel);
+		titleLabel.setFont(titleLabel.getFont().deriveFont(GUIConstants.FRAME_TITLE_FONT_SIZE));
+		
+		JPanel instructionsPanel = new JPanel(new BorderLayout());
 		JPanel northGrid = new JPanel(new GridLayout(1, 3));
 		
 		JButton addButton= new JButton(GUIConstants.INSTRUCTION_ADD);
@@ -52,7 +59,7 @@ public class InstructionPanel extends JPanel {
 		
 		northGrid.add(addButton);
 		northGrid.add(removeButton);
-		this.add(northGrid, BorderLayout.NORTH);
+		instructionsPanel.add(northGrid, BorderLayout.NORTH);
 		
 		Object[][] data = {
 				{"Create", GUIConstants.INSTRUCTION_EDIT},
@@ -60,7 +67,10 @@ public class InstructionPanel extends JPanel {
 		};
 		this.table = new JTable(new PerfTestTableModel(new String[]{GUIConstants.INSTRUCTION_ID, GUIConstants.INSTRUCTION_TYPE, GUIConstants.INSTRUCTION_EDITION}, data));
 		this.table.getColumn(GUIConstants.INSTRUCTION_EDITION).setCellRenderer(new ButtonTableRenderer());
-		this.add(new JScrollPane(table), BorderLayout.CENTER);
+		instructionsPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		this.add(titlePanel, BorderLayout.NORTH);
+		this.add(instructionsPanel, BorderLayout.CENTER);
 	}
 
 	private void addAction(ActionEvent e) {

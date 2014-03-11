@@ -205,7 +205,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		
 		if (!this.isRootVisible()) {
 			this.setRootVisible(true);
-			AbstractTestPlanPanel testPlanPanel = this.testPlanManagement.getUsedProtocolParser().createNewTestPlanPanel();
+			AbstractTestPlanPanel testPlanPanel = this.testPlanManagement.getUsedProtocolParser().createNewTestPlanPanel(this.testPlanManagement);
 			this.testPlanManager.addNode(this.root, testPlanPanel);
 		}
 		this.updateUI();

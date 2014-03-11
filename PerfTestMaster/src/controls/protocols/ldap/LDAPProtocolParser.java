@@ -12,6 +12,7 @@ import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.TCPProxy;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
 /**
  * 
@@ -71,8 +72,8 @@ public class LDAPProtocolParser extends ProtocolParser {
 	}
 
 	@Override
-	public AbstractTestPlanPanel createNewTestPlanPanel() {
-		return new LDAPTestPlanPanel();
+	public AbstractTestPlanPanel createNewTestPlanPanel(ITestPlanManagement testPlanManagement) {
+		return new LDAPTestPlanPanel(testPlanManagement);
 	}
 
 }

@@ -3,6 +3,7 @@
  */
 package controls.ctestplanmanagement;
 
+import gui.interfaces.TestPlanPanelListenable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import controls.ctestplanmanagement.interfaces.ITestPlan;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public abstract class AbstractTestPlan implements ITestPlan {
+public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListenable {
 
 	private String name;
 	private List<AbstractMonitoredTest> tests;

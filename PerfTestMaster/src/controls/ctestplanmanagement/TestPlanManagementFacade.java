@@ -5,15 +5,17 @@ package controls.ctestplanmanagement;
 
 import gui.interfaces.TestListener;
 import gui.interfaces.TestPlanListener;
+import gui.interfaces.TestPlanPanelListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
-import shared.AbstractTest;
 import shared.IInstruction;
 import tools.Factory;
 
@@ -32,11 +34,13 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private ISlaveManagement slaveManagement;
 	private List<TestPlanListener> planTestListenerList;
 	private List<TestListener> testListenerList;
+	private List<TestPlanPanelListener> testPlanPanelListeners;
 	
 	public TestPlanManagementFacade() {
 		this.protocolParser = new ArrayList<ProtocolParser>();
 		this.planTestListenerList = new ArrayList<TestPlanListener>();
 		this.testListenerList = new ArrayList<TestListener>();
+		this.testPlanPanelListeners = new ArrayList<TestPlanPanelListener>();
 	}
 	
 	/**
@@ -208,8 +212,19 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public void addTarget(String target) {
 		if (null == this.testPlan)
 			return;
-		if (this.testPlan.getTargets().contains(target)) {
+		if (null == target || target.isEmpty())
+			return;
+		
+		Pattern p = Pattern.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
+		//((0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)\.){3}(0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)
+	    Matcher m = p.matcher(target);
+		
+		if (!m.find())
+			return;
+		
+		if (!this.testPlan.getTargets().contains(target)) {
 			this.testPlan.getTargets().add(target);
+			updatePlanTestTargets();
 		}
 	}
 
@@ -270,6 +285,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (null == this.testPlan)
 			return;
 		this.testPlan.getTargets().remove(target);
+		updatePlanTestTargets();
 	}
 	
 	public boolean removeTest(String testName) {
@@ -299,7 +315,13 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public void setPort(int port) {
-		this.testPlan.setPort(port);
+		if (port >= 0)
+			this.testPlan.setPort(port);
+		
+		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updatePort("" + this.testPlan.getPort());
+		}
 	}
 
 	@Override
@@ -374,5 +396,35 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		while (iter2.hasNext()) {
 			iter2.next().renameTest(oldName, newName, cascade);
 		}
+	}
+
+	@Override
+	public void addTestPlanPanelListener(
+			TestPlanPanelListener testPlanPanelListener) {
+		this.testPlanPanelListeners.add(testPlanPanelListener);
+		if (null != this.testPlan)
+			this.testPlan.addTestPlanPanelListener(testPlanPanelListener);
+	}
+
+	@Override
+	public void removeTestPlanPanelListener(
+			TestPlanPanelListener testPlanPanelListener) {
+		this.testPlanPanelListeners.remove(testPlanPanelListener);
+		if (null != this.testPlan)
+			this.testPlanPanelListeners.remove(testPlanPanelListener);
+	}
+	
+	private void updatePlanTestTargets() {
+		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updateNetworkInterfaces();
+		}
+	}
+
+	@Override
+	public void testPlanGenericSet(String key, Object value) {
+		if (null == key || key.isEmpty() || null == value)
+			return;
+		this.testPlan.set(key, value);
 	}
 }

@@ -5,10 +5,12 @@ package controls.ctestplanmanagement.interfaces;
 
 import gui.interfaces.TestListenable;
 import gui.interfaces.TestPlanListenable;
+import gui.interfaces.TestPlanPanelListenable;
 
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
+import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.ScalabilityTest;
 import controls.ctestplanmanagement.WorkloadTest;
@@ -20,7 +22,7 @@ import shared.IInstruction;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ITestPlanManagement extends TestPlanListenable, TestListenable {
+public interface ITestPlanManagement extends TestPlanListenable, TestListenable, TestPlanPanelListenable {
 	
 	/**
 	 * Creates and adds an instruction to the test named testName
@@ -78,6 +80,12 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable 
 	 * @return a list of names
 	 */
 	public List<String> getAvailableProtocols();
+
+	/**
+	 * Returns the associated test plan
+	 * @return a test plan or null
+	 */
+	public AbstractTestPlan getTestPlan();
 
 	/**
 	 * Opens a plan test saved in a file
@@ -145,4 +153,6 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable 
 	public void renameTestPlan(String name);
 	
 	public void renameTest(String oldName, String newName, boolean cascade);
+	
+	public void testPlanGenericSet(String key, Object value);
 }
