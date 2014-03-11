@@ -1,10 +1,14 @@
 package gui.panels.protocols.ldap;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import gui.interfaces.protocols.ldap.LDAPTestPlanPanelListener;
 import gui.panels.AbstractTestPlanPanel;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
 import constants.protocols.ldap.LDAPConstants;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
@@ -33,6 +37,37 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 		this.rootField = new JTextField();
 		this.loginField = new JTextField();
 		this.passwordField = new JTextField();
+		
+		this.rootField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+			}
+			public void keyReleased(KeyEvent e) {
+				JTextField field = (JTextField) e.getSource();
+				getTestPlanManagement().testPlanGenericSet("ROOT", field.getText());
+			}
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		this.loginField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+			}
+			public void keyReleased(KeyEvent e) {
+				JTextField field = (JTextField) e.getSource();
+				getTestPlanManagement().testPlanGenericSet("LOGIN", field.getText());
+			}
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		this.passwordField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
+			}
+			public void keyReleased(KeyEvent e) {
+				JTextField field = (JTextField) e.getSource();
+				getTestPlanManagement().testPlanGenericSet("PASSWORD", field.getText());
+			}
+			public void keyPressed(KeyEvent e) {
+			}
+		});
 
 		this.addPropertyLine(new JLabel("Root"), this.rootField);
 		this.addPropertyLine(new JLabel(LDAPConstants.LDAP_TESTPLAN_LOGIN), this.loginField);
@@ -49,5 +84,10 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 	@Override
 	public void updatePassword(String password) {
 		this.passwordField.setText(password);
+	}
+
+	@Override
+	public void updateRoot(String root) {
+		this.rootField.setText(root);
 	}
 }

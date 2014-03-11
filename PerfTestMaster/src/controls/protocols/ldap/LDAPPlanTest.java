@@ -4,6 +4,7 @@
 package controls.protocols.ldap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import gui.interfaces.TestPlanPanelListener;
@@ -47,8 +48,20 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 
 	@Override
 	public void set(String key, Object value) {
-		// TODO Auto-generated method stub
+		if (null == key || key.isEmpty() || null == value)
+			return;
 		
+		switch (key) {
+			case "ROOT":
+				this.setRoot(value.toString());
+				break;
+			case "LOGIN":
+				this.setLogin(value.toString());
+				break;
+			case "PASSWORD":
+				this.setPassword(value.toString());
+				break;
+		}
 	}
 
 	public String getRoot() {
@@ -56,7 +69,14 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 	}
 
 	public void setRoot(String root) {
+		if (null == root)
+			return;
 		this.root = root;
+		
+		Iterator<LDAPTestPlanPanelListener> iter = this.ldapTestPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updateRoot(root);
+		}
 	}
 
 	public String getLogin() {
@@ -64,7 +84,14 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 	}
 
 	public void setLogin(String login) {
+		if (null == login)
+			return;
 		this.login = login;
+		
+		Iterator<LDAPTestPlanPanelListener> iter = this.ldapTestPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updateLogin(login);
+		}
 	}
 
 	public String getPassword() {
@@ -72,7 +99,14 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 	}
 
 	public void setPassword(String password) {
+		if (null == password)
+			return;
 		this.password = password;
+		
+		Iterator<LDAPTestPlanPanelListener> iter = this.ldapTestPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updatePassword(password);
+		}
 	}
 
 }

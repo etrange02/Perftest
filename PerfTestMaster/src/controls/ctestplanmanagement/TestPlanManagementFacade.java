@@ -318,6 +318,8 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (port >= 0)
 			this.testPlan.setPort(port);
 		
+		System.out.println("Emitted " + this.testPlan.getPort());
+		
 		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
 		while (iter.hasNext()) {
 			iter.next().updatePort("" + this.testPlan.getPort());

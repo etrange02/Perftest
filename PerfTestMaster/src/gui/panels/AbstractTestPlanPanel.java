@@ -7,7 +7,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Iterator;
 
 import javax.swing.BoxLayout;
@@ -19,8 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
-
 import constants.protocols.ldap.LDAPConstants;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import tools.GUIConstants;
@@ -64,11 +63,34 @@ public abstract class AbstractTestPlanPanel extends JPanel implements TestPlanPa
 		
 		this.gridLayout = new GridLayout(1, 2);
 		this.grid = new JPanel(this.gridLayout);		
-		try {
-			this.portTextField = new JFormattedTextField(new MaskFormatter("###"));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+
+		this.portTextField = new JFormattedTextField();//new MaskFormatter("###"));
+		this.portTextField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("received");
+				int res = Integer.parseInt(e.getSource().toString());
+				testPlanManagement.setPort(res);
+			}
+		});
+		this.portTextField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {			
+			}
+			public void keyReleased(KeyEvent e) {
+				JTextField field = (JTextField) e.getSource();
+				System.out.println("received " + field.getText());
+				int res = 0;
+				try {
+					res = Integer.parseInt(field.getText());
+				} catch (NumberFormatException nfe) { res = 0; }
+				testPlanManagement.setPort(res);	
+			}
+			public void keyPressed(KeyEvent e) {
+			}
+		});
+		
 		this.grid.add(new JLabel(LDAPConstants.LDAP_TESTPLAN_PORT));
 		this.grid.add(this.portTextField);
 		
@@ -95,9 +117,6 @@ public abstract class AbstractTestPlanPanel extends JPanel implements TestPlanPa
 		interfacesPanel.add(northGrid, BorderLayout.NORTH);
 		
 		Object[][] data = {};
-				/*{"213.254.132.132"},
-				{"123.123.123.123"}
-		};*/
 		this.table = new JTable(new PerfTestTableModel(new String[]{GUIConstants.TEST_PLAN_ID, GUIConstants.TEST_PLAN_ADDRESS}, data));
 		interfacesPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 		

@@ -73,8 +73,7 @@ public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListen
 	 * @param port the port
 	 */
 	public void setPort(int port) {
-		if (port > 0)
-			this.port = port;
+		this.port = port;
 	}
 
 }
