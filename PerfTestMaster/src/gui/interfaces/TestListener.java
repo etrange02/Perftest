@@ -8,5 +8,5 @@ public interface TestListener {
 	
 	public void addWorkloadTestListener(AbstractMonitoredTest abstractMonitoredTest);
 	
-	public void renameTest(String oldName, String newName, boolean cascade);
+	public void renameTest(String newName);
 }

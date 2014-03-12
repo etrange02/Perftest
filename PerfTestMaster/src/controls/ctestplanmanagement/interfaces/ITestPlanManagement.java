@@ -178,7 +178,9 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 */
 	public void renameTestPlan(String name);
 	
-	public void renameTest(String oldName, String newName, boolean cascade);
+	public void renameTest(String oldName, String newName);
+	
+	public void renameTest(AbstractMonitoredTest test, String newName);
 	
 	public void testPlanGenericSet(String key, Object value);
 }

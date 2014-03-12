@@ -197,7 +197,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		String input = (String) JOptionPane.showInputDialog(null, "A new name", "Rename", JOptionPane.PLAIN_MESSAGE, null, null, this.getSelectionPath().getLastPathComponent().toString());
 		if (null == input || input.isEmpty())
 			return;
-		this.testPlanManagement.renameTest(this.getSelectionPath().getLastPathComponent().toString(), input, false);
+		this.testPlanManagement.renameTest(this.getSelectionPath().getLastPathComponent().toString(), input);
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Scalability test", abstractMonitoredTest.getName(), "Scalability"));
+		this.testPlanManager.addNode(test, new TestPanel("Scalability test", abstractMonitoredTest.getName(), "Scalability", this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
@@ -243,7 +243,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		test.add(monitoring);
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Workload test", abstractMonitoredTest.getName(), "Workload"));
+		this.testPlanManager.addNode(test, new TestPanel("Workload test", abstractMonitoredTest.getName(), "Workload", this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
@@ -254,7 +254,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 	}
 
 	@Override
-	public void renameTest(String oldName, String newName, boolean cascade) {
+	public void renameTest(String newName) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.getLastSelectedPathComponent();
 		node.setUserObject(newName);
 		this.updateUI();

@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import controls.cslavemanagement.interfaces.ISlaveManagement;
-import controls.ctestplanmanagement.interfaces.ITestPlan;
-import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import shared.AbstractInstruction;
 import shared.IInstruction;
 import tools.Factory;
+import controls.cslavemanagement.interfaces.ISlaveManagement;
+import controls.ctestplanmanagement.interfaces.ITestPlan;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
 /**
  * 
@@ -432,7 +432,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	@Override
-	public void renameTest(String oldName, String newName, boolean cascade) {
+	public void renameTest(String oldName, String newName) {
 		if (null == oldName || null == newName || newName.isEmpty())
 			return;
 		AbstractMonitoredTest test = null, tmp = null;
@@ -449,10 +449,34 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		
 		test.setName(newName);
+		test.updateTestListeners();
 		
 		Iterator<TestListener> iter2 = this.testListenerList.iterator();
 		while (iter2.hasNext()) {
-			iter2.next().renameTest(oldName, newName, cascade);
+			iter2.next().renameTest(test.getName());
+		}
+	}
+	
+	public void renameTest(AbstractMonitoredTest test, String newName) {
+		if (null == getTestPlan() || null == test || null == newName || newName.isEmpty())
+			return;
+		
+		if (!this.getTestPlan().getTests().contains(test))
+			return;
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+		boolean present = false;
+		while (iter.hasNext() && !present) {
+			if (iter.next().getName().equals(newName))
+				return;
+		}
+		
+		test.setName(newName);
+		
+		test.updateTestListeners();
+		
+		Iterator<TestListener> iter2 = this.testListenerList.iterator();
+		while (iter2.hasNext()) {
+			iter2.next().renameTest(test.getName());
 		}
 	}
 
