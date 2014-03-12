@@ -26,6 +26,7 @@ public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListen
 		this.tests = new ArrayList<>();
 		this.targets = new ArrayList<>();
 		this.port = 0;
+		this.name = "";
 	}
 
 	public String getName() {

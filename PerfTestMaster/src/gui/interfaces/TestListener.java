@@ -1,10 +1,12 @@
 package gui.interfaces;
 
+import controls.ctestplanmanagement.AbstractMonitoredTest;
+
 public interface TestListener {
 
-	public void addScalabilityTestListener(String name);
+	public void addScalabilityTestListener(AbstractMonitoredTest abstractMonitoredTest);
 	
-	public void addWorkloadTestListener(String name);
+	public void addWorkloadTestListener(AbstractMonitoredTest abstractMonitoredTest);
 	
 	public void renameTest(String oldName, String newName, boolean cascade);
 }

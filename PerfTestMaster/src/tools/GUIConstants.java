@@ -57,7 +57,7 @@ public class GUIConstants {
 	
 	//// Instruction panel
 	public static String INSTRUCTION_ID = "Id";
-	public static String INSTRUCTION_TYPE = "Type";
+	public static String INSTRUCTION_NAME = "Name";
 	public static String INSTRUCTION_EDITION = "Edition";
 	public static String INSTRUCTION_EDIT = "Edit";
 	public static String INSTRUCTION_ADD = "Add";

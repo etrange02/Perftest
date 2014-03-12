@@ -10,6 +10,7 @@ import gui.interfaces.TestPlanPanelListenable;
 import java.util.List;
 
 import controls.cslavemanagement.interfaces.ISlaveManagement;
+import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.ScalabilityTest;
@@ -23,7 +24,7 @@ import shared.IInstruction;
  * @version 1.0
  */
 public interface ITestPlanManagement extends TestPlanListenable, TestListenable, TestPlanPanelListenable {
-	
+
 	/**
 	 * Creates and adds an instruction to the test named testName
 	 * @param testName a test name
@@ -31,6 +32,14 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 * @return an instruction. null is returned if the test does not exist
 	 */
 	public IInstruction addNewInstruction(String testName,
+			String instructionName);
+	/**
+	 * Creates and adds an instruction to the test named testName
+	 * @param test an existing test
+	 * @param instructionName an instruction name
+	 * @return an instruction. null is returned if the test does not exist
+	 */
+	public IInstruction addNewInstruction(AbstractMonitoredTest test,
 			String instructionName);
 
 	/**
@@ -74,6 +83,15 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 * @return true on success, false otherwise
 	 */
 	public boolean deployTest(String name);
+	
+	/**
+	 * Edits an instruction stored in the given test
+	 * @param test a test stored
+	 * @param pos index of the modified instruction
+	 * @param name name of the modified instruction
+	 * @param request a modified request
+	 */
+	public void editInstruction(AbstractMonitoredTest test, int pos, String name, String request);
 
 	/**
 	 * Returns a list of implemented and recognised protocols
@@ -101,6 +119,14 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 * @return true on success, false otherwise
 	 */
 	public boolean removeInstruction(String testName, int instructionPosition);
+
+	/**
+	 * Removes the instructionPosition instruction from the testName
+	 * @param test an existing test managed by the instance
+	 * @param instructionName an instruction name
+	 * @return true on success, false otherwise
+	 */
+	public boolean removeInstruction(AbstractMonitoredTest test, int instructionPosition);
 
 	/**
 	 * Removes a specified server address from the target list

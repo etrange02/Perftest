@@ -20,6 +20,8 @@ public class Slave implements ISlave {
 	
 	public Slave() {
 		this.deployed = false;
+		this.name = "";
+		this.address = "";
 	}
 
 	public String getName() {

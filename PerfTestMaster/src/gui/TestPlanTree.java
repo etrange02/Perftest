@@ -25,6 +25,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import tools.GUIConstants;
 import tools.GUIFactory;
@@ -212,8 +213,8 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 	}
 
 	@Override
-	public void addScalabilityTestListener(String name) {
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode(name);
+	public void addScalabilityTestListener(AbstractMonitoredTest abstractMonitoredTest) {
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(abstractMonitoredTest.getName());
 		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
 		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
 		
@@ -222,8 +223,8 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Scalability test", name, "Scalability"));
-		this.testPlanManager.addNode(instruction, new InstructionPanel());
+		this.testPlanManager.addNode(test, new TestPanel("Scalability test", abstractMonitoredTest.getName(), "Scalability"));
+		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
 		TreePath testPath = new TreePath(test.getPath());
@@ -233,8 +234,8 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 	}
 
 	@Override
-	public void addWorkloadTestListener(String name) {
-		DefaultMutableTreeNode test = new DefaultMutableTreeNode(name);
+	public void addWorkloadTestListener(AbstractMonitoredTest abstractMonitoredTest) {
+		DefaultMutableTreeNode test = new DefaultMutableTreeNode(abstractMonitoredTest.getName());
 		DefaultMutableTreeNode instruction = new DefaultMutableTreeNode("Instructions");
 		DefaultMutableTreeNode monitoring = new DefaultMutableTreeNode("Monitoring");
 		
@@ -242,8 +243,8 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		test.add(monitoring);
 		((DefaultTreeModel) this.getModel()).insertNodeInto(test, root, root.getChildCount());
 		
-		this.testPlanManager.addNode(test, new TestPanel("Workload test", name, "Workload"));
-		this.testPlanManager.addNode(instruction, new InstructionPanel());
+		this.testPlanManager.addNode(test, new TestPanel("Workload test", abstractMonitoredTest.getName(), "Workload"));
+		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(monitoring, new JPanel());
 		
 		TreePath testPath = new TreePath(test.getPath());

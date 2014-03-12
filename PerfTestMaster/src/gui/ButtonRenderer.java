@@ -12,13 +12,15 @@ import javax.swing.table.TableCellRenderer;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class ButtonTableRenderer extends JButton implements TableCellRenderer {
+public class ButtonRenderer extends JButton implements TableCellRenderer {
 
 	private static final long serialVersionUID = 7480573914113345938L;
-
-	public ButtonTableRenderer() {
+	private String text;
+	
+	public ButtonRenderer(String text) {
 		super();
         //setOpaque(true);
+		this.text = text;
     }
 	
 	@Override
@@ -30,8 +32,8 @@ public class ButtonTableRenderer extends JButton implements TableCellRenderer {
         } else {
             setForeground(table.getForeground());
         }
-        setText((value == null) ? "" : value.toString());
+        this.setText(this.text);
+        //setText((value == null) ? "" : value.toString());
         return this;
     }
-
 }

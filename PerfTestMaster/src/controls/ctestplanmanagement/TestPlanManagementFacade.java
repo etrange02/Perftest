@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import shared.AbstractInstruction;
 import shared.IInstruction;
 import tools.Factory;
 
@@ -127,7 +128,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public IInstruction addNewInstruction(String testName, String instructionName) {
-		if (null == getTestPlan())
+		if (null == getTestPlan() || null == testName || null == instructionName || testName.isEmpty() || instructionName.isEmpty())
 			return null;
 		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
 		boolean continu = true;
@@ -139,8 +140,29 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			}
 		}
 		if (false == continu && null != this.usedProtocolParser) {
-			return this.usedProtocolParser.createNewInstruction();
+			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction();
+			instruction.setName(instructionName);
+			test.getInstructions().add(instruction);
+			test.updateListeners();
+			return instruction;
 		}
+		return null;
+	}
+
+	@Override
+	public IInstruction addNewInstruction(AbstractMonitoredTest test,
+			String instructionName) {
+		if (null == getTestPlan() || null == test || null == instructionName || instructionName.isEmpty())
+			return null;
+		
+		if (this.getTestPlan().getTests().contains(test)) {
+			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction();
+			instruction.setName(instructionName);
+			test.getInstructions().add(instruction);
+			test.updateListeners();
+			return instruction;
+		}
+		
 		return null;
 	}
 
@@ -169,7 +191,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (canAddNewMonitoredTest(testName)) {
 			test = Factory.createScalabilityTest(testName);
 			this.testPlan.getTests().add(test);
-			addScalabilityTestListenerList(testName);
+			addScalabilityTestListenerList(test);
 		}
 		return test;
 	}
@@ -179,7 +201,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (canAddNewMonitoredTest(testName)) {
 			test = Factory.createWorkloadTest(testName);
 			this.testPlan.getTests().add(test);
-			addWorkloadTestListener(testName);
+			addWorkloadTestListener(test);
 		}
 		return test;
 	}
@@ -245,6 +267,23 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		return false;
 	}
+	
+	public void editInstruction(AbstractMonitoredTest test, int pos,
+			String name, String request) {
+		if (null == getTestPlan() || null == test || null == name || name.isEmpty() || null == request || request.isEmpty())
+			return;
+		if (!this.getTestPlan().getTests().contains(test))
+			return;
+		if (pos >= test.getInstructions().size())
+			return;
+		
+		IInstruction instruction = test.getInstructions().get(pos);
+		if (null == instruction)
+			return;
+		instruction.setName(name);
+		instruction.setReadableRequest(request);
+		test.updateListeners();
+	}
 
 	public List<String> getAvailableProtocols() {
 		List<String> list = new ArrayList<String>();
@@ -274,8 +313,25 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 					return false;
 				} else {
 					test.getInstructions().remove(instructionPosition);
+					test.updateListeners();
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean removeInstruction(AbstractMonitoredTest test,
+			int instructionPosition) {
+		if (null == getTestPlan() || null == test || instructionPosition < 0)
+			return false;
+		
+		if (this.getTestPlan().getTests().contains(test)) {
+			if (test.getInstructions().size() > instructionPosition) {
+				test.getInstructions().remove(instructionPosition);
+				test.updateListeners();
+				return true;
 			}
 		}
 		return false;
@@ -361,17 +417,17 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		this.testListenerList.remove(testListener);
 	}
 	
-	private void addScalabilityTestListenerList(String name) {
+	private void addScalabilityTestListenerList(AbstractMonitoredTest abstractMonitoredTest) {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
-			iter.next().addScalabilityTestListener(name);
+			iter.next().addScalabilityTestListener(abstractMonitoredTest);
 		}
 	}
 	
-	private void addWorkloadTestListener(String name) {
+	private void addWorkloadTestListener(AbstractMonitoredTest abstractMonitoredTest) {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
-			iter.next().addWorkloadTestListener(name);
+			iter.next().addWorkloadTestListener(abstractMonitoredTest);
 		}
 	}
 
@@ -429,4 +485,6 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		this.testPlan.set(key, value);
 	}
+
+	
 }

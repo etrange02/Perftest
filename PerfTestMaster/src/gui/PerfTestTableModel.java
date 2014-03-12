@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.table.AbstractTableModel;
 
+import tools.GUIConstants;
+
 /**
  * 
  * @author David Lecoconnier david.lecoconnier@gmail.com
@@ -107,6 +109,11 @@ public class PerfTestTableModel extends AbstractTableModel {
 	
 	public void clear() {
 		this.data = new Object[0][0];
+	}
+	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+	    return this.getColumnName(columnIndex).equals(GUIConstants.INSTRUCTION_EDITION);
 	}
 
 }

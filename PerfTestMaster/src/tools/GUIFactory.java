@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import tools.widgets.InstructionCreator;
 import tools.widgets.TestCreator;
 import tools.widgets.TestPlanCreator;
 
@@ -15,5 +16,9 @@ public class GUIFactory {
 	
 	public static TestCreator testCreator(JFrame parent, String title, boolean modal) {
 		return new TestCreator(parent, title, modal);
+	}
+	
+	public static InstructionCreator instructionCreator(JFrame parent, String title, boolean modal) {
+		return new InstructionCreator(parent, title, modal);
 	}
 }

@@ -23,6 +23,8 @@ public abstract class AbstractInstruction implements IInstruction, Serializable 
 	public AbstractInstruction() {
 		this.binaryRequest = new byte[0];
 		this.binaryResponse = new byte[0];
+		this.readableRequest = "";
+		this.name = "";
 	}
 
 	public String getReadableRequest() {
