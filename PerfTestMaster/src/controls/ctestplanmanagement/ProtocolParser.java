@@ -61,7 +61,7 @@ public abstract class ProtocolParser {
 	 * @param hostname the hostname where find the tested server.
 	 * @param port the port to use to discuss with the tested server.
 	 * @param instructions the list of isntructions to complete.
-	 * @return
+	 * @return an adapted proxy
 	 */
 	public abstract TCPProxy createNewTCPProxy(
 			String hostname, int port,
@@ -92,7 +92,16 @@ public abstract class ProtocolParser {
 	 */
 	public abstract AbstractInstruction readJSONStringInstruction(Object values);
 
+	/**
+	 * Returns the default port associated to the implemented protocol
+	 * @return a port
+	 */
 	public abstract int getDefaultProtocolPort();
 	
+	/**
+	 * GUI - Returns a new panel which draw specific data of the test plan
+	 * @param testPlanManagement an ITestPlanManagement
+	 * @return a panel
+	 */
 	public abstract AbstractTestPlanPanel createNewTestPlanPanel(ITestPlanManagement testPlanManagement);
 }

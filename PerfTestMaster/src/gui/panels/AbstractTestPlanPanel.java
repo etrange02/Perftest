@@ -64,7 +64,7 @@ public abstract class AbstractTestPlanPanel extends JPanel implements TestPlanPa
 		this.gridLayout = new GridLayout(1, 2);
 		this.grid = new JPanel(this.gridLayout);		
 
-		this.portTextField = new JFormattedTextField("0");//new MaskFormatter("###"));
+		this.portTextField = new JFormattedTextField(this.testPlanManagement.getTestPlan().getPort());//new MaskFormatter("###"));
 		this.portTextField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {			
 			}

@@ -141,9 +141,11 @@ public class TCPConnection {
 	
 	/**
 	 * Sends a run command to start the test scenario
+	 * @param address the address of the tested server
+	 * @param port the port of the tested protocol
 	 * @return true on success, false otherwise
 	 */
-	public boolean run(String address) {
+	public boolean run(String address, int port) {
 		if (this.objectConnection.isClosed() || this.commandConnection.isClosed())
 			return false;
 

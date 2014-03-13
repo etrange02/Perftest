@@ -161,7 +161,7 @@ public abstract class TCPProxy implements Runnable {
 					datasSize);	
 		}
 		else if(datasSize != -1){ //-1 means EOF: end of connection
-			throw new Exception("Error while reading BER datas");
+			throw new Exception("Error while reading BER data");
 		}
 
 		return resizedArray;

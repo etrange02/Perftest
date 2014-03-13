@@ -173,6 +173,7 @@ public class Frame extends JFrame {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("stop the current running test");
+				testPlanManagement.getSlaveManagement().stop();
 			}
 		});
 		deployButton.addActionListener(new ActionListener() {
@@ -182,19 +183,24 @@ public class Frame extends JFrame {
 					return;
 				if (path.getPathCount() < 2)
 					return;
+				System.out.println(testPlanManagement.sendTest(path.getPath()[1].toString()));
 				System.out.println("Deploy the test '" + path.getPath()[1] + "'");
 			}
 		});
 		monitorButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				testPlanTree.selectNodeByName("test");
+				if (null == testPlanManagement.getSlaveManagement().getDeployedTestName())
+					return;
+				System.out.println(testPlanManagement.getSlaveManagement().getDeployedTestName());
+				testPlanTree.selectNodeByName(testPlanManagement.getSlaveManagement().getDeployedTestName());
 			}
 		});
-
-		//runButton.setEnabled(false);
-		//stopButton.setEnabled(false);
-		//deployButton.setEnabled(false);
-		//monitorButton.setEnabled(false);
+		createButton.setToolTipText("Open a dialog to create a test plan or a test");
+		runButton.setToolTipText("Scalability test : run some slaves");
+		addButton.setToolTipText("Workload test : run another slave");
+		stopButton.setToolTipText("Stop the running test on slaves");
+		deployButton.setToolTipText("Deploy on slave the test selected in the tree");
+		monitorButton.setToolTipText("Show the monitoring panel of the deployed test");
 
 		toolBar.add(createButton);
 		toolBar.add(runButton);

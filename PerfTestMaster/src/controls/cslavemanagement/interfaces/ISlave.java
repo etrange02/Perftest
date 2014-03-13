@@ -28,4 +28,10 @@ public interface ISlave {
 	 * @return true if deployed, false otherwise
 	 */
 	public boolean isDeployed();
+	
+	/**
+	 * Indicates if the selected test is running on this slave
+	 * @return true if running, false otherwise
+	 */
+	public boolean isRunning();
 }

@@ -16,10 +16,12 @@ public class Slave implements ISlave {
 	private String name;
 	private String address;
 	private boolean deployed;
+	private boolean running;
 	private TCPConnection TCPClientSlave;
 	
 	public Slave() {
 		this.deployed = false;
+		this.running = false;
 		this.name = "";
 		this.address = "";
 	}
@@ -58,6 +60,18 @@ public class Slave implements ISlave {
 	 */
 	public void setDeployed(boolean deployed) {
 		this.deployed = deployed;
+	}
+	
+	public boolean isRunning() {
+		return this.running;
+	}
+	
+	/**
+	 * Modifies the running state
+	 * @param running a running state
+	 */
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 	/**

@@ -181,6 +181,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		if (null != this.usedProtocolParser) {
 			setTestPlan(this.usedProtocolParser.createNewPlanTest());
+			getTestPlan().setPort(this.usedProtocolParser.getDefaultProtocolPort());
 			updatePlanTestNameList(this.usedProtocolParser.getProtocolName());
 		}
 		return getTestPlan();
@@ -508,6 +509,22 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (null == key || key.isEmpty() || null == value)
 			return;
 		this.testPlan.set(key, value);
+	}
+
+	@Override
+	public boolean sendTest(String testName) {
+		if (null == getTestPlan() || null == testName || testName.isEmpty())
+			return false;
+		
+		AbstractMonitoredTest test = null;
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+		while (iter.hasNext()) {
+			test = iter.next();
+			if (testName.equals(test.getName()))
+				break;
+		}
+		
+		return getSlaveManagement().sendTest(test);
 	}
 
 	

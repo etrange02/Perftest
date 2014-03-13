@@ -47,7 +47,7 @@ public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListen
 
 	/**
 	 * Modifies the list of created tests
-	 * @param test a list
+	 * @param tests a list
 	 */
 	public void setTests(List<AbstractMonitoredTest> tests) {
 		this.tests = tests;

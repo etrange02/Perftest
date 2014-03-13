@@ -9,13 +9,13 @@ import gui.interfaces.TestPlanPanelListenable;
 
 import java.util.List;
 
+import shared.IInstruction;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.ScalabilityTest;
 import controls.ctestplanmanagement.WorkloadTest;
-import shared.IInstruction;
 
 /**
  * 
@@ -115,7 +115,7 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	/**
 	 * Removes the instructionPosition instruction from the testName
 	 * @param testName a test name
-	 * @param instructionName an instruction name
+	 * @param instructionPosition an instruction position
 	 * @return true on success, false otherwise
 	 */
 	public boolean removeInstruction(String testName, int instructionPosition);
@@ -123,7 +123,7 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	/**
 	 * Removes the instructionPosition instruction from the testName
 	 * @param test an existing test managed by the instance
-	 * @param instructionName an instruction name
+	 * @param instructionPosition an instruction position
 	 * @return true on success, false otherwise
 	 */
 	public boolean removeInstruction(AbstractMonitoredTest test, int instructionPosition);
@@ -178,9 +178,33 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 */
 	public void renameTestPlan(String name);
 	
+	/**
+	 * Modifies the name of a test. Changes done only if the name is unique
+	 * @param oldName the old test name
+	 * @param newName a new name
+	 */
 	public void renameTest(String oldName, String newName);
 	
+	/**
+	 * Modifies the name of a test. Changes done only if the name is unique
+	 * @param test a test
+	 * @param newName a new name
+	 */
 	public void renameTest(AbstractMonitoredTest test, String newName);
 	
+	/**
+	 * Modifies the value associated to key in the test plan. Useful for non-unique
+	 * data
+	 * @param key an identifier
+	 * @param value a value
+	 */
 	public void testPlanGenericSet(String key, Object value);
+	
+	/**
+	 * Deploys a test on every slaves applications. It internally delegates the 
+	 * sending to ISlaveManagement
+	 * @param testName a name of a test to deploy
+	 * @return true on success, false otherwise
+	 */
+	public boolean sendTest(String testName);
 }

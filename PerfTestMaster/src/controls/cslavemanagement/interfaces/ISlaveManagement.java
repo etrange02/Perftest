@@ -9,8 +9,8 @@ import java.util.List;
 
 import controls.cslavemanagement.DataBuffer;
 import controls.cslavemanagement.Slave;
+import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
-import shared.AbstractTest;
 
 /**
  * 
@@ -23,14 +23,12 @@ public interface ISlaveManagement extends SlaveListenable {
 	/**
 	 * Detects slaves applications on network defined by ipAddress
 	 * @param ipAddress the network address
-	 * @param port the port where slaves are listening
 	 */
 	public void detectSlaves(String ipAddress);
 
 	/**
 	 * Adds a slave defined by ipAddress
 	 * @param ipAddress the ip address
-	 * @param port the listening port
 	 * @return true if slave found, false otherwise
 	 */
 	public boolean addSlave(String ipAddress);
@@ -40,7 +38,7 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * @param test a test to deploy
 	 * @return true on success, false otherwise
 	 */
-	public boolean sendTest(AbstractTest test);
+	public boolean sendTest(AbstractMonitoredTest test);
 
 	/**
 	 * Returns the number of slaves applications the master is dealing with
@@ -49,7 +47,7 @@ public interface ISlaveManagement extends SlaveListenable {
 	public int count();
 
 	/**
-	 * Runs another slave. Useful in Workload test
+	 * Runs another slave. Useful in deployed Workload test
 	 * @param address of the tested server
 	 * @param port of the tested server
 	 * @return true on success
@@ -57,9 +55,9 @@ public interface ISlaveManagement extends SlaveListenable {
 	public boolean runAnotherSlave(String address, int port);
 
 	/**
-	 * Runs count slaves. Useful in Scalability test
+	 * Runs count slaves. Useful in deployed Scalability test
 	 * @param count number of slaves that will run
-	 * @param address address of the tested server
+	 * @param addresses address of the tested server
 	 * @param port port of the tested server
 	 * @return true on success, false otherwise
 	 */
@@ -79,7 +77,7 @@ public interface ISlaveManagement extends SlaveListenable {
 	public boolean removeSlave(String name);
 
 	/**
-	 * Indicates whether a slave is ready to run the deployed test
+	 * Indicates whether a slave is ready to run the deployed test. Used with workload tests
 	 * @return true if one slave is ready, false otherwise
 	 */
 	public boolean hasAnotherReadySlave();
@@ -102,9 +100,15 @@ public interface ISlaveManagement extends SlaveListenable {
 	 */
 	public void setTestPlanManagement(ITestPlanManagement testPlanManagement);
 
-	/** 
-	 * @return slaves
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of slaves
+	 * @return a list
 	 */
 	public List<Slave> getSlave();
+	
+	/**
+	 * Returns the name of the deployed test
+	 * @return a name or an empty string if no test has been deployed
+	 */
+	public String getDeployedTestName();
 }

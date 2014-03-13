@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import controls.cslavemanagement.interfaces.ISlaveManagement;
-import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
-import shared.AbstractTest;
 import shared.Constants;
+import shared.Status;
 import tools.Factory;
+import controls.cslavemanagement.interfaces.ISlaveManagement;
+import controls.ctestplanmanagement.AbstractMonitoredTest;
+import controls.ctestplanmanagement.ScalabilityTest;
+import controls.ctestplanmanagement.WorkloadTest;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
 
 /**
@@ -33,6 +36,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private List<DataBuffer> dataBuffer;
 	private ITestPlanManagement testPlanManagement;
 	private List<SlaveListener> slaveListeners;
+	private AbstractMonitoredTest monitoredTest;
 	
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
@@ -60,49 +64,49 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		}
 	}
 
-	/** 
-	 * @return slave
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of slaves
+	 * @return a list
 	 */
 	public List<Slave> getSlave() {
 		return this.slave;
 	}
 
-	/** 
-	 * @param slave slave � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of slaves
+	 * @param slave a list
 	 */
 	public void setSlave(List<Slave> slave) {
 		this.slave = slave;
 	}
 
-	/** 
-	 * @return TCPConnection
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of TCP connections to slaves
+	 * @return a list of TCP connections
 	 */
 	public List<TCPConnection> getTCPConnection() {
 		return TCPConnection;
 	}
 
-	/** 
-	 * @param TCPConnection TCPConnection � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of TCP connections
+	 * @param TCPConnection a list
 	 */
 	public void setTCPConnection(List<TCPConnection> TCPConnection) {
 		this.TCPConnection = TCPConnection;
 	}
 
-	/** 
-	 * @return dataBuffer
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Returns the list of buffered data
+	 * @return a list
 	 */
 	public List<DataBuffer> getDataBuffer() {
 		return dataBuffer;
 	}
 
-	/** 
-	 * @param dataBuffer dataBuffer � d�finir
-	 * @generated "UML vers Java (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
+	/**
+	 * Modifies the list of DataBuffer
+	 * @param dataBuffer a list
 	 */
 	public void setDataBuffer(List<DataBuffer> dataBuffer) {
 		this.dataBuffer = dataBuffer;
@@ -197,17 +201,32 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		return true;
 	}
 
-	public boolean sendTest(AbstractTest test) {		
+	@Override
+	public boolean sendTest(AbstractMonitoredTest test) {
 		if (null == test)
 			return false;
+		
+		if (null != this.monitoredTest) {
+			this.stop();
+			this.monitoredTest.setStatus(Status.WAITING);
+		}
+		
+		this.monitoredTest = test;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
 		while (iter.hasNext()) {
 			slave = iter.next();
 			slave.getTCPClientSlave().send(test);
 		}
-		
+		this.monitoredTest.setStatus(Status.DEPLOYED);		
 		return true;
+	}
+
+	@Override
+	public String getDeployedTestName() {
+		if (null == this.monitoredTest)
+			return "";
+		return this.monitoredTest.getName();
 	}
 
 	public int count() {
@@ -215,31 +234,52 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public boolean runAnotherSlave(String address, int port) {
+		if (null == this.monitoredTest || this.monitoredTest.getStatus() == Status.WAITING)
+			return false;
+		
+		if (this.monitoredTest instanceof WorkloadTest) {
+			Iterator<Slave> iter = this.slave.iterator();
+			Slave slave = null;
+			while (iter.hasNext()) {
+				slave = iter.next();
+				if (!slave.isRunning() && slave.isDeployed()) {
+					slave.getTCPClientSlave().run(address, port);
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
 	public boolean runSlaves(int count, List<String> addresses, int port) {
+		if (null == this.monitoredTest || this.monitoredTest.getStatus() != Status.DEPLOYED)
+			return false;
+		
 		if (count > this.slave.size())
 			return false;
 		
-		String[] addressArray = addresses.toArray(new String[0]);
-		int index = 0;
-		
-		Iterator<Slave> iter = this.slave.iterator();
-		for (int i = 0; i < count; ++i) {
-			iter.next().getTCPClientSlave().run(addressArray[index]);
-			index = (index+1) % addressArray.length;
-		}
-		
+		if (this.monitoredTest instanceof ScalabilityTest) {
+			String[] addressArray = addresses.toArray(new String[0]);
+			int index = 0;
+			
+			Iterator<Slave> iter = this.slave.iterator();
+			for (int i = 0; i < count && iter.hasNext(); ++i) {
+				iter.next().getTCPClientSlave().run(addressArray[index], port);
+				index = (index+1) % addressArray.length;
+			}
+		}		
 		return true;
 	}
 
 	public boolean stop() {
+		if (null == this.monitoredTest && this.monitoredTest.getStatus() == Status.RUNNING)
+			return false;
 		Iterator<Slave> iter = this.slave.iterator();
 		while (iter.hasNext()) {
 			iter.next().getTCPClientSlave().stop();
 		}
-		return false;
+		this.monitoredTest.setStatus(Status.WAITING);
+		return true;
 	}
 
 	/**
@@ -268,6 +308,11 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public boolean hasAnotherReadySlave() {
+		Iterator<Slave> iter = this.slave.iterator();
+		while (iter.hasNext()) {
+			if (!iter.next().isRunning())
+				return true;
+		}
 		return false;
 	}
 
