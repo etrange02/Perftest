@@ -14,13 +14,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
+import javax.swing.tree.TreePath;
 
-import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import tools.GUIConstants;
 import tools.GUIFactory;
 import tools.widgets.TestCreator;
 import tools.widgets.TestPlanCreator;
+import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
 /**
  * 
@@ -131,7 +134,75 @@ public class Frame extends JFrame {
 	}
 	
 	private void initToolsBar() {
-		
+		JToolBar toolBar = new JToolBar();
+		this.add(toolBar, BorderLayout.PAGE_START);
+
+		JButton createButton = new JButton("Create");
+		JButton runButton = new JButton("Run");
+		JButton addButton = new JButton("Add");
+		JButton stopButton = new JButton("Stop");
+		JButton deployButton = new JButton("Deploy");
+		JButton monitorButton = new JButton("Monitor");
+
+
+		createButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (null == testPlanManagement.getTestPlan()) {
+					newTestPlanMenuItemAction(e);
+				} else {
+					newTestMenuItemAction(e);
+				}
+			}
+		});
+		runButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TreePath[] paths = testPlanTree.getSelectionPaths();
+				if (null == paths)// || paths.length <= 1)
+					return;
+				if (paths[0].getPathCount() < 2)
+					return;
+				System.out.println("Run the test '" + paths[0].getPath()[1] + "'");
+				System.out.println("Pust all selected slaves in running mode");
+			}
+		});
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Puts a slave in running mode");
+			}
+		});
+		stopButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("stop the current running test");
+			}
+		});
+		deployButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				TreePath path = testPlanTree.getSelectionPath();
+				if (null == path)// || paths.length <= 1)
+					return;
+				if (path.getPathCount() < 2)
+					return;
+				System.out.println("Deploy the test '" + path.getPath()[1] + "'");
+			}
+		});
+		monitorButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				testPlanTree.selectNodeByName("test");
+			}
+		});
+
+		//runButton.setEnabled(false);
+		//stopButton.setEnabled(false);
+		//deployButton.setEnabled(false);
+		//monitorButton.setEnabled(false);
+
+		toolBar.add(createButton);
+		toolBar.add(runButton);
+		toolBar.add(addButton);
+		toolBar.add(stopButton);
+		toolBar.add(deployButton);
+		toolBar.add(monitorButton);
+		toolBar.setVisible(true);
 	}
 	
 	private void initPanels() {
@@ -222,5 +293,6 @@ public class Frame extends JFrame {
 	
 	private void aboutMenuItemAction(ActionEvent e) {
 		System.out.println("aboutMenuItemAction");
+		JOptionPane.showMessageDialog(null, "David & Jean-Luc", "About PerfTest", JOptionPane.PLAIN_MESSAGE);
 	}
 }
