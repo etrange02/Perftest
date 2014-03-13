@@ -67,6 +67,7 @@ public class TestParameter extends Thread {
 
 
 
+    
     /* *********************************************************************
      * GETTER/SETTER METHODS ***********************************************
      * *********************************************************************/
@@ -129,7 +130,7 @@ public class TestParameter extends Thread {
 			    connection.getITCPConnectionToTestedServer();
 
 		    if(tcpCTTS.isRunning() == false) {
-			tcpCTTS.execOneInst();
+			tcpCTTS.notify();
 			scheduled = true;
 		    }
 		}
@@ -146,7 +147,7 @@ public class TestParameter extends Thread {
 
 			pool.add(new TCPConnectionThread(tcpCTTS));
 			pool.get(pool.size()-1).start();
-			tcpCTTS.execOneInst();
+			tcpCTTS.notify();
 
 			scheduled = true;
 

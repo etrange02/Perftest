@@ -7,9 +7,8 @@ import cslave.Comparator;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 2.0
  */
 public interface ITestManager {
 

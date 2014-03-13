@@ -4,22 +4,26 @@ import shared.Constants;
 import cslave.Comparator;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
+
+/**
+ * 
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 2.0
+ */
 public class LDAPComparator extends Comparator {
 
-	@Override
-	protected void processCompare(byte[] binaryResponse, byte[] serverBinaryResponse) {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
+	return LDAPTCPConnectionToServer.class;
+    }
 
-	@Override
-	public String getProtocolName() {
-		return Constants.LDAP;
-	}
-
-	@Override
-	public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
-
+    @Override
+    public String getProtocolName() {
+	return Constants.LDAP;
+    }
+    
+    @Override
+    public boolean isConcernedComparator(String protocolName) {
+	return Constants.LDAP.compareTo(protocolName)==0;
+    }
 }

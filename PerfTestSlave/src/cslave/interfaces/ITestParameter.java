@@ -5,12 +5,9 @@ package cslave.interfaces;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
- * @version 1.0 
- * 
  * @author Jean-Luc Amitousa Mankoy jean-luc.amitousa-mankoy@hotmail.fr
  * @version 1.1
- * Add delay
+ * 
  */
 public interface ITestParameter {
 

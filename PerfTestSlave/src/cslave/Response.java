@@ -13,37 +13,80 @@ import cslave.interfaces.IResponse;
  */
 public class Response implements IResponse {
 
-	private int delay;
-	private byte[] serverBinaryResponse;
-	
-	public Response() {
-		this.delay = 0;
-		this.serverBinaryResponse = new byte[0];
-	}
+    private int delay;
+    private byte[] binaryRequest;
+    private byte[] expectedBinaryResponse;
+    private byte[] serverBinaryResponse;
 
-	public int getDelay() {
-		return delay;
-	}
+    
+    
+    
+    
+    
+    /* *********************************************************************
+     * CONSTRUCTORS ********************************************************
+     * *********************************************************************/
+    
+    public Response() {
+	this.delay = 0;
+	this.serverBinaryResponse = new byte[0];
+    }
 
-	/**
-	 * Modifies the time of response received. Should be positive.
-	 * If negative, we consider that the wanted delay is 0.
-	 * @param delay the delay
-	 */
-	public void setDelay(int delay) {
-		
-		this.delay = delay < 0 ? 0 : delay;
-	}
+    
+    
+    
+    
+    
+    /* *********************************************************************
+     * GETTERS/SETTERS *****************************************************
+     * *********************************************************************/
+    
+    public int getDelay() {
+	return delay;
+    }
 
-	public byte[] getServerBinaryResponse() {
-		return serverBinaryResponse;
-	}
+    /**
+     * Modifies the time of response received. Should be positive.
+     * If negative, we consider that the wanted delay is 0.
+     * @param delay the delay
+     */
+    public void setDelay(int delay) {
 
-	/**
-	 * Modifies the response given by the server
-	 * @param serverBinaryResponse the response
-	 */
-	public void setServerBinaryResponse(byte[] serverBinaryResponse) {
-		this.serverBinaryResponse = serverBinaryResponse;
-	}
+	this.delay = delay < 0 ? 0 : delay;
+    }
+
+    public byte[] getServerBinaryResponse() {
+	return serverBinaryResponse;
+    }
+
+    /**
+     * Modifies the response given by the server
+     * @param serverBinaryResponse the response
+     */
+    public void setServerBinaryResponse(byte[] serverBinaryResponse) {
+	this.serverBinaryResponse = serverBinaryResponse;
+    }
+
+    public byte[] getBinaryRequest() {
+	return binaryRequest;
+    }
+
+    /**
+     * @param binaryRequest the request that was given to the server
+     */
+    public void setBinaryRequest(byte[] binaryRequest) {
+	this.binaryRequest = binaryRequest;
+    }
+
+    public byte[] getExpectedBinaryResponse() {
+	return expectedBinaryResponse;
+    }
+
+    /**
+     * 
+     * @param expectedBinaryResponse
+     */
+    public void setExpectedBinaryResponse(byte[] expectedBinaryResponse) {
+	this.expectedBinaryResponse = expectedBinaryResponse;
+    }
 }

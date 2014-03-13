@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import shared.Constants;
+import shared.SendableResponsePack;
+import cslave.interfaces.IResponse;
 import cslave.interfaces.ITestManager;
 
 /**
@@ -22,13 +24,14 @@ public class TestManager extends Thread implements ITestManager {
     private CommandTCPConnectionToMaster commandTCPConnectionToMaster;
     private ObjectTCPConnectionToMaster  objectTCPConnectionToMaster;
     private TestParameter testParameter;
+    private Comparator testComparator;
     private Thread testRunner;
 
 
 
 
 
-    
+
     /* *********************************************************************
      * CONSTRUCTORS/CLEANER ************************************************
      * *********************************************************************/
@@ -166,7 +169,7 @@ public class TestManager extends Thread implements ITestManager {
     /* *********************************************************************
      * IMPORTANT METHODS ***************************************************
      * *********************************************************************/
-    
+
     @Override
     public void start() {
 
@@ -249,13 +252,14 @@ public class TestManager extends Thread implements ITestManager {
 	if(splittedCmd.length == 2) {
 
 	    String protocolName = splittedCmd[1];
-	    Comparator comparator = getComparator(protocolName);
 
-	    if(comparator != null) {
+	    setTestComparator(protocolName);
+
+	    if(testComparator != null) {
 		testParameter.setAbstractTest(objectTCPConnectionToMaster.read());
 		testParameter.setProtocolName(protocolName);
 		testParameter.setTcpConnectionClazz(
-			comparator.getTcpConnectionClazz());
+			testComparator.getTcpConnectionClazz());
 
 		commandTCPConnectionToMaster.write(
 			Constants.OK_RESP+"/\n"); 
@@ -274,10 +278,8 @@ public class TestManager extends Thread implements ITestManager {
     private void runTest(String cmd) throws IOException {
 
 	String[] splittedCMD = cmd.split("/");
-	Comparator matchingComparator = 
-		getComparator(testParameter.getProtocolName());
 
-	if(matchingComparator != null && splittedCMD.length == 4) {
+	if(testComparator != null && splittedCMD.length == 4) {
 
 	    try {
 
@@ -298,7 +300,6 @@ public class TestManager extends Thread implements ITestManager {
 		commandTCPConnectionToMaster.write(
 			Constants.KO_RESP+"/\n"); 
 	    }
-
 	}
 	else {
 	    commandTCPConnectionToMaster.write(
@@ -307,23 +308,46 @@ public class TestManager extends Thread implements ITestManager {
     }
 
     private void sendResponses() throws IOException {
-	objectTCPConnectionToMaster.write(testParameter.getResponsePack());
+
+	List<IResponse> responsePack = testParameter.getResponsePack();
+	int responsePackSize = responsePack.size();
+	int[] delays = new int [responsePackSize];
+	int nbMiss = 0;
+	int nbSuccess = 0;
+
+	for(int i = 0; i < responsePackSize; i++) {
+	    IResponse response = responsePack.get(i);
+
+	    delays[i] = response.getDelay();
+
+	    if(testComparator.isExpectedResponse(response) == true) {
+		nbSuccess++;
+	    }
+	    else {
+		nbMiss++;
+	    }
+	}
+
+	objectTCPConnectionToMaster.write(
+		new SendableResponsePack(delays, nbMiss, nbSuccess));
     }
-    
-    private Comparator getComparator(String protocolName) {
+
+    private void setTestComparator(String protocolName) {
+	
 	Iterator<Comparator> iter = this.comparator.iterator();
+	
 	while (iter.hasNext()) {
 
 	    Comparator comparatorTmp = iter.next();
 
 	    if (comparatorTmp.isConcernedComparator(protocolName)) {
-		return comparatorTmp;
+		testComparator =  comparatorTmp;
 	    }
 	}
 
-	return null;
+	testComparator = null;
     }
-    
+
     public void addComparator(Comparator comparator) {
 	Iterator<Comparator> iter = this.comparator.iterator();
 	while (iter.hasNext()) {

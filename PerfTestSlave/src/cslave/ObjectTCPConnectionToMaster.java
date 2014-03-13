@@ -3,14 +3,11 @@ package cslave;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 import shared.AbstractTest;
 import shared.Constants;
 
 import com.sun.xml.internal.ws.Closeable;
-
-import cslave.interfaces.IResponse;
 
 /**
  * 
@@ -78,7 +75,7 @@ implements Closeable {
 	return (AbstractTest)objectInputStream.readObject();
     }
 
-    public void write(List<IResponse> responses) throws IOException {
-	objectOutputStream.writeObject(responses);
+    public void write(Object object) throws IOException {
+	objectOutputStream.writeObject(object);
     }
 }

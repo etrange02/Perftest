@@ -2,9 +2,8 @@ package cslave.interfaces;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 2.0
  */
 public interface IResponse {
 
@@ -13,7 +12,13 @@ public interface IResponse {
 	 * @return the time
 	 */
 	public int getDelay();
-
+	
+	/**
+	 * Returns the response expected by the server
+	 * @return the expected binary response
+	 */
+	public byte[] getExpectedBinaryResponse();
+	
 	/**
 	 * Returns the response given by the server
 	 * @return the binary response

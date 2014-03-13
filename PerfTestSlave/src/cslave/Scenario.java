@@ -11,30 +11,48 @@ import cslave.interfaces.IScenario;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 2.0
  */
 public class Scenario implements IScenario {
 
-	private List<IResponse> responses;
-	
-	public Scenario() {
-		this.responses = new ArrayList<>();
-	}
+    private List<IResponse> responses;
 
-	/**
-	 * Modifies the list of responses
-	 * @param response a list of responses
-	 */
-	public void setResponse(List<IResponse> responses) {
-		this.responses = responses;
-	}
+    
+    
+    
+    
 
-	public void addResponse(byte[] binaryResponse, Integer delay) {
-	}
+    /* *********************************************************************
+     * CONSTRUCTORS ********************************************************
+     * *********************************************************************/
+    
+    public Scenario() {
+	this.responses = new ArrayList<>();
+    }
 
-	public List<IResponse> getResponses() {
-		return this.responses;
-	}
+    
+    
+    
+    
+    
+    /* *********************************************************************
+     * GETTER/SETTER *******************************************************
+     * *********************************************************************/
+    
+    /**
+     * Modifies the list of responses
+     * @param response a list of responses
+     */
+    public void setResponse(List<IResponse> responses) {
+	this.responses = responses;
+    }
+
+    public void addResponse(IResponse response) {
+	this.responses.add(response);
+    }
+
+    public List<IResponse> getResponses() {
+	return this.responses;
+    }
 }

@@ -13,20 +13,20 @@ import cslave.interfaces.ITCPConnectionToTestedServer;
  */
 public class DefaultComparator extends Comparator {
 
-	protected void processCompare(
-			byte[] binaryResponse, byte[] serverBinaryResponse) {
-	}
-
-	public TCPConnectionToTestedServer createNewTCPConnectionToTestedServer() {
-		return null;
-	}
-
-	public String getProtocolName() {
-		return "";
+	@Override
+	public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 
 	@Override
-	public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
+	public boolean isConcernedComparator(String protocolName) {
+	    // TODO Auto-generated method stub
+	    return false;
+	}
+
+	@Override
+	public String getProtocolName() {
 	    // TODO Auto-generated method stub
 	    return null;
 	}

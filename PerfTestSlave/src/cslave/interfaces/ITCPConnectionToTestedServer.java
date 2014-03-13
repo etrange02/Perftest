@@ -3,6 +3,8 @@
  */
 package cslave.interfaces;
 
+import java.io.IOException;
+
 import shared.ITest;
 
 /**
@@ -12,9 +14,8 @@ import shared.ITest;
  */
 public interface ITCPConnectionToTestedServer extends Runnable {
 
-    public void init(String hostname, int port, ITest test, IScenario scenario);
+    public void init(String hostname, int port, ITest test, IScenario scenario)
+	    throws IOException;
 
     public boolean isRunning();
-
-    public void execOneInst();
 }

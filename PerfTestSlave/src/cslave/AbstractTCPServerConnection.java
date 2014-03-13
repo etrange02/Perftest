@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * 
+ * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
+ * @version 1.0
+ */
 public abstract class AbstractTCPServerConnection implements Closeable {
 
     private ServerSocket serverSocket; 

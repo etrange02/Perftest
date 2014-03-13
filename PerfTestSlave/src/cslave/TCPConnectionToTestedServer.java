@@ -6,8 +6,6 @@ package cslave;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import shared.ITest;
-import cslave.interfaces.IScenario;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
 /**
@@ -18,10 +16,8 @@ import cslave.interfaces.ITCPConnectionToTestedServer;
 public abstract class TCPConnectionToTestedServer 
 implements ITCPConnectionToTestedServer {
 
-    private ITest test;
-    private IScenario scenario;
     private Socket clientSocket;
-
+    
 
 
 
@@ -34,12 +30,11 @@ implements ITCPConnectionToTestedServer {
     public 
     TCPConnectionToTestedServer() {
 
-	test = null;
-	scenario = null;
+	clientSocket = null;
     }
 
     public 
-    void init(String hostname, int port, ITest test, IScenario scenario) {
+    void init(String hostname, int port) {
 
 	try {
 
@@ -47,9 +42,6 @@ implements ITCPConnectionToTestedServer {
 		    new Socket(
 			    InetAddress.getByName(hostname),
 			    port);
-	    
-	    this.test = test;
-	    this.scenario = scenario;
 	}
 	catch(Exception e) {
 	    e.printStackTrace();
@@ -67,13 +59,5 @@ implements ITCPConnectionToTestedServer {
 
     protected Socket getClientSocket() {
 	return clientSocket;
-    }
-    
-    protected ITest getTest() {
-	return test;
-    }
-    
-    protected IScenario getScenario() {
-	return scenario;
     }
 }
