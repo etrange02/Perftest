@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.Socket;
+
+import shared.Constants;
+
+import com.sun.xml.internal.ws.Closeable;
 
 
 /**
@@ -12,55 +15,69 @@ import java.net.Socket;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class CommandTCPConnectionToMaster extends TCPConnectionToMaster {
+public class CommandTCPConnectionToMaster 
+extends AbstractTCPServerConnection
+implements Closeable {
+    
+    private BufferedReader bufferedReader;
+    private OutputStream outputStream;
+    
+    
+    
+    
+    
+    
+    /* *********************************************************************
+     * CONSTRUCTORS/CLEANS METHODS *****************************************
+     * *********************************************************************/
 
-	/* *********************************************************************
-	 * CONSTRUCTORS ********************************************************
-	 * *********************************************************************/
+    public CommandTCPConnectionToMaster() throws IOException {
+	
+	bufferedReader = null;
+	outputStream = null;
+	
+    }
 
-	public CommandTCPConnectionToMaster(int port) throws IOException {
-		super(port);
+    public void startConnectionToMaster() throws IOException {
+
+	super.acceptConnection(Constants.SOCKET_COMMAND_PORT);
+	
+	bufferedReader = 
+		new BufferedReader(
+			new InputStreamReader(
+				getClientSocket().getInputStream()));
+	outputStream = getClientSocket().getOutputStream();
+    }
+
+  
+  
+    
+    
+    
+    /* *********************************************************************
+     * IMPORTANTS METHODS **************************************************
+     * *********************************************************************/
+
+    public String read() throws IOException {
+	return bufferedReader.readLine();
+    }
+    
+    public void write(String cmd) throws IOException {
+	outputStream.write(cmd.getBytes());
+    }
+    
+    public void close() {
+	
+	try {
+	   
+	    
+	    bufferedReader.close();
+	    outputStream.close();
+	    
+	    super.close();
+	    
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
-
-	
-	
-	
-	
-	
-	/* *********************************************************************
-	 * IMPORTANTS METHODS **************************************************
-	 * *********************************************************************/
-
-	@Override
-	public void run() {
-		
-		Socket socket = null;
-		BufferedReader bufferedReader = null;
-		OutputStream outputStream = null;
-		TestManager testManager = getTestManager();
-
-		try {
-			socket = getServerSocket().accept();
-			bufferedReader = 
-					new BufferedReader(
-							new InputStreamReader(socket.getInputStream()));
-			outputStream = socket.getOutputStream();
-			
-			
-			do {
-				
-				wait(); //Wait testManager to ask for the next command
-				testManager.setLastReceivedCommand(bufferedReader.readLine());
-				testManager.notify();
-				
-				wait(); //Wait testManager to give the next answer
-				outputStream.write(
-						testManager.getNextCommandToSend().getBytes());
-			}
-			while(true);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    }
 }

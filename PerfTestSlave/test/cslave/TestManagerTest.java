@@ -52,9 +52,13 @@ public class TestManagerTest {
     
     
     
-
+    
+    /* *********************************************************************
+     * master/slave protocol tests  ****************************************
+     * *********************************************************************/
+    
     @Test
-    public void test() {
+    public void protocolCommand() {
 	fail("Not yet implemented");
     }
 }

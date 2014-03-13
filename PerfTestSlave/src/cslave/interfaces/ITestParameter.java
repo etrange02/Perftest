@@ -6,8 +6,11 @@ package cslave.interfaces;
 /**
  * 
  * @author David Lecoconnier david.lecoconnier@gmail.com
- * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 1.0 
+ * 
+ * @author Jean-Luc Amitousa Mankoy jean-luc.amitousa-mankoy@hotmail.fr
+ * @version 1.1
+ * Add delay
  */
 public interface ITestParameter {
 
@@ -46,4 +49,16 @@ public interface ITestParameter {
 	 * @return the protocol name
 	 */
 	public String getProtocolName();
+	
+	/**
+	 * Modifies the delay between two instructions
+	 * @param delay
+	 */
+	public void setDelay(int delay);
+	
+	/**
+	 *  Returns the delay between two instructions
+	 * @return  the delay between two instructions
+	 */
+	public int getDelay();
 }

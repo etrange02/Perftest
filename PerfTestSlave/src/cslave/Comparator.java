@@ -4,6 +4,8 @@
 package cslave;
 
 import shared.AbstractTest;
+import cslave.interfaces.IPoolTCPConnectionToTestedServer;
+import cslave.interfaces.ITCPConnectionToTestedServer;
 
 /**
  * 
@@ -64,8 +66,10 @@ public abstract class Comparator {
 	public abstract String getProtocolName();
 
 	/**
-	 * Returns a TCPConnectionToTestedServer which corresponds to the implemented protocol
-	 * @return a new TCPConnectionToTestedServer
+	 * Returns a IPoolTCPConnectionToTestedServer which corresponds to 
+	 * the implemented protocol
+	 * @return a new IPoolTCPConnectionToTestedServer
 	 */
-	public abstract TCPConnectionToTestedServer createNewTCPConnectionToTestedServer();
+	public abstract 
+	Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz();
 }

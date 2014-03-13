@@ -3,6 +3,8 @@
  */
 package cslave;
 
+import cslave.interfaces.ITCPConnectionToTestedServer;
+
 /**
  * 
  * @author David Lecoconnier david.lecoconnier@gmail.com
@@ -21,5 +23,11 @@ public class DefaultComparator extends Comparator {
 
 	public String getProtocolName() {
 		return "";
+	}
+
+	@Override
+	public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 }
