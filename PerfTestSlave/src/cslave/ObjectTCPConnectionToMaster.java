@@ -3,16 +3,14 @@ package cslave;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.List;
+
+import shared.AbstractTest;
+import shared.Constants;
 
 import com.sun.xml.internal.ws.Closeable;
 
 import cslave.interfaces.IResponse;
-import shared.AbstractTest;
-import shared.Constants;
-import shared.Result;
 
 /**
  * 

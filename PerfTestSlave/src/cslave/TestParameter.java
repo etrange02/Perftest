@@ -121,58 +121,64 @@ public class TestParameter extends Thread {
 
 	//TODO check every things is ok before start run
 
+	try {
+	    while(true) {
 
-	while(true) {
-
-	    for(TCPConnectionThread connection : pool) {
-		ITCPConnectionToTestedServer tcpCTTS =
-			connection.getITCPConnectionToTestedServer();
-
-		if(tcpCTTS.isRunning() == false) {
-		    tcpCTTS.execOneInst();
-		    scheduled = true;
-		}
-	    }
-
-	    if(scheduled == false && pool.size() < POOL_MAX_SIZE) {
-
-		try {
-
+		for(TCPConnectionThread connection : pool) {
 		    ITCPConnectionToTestedServer tcpCTTS =
-			    tcpConnectionClazz.newInstance();
+			    connection.getITCPConnectionToTestedServer();
 
-
-		    tcpCTTS.init(ipAddress, port, test, scenario);
-
-		    pool.add(new TCPConnectionThread(tcpCTTS));
-		    pool.get(pool.size()-1).start();
-		    tcpCTTS.execOneInst();
-
-		    scheduled = true;
-
-		} catch (InstantiationException e) {
-		    e.printStackTrace();
-		} catch (IllegalAccessException e) {
-		    e.printStackTrace();
+		    if(tcpCTTS.isRunning() == false) {
+			tcpCTTS.execOneInst();
+			scheduled = true;
+		    }
 		}
+
+		if(scheduled == false && pool.size() < POOL_MAX_SIZE) {
+
+		    try {
+
+			ITCPConnectionToTestedServer tcpCTTS =
+				tcpConnectionClazz.newInstance();
+
+
+			tcpCTTS.init(ipAddress, port, test, scenario);
+
+			pool.add(new TCPConnectionThread(tcpCTTS));
+			pool.get(pool.size()-1).start();
+			tcpCTTS.execOneInst();
+
+			scheduled = true;
+
+		    } catch (InstantiationException e) {
+			e.printStackTrace();
+		    } catch (IllegalAccessException e) {
+			e.printStackTrace();
+		    }
+		}
+
+
+		scheduled = false;
+
+		Thread.sleep(delay*1000); //TODO Put the real unit 
 	    }
-
-
-	    scheduled = false;
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
     public List<IResponse> getResponsePack() {
-	
+
 	List<IResponse> responses = scenario.getResponses();
 	List<IResponse> resultPack = null;
 	int packSize = Math.min(
 		RESULT_PACK_SIZE, responses.size());
-	
-	
+
+
 	resultPack = responses.subList(0, packSize);
 	responses.removeAll(resultPack);
-	
+
 	return resultPack;
     }
 }

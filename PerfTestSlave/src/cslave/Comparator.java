@@ -4,7 +4,6 @@
 package cslave;
 
 import shared.AbstractTest;
-import cslave.interfaces.IPoolTCPConnectionToTestedServer;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
 /**
