@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import shared.Constants;
-import shared.SendableResponsePack;
-import cslave.interfaces.IResponse;
 import cslave.interfaces.ITestManager;
 
 /**
@@ -309,27 +307,9 @@ public class TestManager extends Thread implements ITestManager {
 
     private void sendResponses() throws IOException {
 
-	List<IResponse> responsePack = testParameter.getResponsePack();
-	int responsePackSize = responsePack.size();
-	int[] delays = new int [responsePackSize];
-	int nbMiss = 0;
-	int nbSuccess = 0;
-
-	for(int i = 0; i < responsePackSize; i++) {
-	    IResponse response = responsePack.get(i);
-
-	    delays[i] = response.getDelay();
-
-	    if(testComparator.isExpectedResponse(response) == true) {
-		nbSuccess++;
-	    }
-	    else {
-		nbMiss++;
-	    }
-	}
-
 	objectTCPConnectionToMaster.write(
-		new SendableResponsePack(delays, nbMiss, nbSuccess));
+		testComparator.createSendableResponsePack(
+			testParameter.getResponsePack()));
     }
 
     private void setTestComparator(String protocolName) {
