@@ -5,7 +5,6 @@ package shared;
 
 /**
  * 
- * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
@@ -20,9 +19,6 @@ public class Constants {
 	 * Socket port for commands transmission
 	 */
 	public static final int SOCKET_COMMAND_PORT = 2001;
-	
-	//Protocol names
-	public static final String LDAP = "LDAP";
 	
 	
 	//Commands

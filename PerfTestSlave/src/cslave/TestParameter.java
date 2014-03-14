@@ -29,7 +29,6 @@ public class TestParameter extends Thread {
     private int port;
     private String ipAddress;
     private String protocolName;
-    private int  delay;
 
     private ITest test;
     private IScenario scenario;
@@ -49,7 +48,6 @@ public class TestParameter extends Thread {
 	port = 0;
 	ipAddress = null;
 	protocolName = null;
-	delay = 0;
 	test = null;
 	scenario = new Scenario();
 	tcpConnectionClazz = null;
@@ -86,10 +84,6 @@ public class TestParameter extends Thread {
 
     public void setProtocolName(String protocolName) {
 	this.protocolName = protocolName;
-    }
-
-    public void setDelay(int delay) {
-	this.delay = delay;
     }
 
     public void setAbstractTest(AbstractTest abstractTest) {
@@ -161,7 +155,7 @@ public class TestParameter extends Thread {
 
 		scheduled = false;
 
-		Thread.sleep(delay*1000); //TODO Put the real unit 
+		Thread.sleep(test.getInstructionDelay()*1000); //TODO Put the real unit 
 	    }
 	}
 	catch (Exception e) {

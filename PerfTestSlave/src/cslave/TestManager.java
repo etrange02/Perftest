@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import shared.AbstractTest;
 import shared.Constants;
+import shared.tcp.TCPObjectServer;
+import shared.tcp.TCPStringServer;
 import cslave.interfaces.ITestManager;
 
 /**
@@ -19,8 +22,8 @@ import cslave.interfaces.ITestManager;
 public class TestManager extends Thread implements ITestManager {
 
     private List<Comparator> comparator;
-    private CommandTCPConnectionToMaster commandTCPConnectionToMaster;
-    private ObjectTCPConnectionToMaster  objectTCPConnectionToMaster;
+    private TCPStringServer commandTCPConnectionToMaster;
+    private TCPObjectServer objectTCPConnectionToMaster;
     private TestParameter testParameter;
     private Comparator testComparator;
     private Thread testRunner;
@@ -39,8 +42,8 @@ public class TestManager extends Thread implements ITestManager {
 
 	this.comparator = new ArrayList<Comparator>();
 
-	commandTCPConnectionToMaster = null;
-	objectTCPConnectionToMaster = null;
+	commandTCPConnectionToMaster =  new TCPStringServer();
+	objectTCPConnectionToMaster = new TCPObjectServer();
 	testParameter = null;
 	testRunner = null;
 
@@ -50,20 +53,13 @@ public class TestManager extends Thread implements ITestManager {
 
     public void init() throws IOException {
 
-	if(commandTCPConnectionToMaster != null &&
-		commandTCPConnectionToMaster.isClosed() == false) {
-	    commandTCPConnectionToMaster.close();
-	}
-	if(objectTCPConnectionToMaster != null &&
-		objectTCPConnectionToMaster.isClosed() == false) {
-	    objectTCPConnectionToMaster.close();
-	}
+	commandTCPConnectionToMaster.close();
+	commandTCPConnectionToMaster.startStringConnection(
+		Constants.SOCKET_COMMAND_PORT);
 
-	commandTCPConnectionToMaster =  
-		new CommandTCPConnectionToMaster();
-
-	objectTCPConnectionToMaster = 
-		new ObjectTCPConnectionToMaster();
+	objectTCPConnectionToMaster.close();
+	objectTCPConnectionToMaster.startObjectConnection(
+		Constants.SOCKET_OBJECT_PORT);
 
 	resetTest();
     }
@@ -73,13 +69,17 @@ public class TestManager extends Thread implements ITestManager {
 
 	super.interrupt();
 
-	if(commandTCPConnectionToMaster != null &&
-		commandTCPConnectionToMaster.isClosed() == false) {
-	    commandTCPConnectionToMaster.close();
-	}
-	if(objectTCPConnectionToMaster != null &&
-		objectTCPConnectionToMaster.isClosed() == false) {
-	    objectTCPConnectionToMaster.close();
+	try {
+
+	    if(commandTCPConnectionToMaster != null) {
+		commandTCPConnectionToMaster.close();
+	    }
+	    if(objectTCPConnectionToMaster != null) {
+		objectTCPConnectionToMaster.close();
+	    }
+
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
 
 	testRunner.interrupt();
@@ -108,38 +108,6 @@ public class TestManager extends Thread implements ITestManager {
      */
     public void setTestParameter(TestParameter testParameter) {
 	this.testParameter = testParameter;
-    }
-
-    /**
-     * @return the tcp connection used for receive/send commands
-     */
-    public CommandTCPConnectionToMaster getCommandTCPConnectionToMaster() {
-	return commandTCPConnectionToMaster;
-    }
-
-    /**
-     * Set the tcp connection used for receive/send commands
-     * @param commandTCPConnectionToMaster
-     */
-    public void setCommandTCPConnectionToMaster(
-	    CommandTCPConnectionToMaster commandTCPConnectionToMaster) {
-	this.commandTCPConnectionToMaster = commandTCPConnectionToMaster;
-    }
-
-    /**
-     * @return the tcp connection used for receive/send objects
-     */
-    public ObjectTCPConnectionToMaster getObjectTCPConnectionToMaster() {
-	return objectTCPConnectionToMaster;
-    }
-
-    /**
-     * Set the tcp connection used for receive/send objects
-     * @param commandTCPConnectionToMaster
-     */
-    public void setObjectTCPConnectionToMaster(
-	    ObjectTCPConnectionToMaster objectTCPConnectionToMaster) {
-	this.objectTCPConnectionToMaster = objectTCPConnectionToMaster;
     }
 
     /**
@@ -209,23 +177,27 @@ public class TestManager extends Thread implements ITestManager {
 	    } 
 	    catch(IOException e) {
 
-		if(isInterrupted()) {
-		    //finish the execution
 		    break;
-		}
-		else {
-
-		    try {
-			if(commandTCPConnectionToMaster.isClosed()) {
-			    init();
-			}
-		    } catch (IOException e1) {
-			e1.printStackTrace();
-		    }
-		}
 	    }
 	    catch(Exception e) {
 		e.printStackTrace();
+	    }
+	    finally {
+
+		try {
+
+		    System.out.println("TestManager.start.finally: Clean");
+		    
+		    if(commandTCPConnectionToMaster != null) {
+			commandTCPConnectionToMaster.close();
+		    }
+		    if(objectTCPConnectionToMaster != null) {
+			objectTCPConnectionToMaster.close();
+		    }
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	    }
 	}
     }
@@ -254,7 +226,8 @@ public class TestManager extends Thread implements ITestManager {
 	    setTestComparator(protocolName);
 
 	    if(testComparator != null) {
-		testParameter.setAbstractTest(objectTCPConnectionToMaster.read());
+		testParameter.setAbstractTest(
+			(AbstractTest)objectTCPConnectionToMaster.read());
 		testParameter.setProtocolName(protocolName);
 		testParameter.setTcpConnectionClazz(
 			testComparator.getTcpConnectionClazz());
@@ -277,14 +250,13 @@ public class TestManager extends Thread implements ITestManager {
 
 	String[] splittedCMD = cmd.split("/");
 
-	if(testComparator != null && splittedCMD.length == 4) {
+	if(testComparator != null && splittedCMD.length == 3) {
 
 	    try {
 
 		testParameter.setPort(
 			Integer.parseInt(splittedCMD[1]));
 		testParameter.setIPAddress(splittedCMD[2]);
-		testParameter.setDelay(Integer.parseInt(splittedCMD[3]));
 
 
 		testRunner = new Thread(testParameter);
@@ -313,9 +285,9 @@ public class TestManager extends Thread implements ITestManager {
     }
 
     private void setTestComparator(String protocolName) {
-	
+
 	Iterator<Comparator> iter = this.comparator.iterator();
-	
+
 	while (iter.hasNext()) {
 
 	    Comparator comparatorTmp = iter.next();

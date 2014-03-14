@@ -202,7 +202,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	@Override
-	public boolean sendTest(AbstractMonitoredTest test) {
+	public boolean sendTest(
+		AbstractMonitoredTest test) {
 		if (null == test)
 			return false;
 		
