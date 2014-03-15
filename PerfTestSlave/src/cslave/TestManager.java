@@ -51,7 +51,7 @@ public class TestManager extends Thread implements ITestManager {
 		init();
 	}
 
-	public void init() throws IOException {
+	private void init() throws IOException {
 
 		commandTCPConnectionToMaster.startStringConnection(
 				Constants.SOCKET_COMMAND_PORT);
@@ -67,18 +67,30 @@ public class TestManager extends Thread implements ITestManager {
 
 		try {
 
-			if(commandTCPConnectionToMaster != null) {
-				commandTCPConnectionToMaster.close();
-			}
-			if(objectTCPConnectionToMaster != null) {
-				objectTCPConnectionToMaster.close();
-			}
+			closeConnections();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		testRunner.interrupt();
+	}
+	
+	private void closeConnections() throws IOException {
+		
+		closeConnectionToMaster();
+		
+		if(testRunner != null) {
+			testRunner.interrupt();
+		}
+	}
+	
+	private void closeConnectionToMaster() throws IOException {
+		
+		if(commandTCPConnectionToMaster != null) {
+			commandTCPConnectionToMaster.close();
+		}
+		if(objectTCPConnectionToMaster != null) {
+			objectTCPConnectionToMaster.close();
+		}
 	}
 
 
@@ -144,7 +156,8 @@ public class TestManager extends Thread implements ITestManager {
 				lastReceivedCommand = commandTCPConnectionToMaster.read();
 
 				if(lastReceivedCommand == null) {
-					continue;
+					closeConnections();
+					init();
 				}
 				else if(lastReceivedCommand.startsWith(Constants.RUN_CMD)) {
 
