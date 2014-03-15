@@ -195,8 +195,6 @@ public class TestManager extends Thread implements ITestManager {
 
 				try {
 
-					System.out.println("TestManager.start.finally: Clean");
-
 					if(commandTCPConnectionToMaster != null) {
 						commandTCPConnectionToMaster.close();
 					}
