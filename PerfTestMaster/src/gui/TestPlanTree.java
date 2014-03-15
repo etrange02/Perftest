@@ -4,6 +4,7 @@ import gui.interfaces.TestListener;
 import gui.interfaces.TestPlanListener;
 import gui.panels.AbstractTestPlanPanel;
 import gui.panels.InstructionPanel;
+import gui.panels.MonitoringPanel;
 import gui.panels.TestPanel;
 
 import java.awt.Dimension;
@@ -16,7 +17,6 @@ import java.util.Enumeration;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
@@ -54,7 +54,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		super();
 		this.testPlanManager = testPlanPanel;
 		this.testPlanManagement = testPlanManagement;
-		this.testPlanManagement.addPlanTestListener(this);
+		this.testPlanManagement.addTestPlanListener(this);
 		this.testPlanManagement.addTestListener(this);
 		this.frame = frame;
 		
@@ -226,7 +226,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		
 		this.testPlanManager.addNode(test, new TestPanel("Scalability test", abstractMonitoredTest.getName(), "Scalability", this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
-		this.testPlanManager.addNode(monitoring, new JPanel());
+		this.testPlanManager.addNode(monitoring, new MonitoringPanel("Scalability monitoring", this.testPlanManagement, abstractMonitoredTest, true));
 		
 		TreePath testPath = new TreePath(test.getPath());
 		this.expandPath(testPath);
@@ -246,7 +246,7 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 		
 		this.testPlanManager.addNode(test, new TestPanel("Workload test", abstractMonitoredTest.getName(), "Workload", this.testPlanManagement, abstractMonitoredTest));
 		this.testPlanManager.addNode(instruction, new InstructionPanel(this.frame, this.testPlanManagement, abstractMonitoredTest));
-		this.testPlanManager.addNode(monitoring, new JPanel());
+		this.testPlanManager.addNode(monitoring, new MonitoringPanel("Workload monitoring", this.testPlanManagement, abstractMonitoredTest, false));
 		
 		TreePath testPath = new TreePath(test.getPath());
 		this.expandPath(testPath);

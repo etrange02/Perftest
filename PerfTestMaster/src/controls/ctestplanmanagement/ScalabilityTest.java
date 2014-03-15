@@ -3,6 +3,7 @@
  */
 package controls.ctestplanmanagement;
 
+
 /**
  * 
  * @author David Lecoconnier david.lecoconnier@gmail.com
@@ -13,9 +14,11 @@ public class ScalabilityTest extends AbstractMonitoredTest {
 	
 	private static final long serialVersionUID = -8919264177566199550L;
 	private ScalabilityMonitor scalabilityMonitor;
+	private int affectedSlaveCount;
 	
 	public ScalabilityTest(String name) {
 		super(name);
+		this.affectedSlaveCount = 0;
 	}
 
 	/**
@@ -40,5 +43,13 @@ public class ScalabilityTest extends AbstractMonitoredTest {
 
 	public Monitor getMonitor() {
 		return getScalabilityMonitor();
+	}
+
+	public int getAffectedSlaveCount() {
+		return affectedSlaveCount;
+	}
+
+	public void setAffectedSlaveCount(int affectedSlaveCount) {
+		this.affectedSlaveCount = affectedSlaveCount;
 	}
 }

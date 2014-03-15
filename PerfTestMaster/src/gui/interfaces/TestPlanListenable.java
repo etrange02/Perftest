@@ -2,7 +2,7 @@ package gui.interfaces;
 
 public interface TestPlanListenable {
 
-	public void addPlanTestListener(TestPlanListener planTestListener);
+	public void addTestPlanListener(TestPlanListener testPlanListener);
 	
-	public void removePlanTestListener(TestPlanListener planTestListener);
+	public void removeTestPlanListener(TestPlanListener testPlanListener);
 }

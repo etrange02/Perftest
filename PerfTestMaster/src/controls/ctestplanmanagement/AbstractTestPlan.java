@@ -3,8 +3,11 @@
  */
 package controls.ctestplanmanagement;
 
-import gui.interfaces.TestPlanPanelListenable;
+import gui.interfaces.TestPlanListenable;
+import gui.interfaces.TestPlanListener;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import controls.ctestplanmanagement.interfaces.ITestPlan;
@@ -15,16 +18,18 @@ import controls.ctestplanmanagement.interfaces.ITestPlan;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListenable {
+public abstract class AbstractTestPlan implements ITestPlan, TestPlanListenable {
 
 	private String name;
 	private List<AbstractMonitoredTest> tests;
 	private List<String> targets;
 	private int port;
+	private List<TestPlanListener> planTestListenerList;
 	
 	public AbstractTestPlan() {
-		this.tests = new ArrayList<>();
-		this.targets = new ArrayList<>();
+		this.tests = new ArrayList<AbstractMonitoredTest>();
+		this.targets = new ArrayList<String>();
+		this.planTestListenerList = new ArrayList<TestPlanListener>();
 		this.port = 0;
 		this.name = "";
 	}
@@ -75,6 +80,23 @@ public abstract class AbstractTestPlan implements ITestPlan, TestPlanPanelListen
 	 */
 	public void setPort(int port) {
 		this.port = port;
+	}
+	
+	public void updatePlanTestNameList(String name) {
+		Iterator<TestPlanListener> iter = this.planTestListenerList.iterator();
+		while (iter.hasNext()) {
+			iter.next().updatePlanTestName(name);
+		}
+	}
+	
+	@Override
+	public void addTestPlanListener(TestPlanListener testPlanListener) {
+		this.planTestListenerList.add(testPlanListener);
+	}
+
+	@Override
+	public void removeTestPlanListener(TestPlanListener testPlanListener) {
+		this.planTestListenerList.remove(testPlanListener);
 	}
 
 }

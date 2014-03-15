@@ -207,4 +207,28 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 * @return true on success, false otherwise
 	 */
 	public boolean sendTest(String testName);
+	
+	/**
+	 * Modifies the delay between two instructions for the given test
+	 * @param test a test
+	 * @param delay a delay, more than or equals to 1
+	 */
+	public void setDelayBetweenInstructions(AbstractMonitoredTest test, int delay);
+	
+	/**
+	 * Informs the tests that the maximum available count. Only scalability test 
+	 * are modified
+	 * of slaves changed
+	 * @param test a test
+	 * @param count number of affectetd slaves
+	 */
+	public void setAffectedSlaves(AbstractMonitoredTest test, int count);
+	
+	/**
+	 * Modifies the list of selected targets for the given test
+	 * @param test a test
+	 * @param selectedTargets a list of targets
+	 */
+	public void setSelectedTargets(AbstractMonitoredTest test, List<String> selectedTargets);
+	
 }

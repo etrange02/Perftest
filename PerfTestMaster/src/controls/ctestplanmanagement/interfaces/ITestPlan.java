@@ -52,5 +52,4 @@ public interface ITestPlan {
 	 * @param value an object value
 	 */
 	public void set(String key, Object value);
-	
 }

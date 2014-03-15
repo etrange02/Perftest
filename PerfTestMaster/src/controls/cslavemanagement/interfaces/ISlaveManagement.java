@@ -111,4 +111,10 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * @return a name or an empty string if no test has been deployed
 	 */
 	public String getDeployedTestName();
+	
+	/**
+	 * Informs all tests that are Scalability kind that the maximum available count
+	 * of slaves changed
+	 */
+	public void updateMonitoringPanelWithMaxSlaveCount();
 }

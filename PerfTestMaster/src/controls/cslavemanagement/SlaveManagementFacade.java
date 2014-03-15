@@ -197,6 +197,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		}
 		
 		updateAllSlaveListeners();
+		this.updateMonitoringPanelWithMaxSlaveCount();
 		
 		return true;
 	}
@@ -292,19 +293,20 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			return false;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
+		boolean result = false;
 		
-		while (iter.hasNext()) {
+		while (iter.hasNext() && !result) {
 			slave = iter.next();
 			if (name.equals(slave.getAddress())) {
 				slave.getTCPClientSlave().close();
 				this.slave.remove(slave);
 				this.TCPConnection.remove(slave.getTCPClientSlave());
-				updateAllSlaveListeners();
-				return true;
+				result = true;
 			}
 		}
 		updateAllSlaveListeners();
-		return false;
+		this.updateMonitoringPanelWithMaxSlaveCount();
+		return result;
 	}
 
 	public boolean hasAnotherReadySlave() {
@@ -330,6 +332,18 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		Iterator<SlaveListener> iter = this.slaveListeners.iterator();
 		while (iter.hasNext()) {
 			iter.next().updateData();
+		}
+	}
+	
+	public void updateMonitoringPanelWithMaxSlaveCount() {
+		Iterator<AbstractMonitoredTest> iter = this.getTestPlanManagement().getTestPlan().getTests().iterator();
+		AbstractMonitoredTest test = null;
+		while (iter.hasNext()) {
+			test = iter.next();
+			System.out.println("updateMonitoringPanelWithMaxSlaveCount");
+			if (test instanceof ScalabilityTest) {
+				this.getTestPlanManagement().setAffectedSlaves(test, ((ScalabilityTest) test).getAffectedSlaveCount());
+			}
 		}
 	}
 	

@@ -143,7 +143,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction();
 			instruction.setName(instructionName);
 			test.getInstructions().add(instruction);
-			test.updateListeners();
+			test.updateDataListeners();
 			return instruction;
 		}
 		return null;
@@ -159,7 +159,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction();
 			instruction.setName(instructionName);
 			test.getInstructions().add(instruction);
-			test.updateListeners();
+			test.updateDataListeners();
 			return instruction;
 		}
 		
@@ -247,7 +247,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		
 		if (!this.testPlan.getTargets().contains(target)) {
 			this.testPlan.getTargets().add(target);
-			updatePlanTestTargets();
+			this.updatePlanTestTargets();
 		}
 	}
 
@@ -283,7 +283,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		instruction.setName(name);
 		instruction.setReadableRequest(request);
-		test.updateListeners();
+		test.updateDataListeners();
 	}
 
 	public List<String> getAvailableProtocols() {
@@ -314,7 +314,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 					return false;
 				} else {
 					test.getInstructions().remove(instructionPosition);
-					test.updateListeners();
+					test.updateDataListeners();
 					return true;
 				}
 			}
@@ -331,7 +331,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (this.getTestPlan().getTests().contains(test)) {
 			if (test.getInstructions().size() > instructionPosition) {
 				test.getInstructions().remove(instructionPosition);
-				test.updateListeners();
+				test.updateDataListeners();
 				return true;
 			}
 		}
@@ -342,7 +342,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (null == this.testPlan)
 			return;
 		this.testPlan.getTargets().remove(target);
-		updatePlanTestTargets();
+		this.updatePlanTestTargets();
 	}
 	
 	public boolean removeTest(String testName) {
@@ -377,19 +377,16 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		
 		System.out.println("Emitted " + this.testPlan.getPort());
 		
-		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
-		while (iter.hasNext()) {
-			iter.next().updatePort("" + this.testPlan.getPort());
-		}
+		this.updatePortListener("" + this.testPlan.getPort());
 	}
 
 	@Override
-	public void addPlanTestListener(TestPlanListener planTestListener) {
+	public void addTestPlanListener(TestPlanListener planTestListener) {
 		this.planTestListenerList.add(planTestListener);
 	}
 
 	@Override
-	public void removePlanTestListener(TestPlanListener planTestListener) { 
+	public void removeTestPlanListener(TestPlanListener planTestListener) { 
 		this.planTestListenerList.remove(planTestListener);
 	}
 
@@ -429,6 +426,26 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
 			iter.next().addWorkloadTestListener(abstractMonitoredTest);
+		}
+	}
+	
+	private void updatePortListener(String port) {
+		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updatePort(port);
+		}
+	}
+	
+	private void updatePlanTestTargets() {
+		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
+		while (iter.hasNext()) {
+			iter.next().updateNetworkInterfaces();
+		}
+		Iterator<AbstractMonitoredTest> iter2 = this.getTestPlan().getTests().iterator();
+		AbstractMonitoredTest test = null;
+		while (iter2.hasNext()) {
+			test = iter2.next();
+			this.setSelectedTargets(test, new ArrayList<>(test.getSelectedTargets()));
 		}
 	}
 
@@ -484,24 +501,15 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	@Override
 	public void addTestPlanPanelListener(
 			TestPlanPanelListener testPlanPanelListener) {
-		this.testPlanPanelListeners.add(testPlanPanelListener);
 		if (null != this.testPlan)
-			this.testPlan.addTestPlanPanelListener(testPlanPanelListener);
+			this.testPlanPanelListeners.add(testPlanPanelListener);
 	}
 
 	@Override
 	public void removeTestPlanPanelListener(
 			TestPlanPanelListener testPlanPanelListener) {
-		this.testPlanPanelListeners.remove(testPlanPanelListener);
 		if (null != this.testPlan)
 			this.testPlanPanelListeners.remove(testPlanPanelListener);
-	}
-	
-	private void updatePlanTestTargets() {
-		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
-		while (iter.hasNext()) {
-			iter.next().updateNetworkInterfaces();
-		}
 	}
 
 	@Override
@@ -527,5 +535,54 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		return getSlaveManagement().sendTest(test);
 	}
 
+	@Override
+	public void setDelayBetweenInstructions(AbstractMonitoredTest test, int delay) {
+		if (null == this.getTestPlan() || null == test)
+			return;
+		if (!getTestPlan().getTests().contains(test))
+			return;
+		if (delay < 1)
+			delay = 1;
+		test.setInstructionDelay(delay);
+		test.updateDelayListeners(delay);
+	}
+
+	@Override
+	public void setAffectedSlaves(AbstractMonitoredTest test, int count) {
+		if (null == this.getTestPlan() || null == test)
+			return;
+		if (!getTestPlan().getTests().contains(test))
+			return;
+		
+		if (count > this.getSlaveManagement().count())
+			count = this.getSlaveManagement().count();
+		if (count < 0)
+			count = 0;
+		
+		if (test instanceof ScalabilityTest) {
+			ScalabilityTest scalabilityTest = (ScalabilityTest) test;
+			scalabilityTest.setAffectedSlaveCount(count);
+			scalabilityTest.updateSlaveCountListeners(count);
+		}
+	}
+
+	@Override
+	public void setSelectedTargets(AbstractMonitoredTest test, List<String> selectedTargets) {
+		if (null == this.getTestPlan() || null == test || null == selectedTargets)
+			return;
+		if (!getTestPlan().getTests().contains(test))
+			return;
+		
+		test.getSelectedTargets().clear();
+		
+		Iterator<String> iter = selectedTargets.iterator();
+		String target = "";
+		while (iter.hasNext()) {
+			target = iter.next();
+			if (this.getTestPlan().getTargets().contains(target))
+				test.getSelectedTargets().add(target);
+		}
+		test.updateSelectedTargets(this.getTestPlan().getTargets(), test.getSelectedTargets());
+	}
 	
 }
