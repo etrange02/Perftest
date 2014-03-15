@@ -21,292 +21,314 @@ import cslave.interfaces.ITestManager;
  */
 public class TestManager extends Thread implements ITestManager {
 
-    private List<Comparator> comparator;
-    private TCPStringServer commandTCPConnectionToMaster;
-    private TCPObjectServer objectTCPConnectionToMaster;
-    private TestParameter testParameter;
-    private Comparator testComparator;
-    private Thread testRunner;
+	private List<Comparator> comparator;
+	private TCPStringServer commandTCPConnectionToMaster;
+	private TCPObjectServer objectTCPConnectionToMaster;
+	private TestParameter testParameter;
+	private Comparator testComparator;
+	private Thread testRunner;
 
 
 
 
 
 
-    /* *********************************************************************
-     * CONSTRUCTORS/CLEANER ************************************************
-     * *********************************************************************/
+	/* *********************************************************************
+	 * CONSTRUCTORS/CLEANER ************************************************
+	 * *********************************************************************/
 
-    public TestManager() throws IOException {
-
-
-	this.comparator = new ArrayList<Comparator>();
-
-	commandTCPConnectionToMaster =  new TCPStringServer();
-	objectTCPConnectionToMaster = new TCPObjectServer();
-	testParameter = null;
-	testRunner = null;
+	public TestManager() throws IOException {
 
 
-	init();
-    }
+		this.comparator = new ArrayList<Comparator>();
 
-    public void init() throws IOException {
+		commandTCPConnectionToMaster =  new TCPStringServer();
+		objectTCPConnectionToMaster = new TCPObjectServer();
+		testParameter = null;
+		testRunner = null;
 
-	commandTCPConnectionToMaster.close();
-	commandTCPConnectionToMaster.startStringConnection(
-		Constants.SOCKET_COMMAND_PORT);
 
-	objectTCPConnectionToMaster.close();
-	objectTCPConnectionToMaster.startObjectConnection(
-		Constants.SOCKET_OBJECT_PORT);
-
-	resetTest();
-    }
-
-    @Override
-    public void interrupt() {
-
-	super.interrupt();
-
-	try {
-
-	    if(commandTCPConnectionToMaster != null) {
-		commandTCPConnectionToMaster.close();
-	    }
-	    if(objectTCPConnectionToMaster != null) {
-		objectTCPConnectionToMaster.close();
-	    }
-
-	} catch (IOException e) {
-	    e.printStackTrace();
+		init();
 	}
 
-	testRunner.interrupt();
-    }
+	public void init() throws IOException {
 
+		commandTCPConnectionToMaster.startStringConnection(
+				Constants.SOCKET_COMMAND_PORT);
 
+		objectTCPConnectionToMaster.startObjectConnection(
+				Constants.SOCKET_OBJECT_PORT);
+		
+		System.out.println("TestManager.init(): Finish");
+	}
 
+	@Override
+	public void interrupt() {
 
-
-
-    /* *********************************************************************
-     * GETTERS/SETTERS *****************************************************
-     * *********************************************************************/
-
-    /**
-     * Returns the TestParameter associated
-     * @return the TestParameter
-     */
-    public TestParameter getTestParameter() {
-	return testParameter;
-    }
-
-    /**
-     * Modifies the associated TestParameter
-     * @param testRunner a TestParameter
-     */
-    public void setTestParameter(TestParameter testParameter) {
-	this.testParameter = testParameter;
-    }
-
-    /**
-     * Returns the list of available comparators
-     * @return a list
-     */
-    public List<Comparator> getComparator() {
-	return comparator;
-    }
-
-    /**
-     * Modifies the list of comparators
-     * @param comparator a new list
-     */
-    public void setComparator(List<Comparator> comparator) {
-	this.comparator = comparator;
-    }
-
-
-
-
-
-
-
-    /* *********************************************************************
-     * IMPORTANT METHODS ***************************************************
-     * *********************************************************************/
-
-    @Override
-    public void start() {
-
-	String lastReceivedCommand = null;
-
-	while(true) {
-
-	    try {
-
-		lastReceivedCommand = commandTCPConnectionToMaster.read();
-
-		if(lastReceivedCommand == null) {
-		    continue;
-		}
-		else if(lastReceivedCommand.startsWith(Constants.RUN_CMD)) {
-
-		    runTest(lastReceivedCommand);
-		}
-		else if(lastReceivedCommand.startsWith(Constants.STOP_CMD)) {
-
-		    stopTest();
-		}
-		else if(lastReceivedCommand.startsWith(Constants.RESET_CMD)) {
-
-		    resetTest(); 
-		}
-		else if(lastReceivedCommand.startsWith(Constants.DEPLOY_CMD)) {
-
-		    deployTest(lastReceivedCommand);
-		}
-		else if(lastReceivedCommand.startsWith(Constants.RESULT_CMD)) {
-
-		    sendResponses();
-		} 
-		else {
-		    commandTCPConnectionToMaster.write(
-			    Constants.KO_RESP+"/\n");
-		}
-	    } 
-	    catch(IOException e) {
-
-		    break;
-	    }
-	    catch(Exception e) {
-		e.printStackTrace();
-	    }
-	    finally {
+		super.interrupt();
 
 		try {
 
-		    System.out.println("TestManager.start.finally: Clean");
-		    
-		    if(commandTCPConnectionToMaster != null) {
-			commandTCPConnectionToMaster.close();
-		    }
-		    if(objectTCPConnectionToMaster != null) {
-			objectTCPConnectionToMaster.close();
-		    }
+			if(commandTCPConnectionToMaster != null) {
+				commandTCPConnectionToMaster.close();
+			}
+			if(objectTCPConnectionToMaster != null) {
+				objectTCPConnectionToMaster.close();
+			}
 
 		} catch (IOException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
-	    }
+
+		testRunner.interrupt();
 	}
-    }
 
-    private void stopTest() throws IOException {
 
-	testRunner.interrupt();
-    }
 
-    private void resetTest() throws IOException {
 
-	this.testParameter = null;
 
-	commandTCPConnectionToMaster.write(
-		Constants.OK_RESP+"/\n");
-    }
 
-    private void deployTest(String cmd) 
-	    throws ClassNotFoundException, IOException {
-	String[]splittedCmd = cmd.split("/");
+	/* *********************************************************************
+	 * GETTERS/SETTERS *****************************************************
+	 * *********************************************************************/
 
-	if(splittedCmd.length == 2) {
+	/**
+	 * Returns the TestParameter associated
+	 * @return the TestParameter
+	 */
+	public TestParameter getTestParameter() {
+		return testParameter;
+	}
 
-	    String protocolName = splittedCmd[1];
+	/**
+	 * Modifies the associated TestParameter
+	 * @param testRunner a TestParameter
+	 */
+	public void setTestParameter(TestParameter testParameter) {
+		this.testParameter = testParameter;
+	}
 
-	    setTestComparator(protocolName);
+	/**
+	 * Returns the list of available comparators
+	 * @return a list
+	 */
+	public List<Comparator> getComparator() {
+		return comparator;
+	}
 
-	    if(testComparator != null) {
-		testParameter.setAbstractTest(
-			(AbstractTest)objectTCPConnectionToMaster.read());
-		testParameter.setProtocolName(protocolName);
-		testParameter.setTcpConnectionClazz(
-			testComparator.getTcpConnectionClazz());
+	/**
+	 * Modifies the list of comparators
+	 * @param comparator a new list
+	 */
+	public void setComparator(List<Comparator> comparator) {
+		this.comparator = comparator;
+	}
+
+
+
+
+
+
+
+	/* *********************************************************************
+	 * IMPORTANT METHODS ***************************************************
+	 * *********************************************************************/
+
+	@Override
+	public void start() {
+
+		String lastReceivedCommand = null;
+
+		while(true) {
+
+			try {
+
+				lastReceivedCommand = commandTCPConnectionToMaster.read();
+
+				if(lastReceivedCommand == null) {
+					continue;
+				}
+				else if(lastReceivedCommand.startsWith(Constants.RUN_CMD)) {
+
+					runTest(lastReceivedCommand);
+				}
+				else if(lastReceivedCommand.startsWith(Constants.STOP_CMD)) {
+
+					stopTest();
+				}
+				else if(lastReceivedCommand.startsWith(Constants.RESET_CMD)) {
+
+					resetTest(); 
+				}
+				else if(lastReceivedCommand.startsWith(Constants.DEPLOY_CMD)) {
+
+					deployTest(lastReceivedCommand);
+				}
+				else if(lastReceivedCommand.startsWith(Constants.RESULT_CMD)) {
+
+					sendResponses();
+				} 
+				else {
+					commandTCPConnectionToMaster.write(
+							Constants.KO_RESP+"/\n");
+				}
+			} 
+			catch(IOException e) {
+
+				break;
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			finally {
+
+				try {
+
+					System.out.println("TestManager.start.finally: Clean");
+
+					if(commandTCPConnectionToMaster != null) {
+						commandTCPConnectionToMaster.close();
+					}
+					if(objectTCPConnectionToMaster != null) {
+						objectTCPConnectionToMaster.close();
+					}
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private void stopTest() throws IOException {
+
+		try {
+			testRunner.interrupt();
+		}
+		catch(Exception e) {
+			commandTCPConnectionToMaster.write(
+					Constants.KO_RESP+"/\n");
+		}
+	}
+
+	private void resetTest() throws IOException {
+
+		this.testParameter = null;
 
 		commandTCPConnectionToMaster.write(
-			Constants.OK_RESP+"/\n"); 
-	    }
-	    else {
-		commandTCPConnectionToMaster.write(
-			Constants.KO_RESP+"/\n"); 
-	    }
-	}
-	else {
-	    commandTCPConnectionToMaster.write(
-		    Constants.KO_RESP+"/\n"); 
-	}
-    }
-
-    private void runTest(String cmd) throws IOException {
-
-	String[] splittedCMD = cmd.split("/");
-
-	if(testComparator != null && splittedCMD.length == 3) {
-
-	    try {
-
-		testParameter.setPort(
-			Integer.parseInt(splittedCMD[1]));
-		testParameter.setIPAddress(splittedCMD[2]);
-
-
-		testRunner = new Thread(testParameter);
-		testRunner.start();
-
-
-		commandTCPConnectionToMaster.write(
-			Constants.OK_RESP+"/\n");
-	    }
-	    catch (NumberFormatException e) {
-		commandTCPConnectionToMaster.write(
-			Constants.KO_RESP+"/\n"); 
-	    }
-	}
-	else {
-	    commandTCPConnectionToMaster.write(
-		    Constants.KO_RESP+"/\n");
-	}
-    }
-
-    private void sendResponses() throws IOException {
-
-	objectTCPConnectionToMaster.write(
-		testComparator.createSendableResponsePack(
-			testParameter.getResponsePack()));
-    }
-
-    private void setTestComparator(String protocolName) {
-
-	Iterator<Comparator> iter = this.comparator.iterator();
-
-	while (iter.hasNext()) {
-
-	    Comparator comparatorTmp = iter.next();
-
-	    if (comparatorTmp.isConcernedComparator(protocolName)) {
-		testComparator =  comparatorTmp;
-	    }
+				Constants.OK_RESP+"/\n");
 	}
 
-	testComparator = null;
-    }
+	private void deployTest(String cmd) 
+			throws ClassNotFoundException, IOException {
+		String[]splittedCmd = cmd.split("/");
 
-    public void addComparator(Comparator comparator) {
-	Iterator<Comparator> iter = this.comparator.iterator();
-	while (iter.hasNext()) {
-	    if (comparator.isConcernedComparator(iter.next().getProtocolName())) {
-		return;
-	    }
+		try {
+			if(splittedCmd.length == 2) {
+
+				String protocolName = splittedCmd[1];
+
+				setTestComparator(protocolName);
+
+				if(testComparator != null) {
+					testParameter.setAbstractTest(
+							(AbstractTest)objectTCPConnectionToMaster.read());
+					testParameter.setProtocolName(protocolName);
+					testParameter.setTcpConnectionClazz(
+							testComparator.getTcpConnectionClazz());
+
+					commandTCPConnectionToMaster.write(
+							Constants.OK_RESP+"/\n"); 
+				}
+				else {
+					commandTCPConnectionToMaster.write(
+							Constants.KO_RESP+"/\n"); 
+				}
+			}
+			else {
+				commandTCPConnectionToMaster.write(
+						Constants.KO_RESP+"/\n"); 
+			}
+		}
+		catch(Exception e) {
+			commandTCPConnectionToMaster.write(
+					Constants.KO_RESP+"/\n");
+		}
 	}
-	this.comparator.add(comparator);
-    }
+
+	private void runTest(String cmd) throws IOException {
+
+		String[] splittedCMD = cmd.split("/");
+
+		try {
+			if(testComparator != null && splittedCMD.length == 3) {
+
+				try {
+
+					testParameter.setPort(
+							Integer.parseInt(splittedCMD[1]));
+					testParameter.setIPAddress(splittedCMD[2]);
+
+
+					testRunner = new Thread(testParameter);
+					testRunner.start();
+
+
+					commandTCPConnectionToMaster.write(
+							Constants.OK_RESP+"/\n");
+				}
+				catch (NumberFormatException e) {
+					commandTCPConnectionToMaster.write(
+							Constants.KO_RESP+"/\n"); 
+				}
+			}
+			else {
+				commandTCPConnectionToMaster.write(
+						Constants.KO_RESP+"/\n");
+			}
+		}
+		catch(Exception e) {
+			commandTCPConnectionToMaster.write(
+					Constants.KO_RESP+"/\n");
+		}
+	}
+
+	private void sendResponses() throws IOException {
+
+		try {
+			objectTCPConnectionToMaster.write(
+					testComparator.createSendableResponsePack(
+							testParameter.getResponsePack()));
+		}
+		catch(Exception e) {
+			commandTCPConnectionToMaster.write(
+					Constants.KO_RESP+"/\n");
+		}
+	}
+
+	private void setTestComparator(String protocolName) {
+
+		Iterator<Comparator> iter = this.comparator.iterator();
+
+		while (iter.hasNext()) {
+
+			Comparator comparatorTmp = iter.next();
+
+			if (comparatorTmp.isConcernedComparator(protocolName)) {
+				testComparator =  comparatorTmp;
+			}
+		}
+
+		testComparator = null;
+	}
+
+	public void addComparator(Comparator comparator) {
+		Iterator<Comparator> iter = this.comparator.iterator();
+		while (iter.hasNext()) {
+			if (comparator.isConcernedComparator(iter.next().getProtocolName())) {
+				return;
+			}
+		}
+		this.comparator.add(comparator);
+	}
 }

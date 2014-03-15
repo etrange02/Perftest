@@ -7,82 +7,89 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 public class TCPStringClient extends AbstractTCPClient {
-    
-    private BufferedReader in;
-    private OutputStream out;
 
-    
-    
-    
+	private BufferedReader in;
+	private OutputStream out;
 
 
-    /* *********************************************************************
-     * CONSTRUCTORS/CLEAN **************************************************
-     * *********************************************************************/
 
-    public TCPStringClient() {
-	
-	super();
-	
-	in = null;
-	out = null;
-    }
 
-    /**
-     * Start a connection to the specified server in order to 
-     * send/receive String  datas
-     * @param hostname Targeted-server hostname
-     * @param port Targeted-server port
-     * @throws IOException
-     */
-    public void startStringConnection(String hostname, int port) throws IOException {
 
-	Socket clientSocket = super.startConnection(hostname, port);
 
-	in = 
-		new BufferedReader(
-			new InputStreamReader(
-				clientSocket.getInputStream()));
-	out = clientSocket.getOutputStream();
-    }
+	/* *********************************************************************
+	 * CONSTRUCTORS/CLEAN **************************************************
+	 * *********************************************************************/
 
-    /**
-     * Close the last established connection
-     */
-    public void close() throws IOException {
-	
-	in.close();
-	out.close();
-	
-	super.close();
-    }    
-    
-    
-    
+	public TCPStringClient() {
 
-    /* *********************************************************************
-     * OTHERS **************************************************************
-     * *********************************************************************/
-    
-    /**
-     * Read an String from the server
-     * @return The readed String
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    public String read() throws IOException{
-	return in.readLine();
-    }
+		super();
 
-    /**
-     * Write an String for the server
-     * @param message the String to write.
-     * @throws IOException
-     */
-    public void write(String message) throws IOException {
-
-	if(message != null) {
-	    out.write(message.getBytes());
+		in = null;
+		out = null;
 	}
-    }
+
+	/**
+	 * Start a connection to the specified server in order to 
+	 * send/receive String  datas
+	 * @param hostname Targeted-server hostname
+	 * @param port Targeted-server port
+	 * @throws IOException
+	 */
+	public void startStringConnection(String hostname, int port) throws IOException {
+
+		Socket clientSocket = super.startConnection(hostname, port);
+
+		in = 
+				new BufferedReader(
+						new InputStreamReader(
+								clientSocket.getInputStream()));
+		out = clientSocket.getOutputStream();
+	}
+
+	/**
+	 * Close the last established connection
+	 */
+	public void close() throws IOException {
+
+		if(in != null) {
+			in.close();
+			in = null;
+		}
+
+		if(out != null) {
+			out.close();
+			out = null;
+		}
+
+		super.close();
+	}    
+
+
+
+
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
+
+	/**
+	 * Read an String from the server
+	 * @return The readed String
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public String read() throws IOException{
+		return in.readLine();
+	}
+
+	/**
+	 * Write an String for the server
+	 * @param message the String to write.
+	 * @throws IOException
+	 */
+	public void write(String message) throws IOException {
+
+		if(message != null) {
+			out.write(message.getBytes());
+		}
+	}
 }
