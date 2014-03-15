@@ -36,10 +36,12 @@ public class TCPObjectServer extends AbstractTCPServer {
 
 	Socket clientSocket = super.acceptConnection(port);
 
+	//init "out" before "in" because other-end ObjectInputStream wait 
+	//for ObjectOutputStream header informations.
+	out = new ObjectOutputStream(
+			clientSocket.getOutputStream());
 	in = new ObjectInputStream(
 		clientSocket.getInputStream());
-	out = new ObjectOutputStream(
-		clientSocket.getOutputStream());
     }
     
     /**
