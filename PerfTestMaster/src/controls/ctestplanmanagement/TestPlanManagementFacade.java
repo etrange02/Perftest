@@ -264,7 +264,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			}
 		}
 		if (false == continu && null != this.usedProtocolParser) {
-			return getSlaveManagement().sendTest(test);
+			return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
 		}
 		return false;
 	}
@@ -532,7 +532,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 				break;
 		}
 		
-		return getSlaveManagement().sendTest(test);
+		return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
 	}
 
 	@Override

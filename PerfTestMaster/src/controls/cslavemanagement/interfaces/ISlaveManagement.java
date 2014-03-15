@@ -36,9 +36,10 @@ public interface ISlaveManagement extends SlaveListenable {
 	/**
 	 * Deploys a test on every slaves applications
 	 * @param test a test to deploy
+	 * @param protocolName the protocol name
 	 * @return true on success, false otherwise
 	 */
-	public boolean sendTest(AbstractMonitoredTest test);
+	public boolean sendTest(AbstractMonitoredTest test, String protocolName);
 
 	/**
 	 * Returns the number of slaves applications the master is dealing with
