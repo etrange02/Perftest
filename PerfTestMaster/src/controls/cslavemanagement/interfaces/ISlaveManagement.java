@@ -98,7 +98,8 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * Modifies the associated TestPlanManagement
 	 * @param testPlanManagement a TestPlanManagement
 	 */
-	public void setTestPlanManagement(ITestPlanManagement testPlanManagement);
+	public void setTestPlanManagement(
+		ITestPlanManagement testPlanManagement);
 
 	/**
 	 * Returns the list of slaves
