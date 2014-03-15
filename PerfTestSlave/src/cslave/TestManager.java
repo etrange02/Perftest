@@ -58,8 +58,6 @@ public class TestManager extends Thread implements ITestManager {
 
 		objectTCPConnectionToMaster.startObjectConnection(
 				Constants.SOCKET_OBJECT_PORT);
-		
-		System.out.println("TestManager.init(): Finish");
 	}
 
 	@Override
@@ -136,7 +134,7 @@ public class TestManager extends Thread implements ITestManager {
 
 	@Override
 	public void start() {
-
+		
 		String lastReceivedCommand = null;
 
 		while(true) {
