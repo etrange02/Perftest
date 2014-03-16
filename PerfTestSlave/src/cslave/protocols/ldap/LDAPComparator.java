@@ -21,9 +21,4 @@ public class LDAPComparator extends Comparator {
     public String getProtocolName() {
 	return LDAPConstants.PROTOCOL_NAME;
     }
-    
-    @Override
-    public boolean isConcernedComparator(String protocolName) {
-	return LDAPConstants.PROTOCOL_NAME.compareTo(protocolName)==0;
-    }
 }

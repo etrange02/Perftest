@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import shared.SendableResponsePack;
+import shared.ldap.LDAPConstants;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
@@ -61,7 +62,14 @@ public abstract class Comparator {
      * @param protocolName a protocol name
      * @return true if it is implemented, false otherwise
      */
-    public abstract boolean isConcernedComparator(String protocolName);
+    public boolean isConcernedComparator(String protocolName) {
+	
+	if(protocolName==null) {
+	    return false;
+	}
+	
+	return protocolName.compareTo(getProtocolName()) == 0;
+    }
     
     /**
      * Create a light-weight response pack that can be send to 
