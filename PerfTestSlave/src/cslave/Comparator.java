@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import shared.SendableResponsePack;
-import shared.ldap.LDAPConstants;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
