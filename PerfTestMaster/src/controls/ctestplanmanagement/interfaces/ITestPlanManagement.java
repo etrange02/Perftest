@@ -44,7 +44,7 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 
 	/**
 	 * Creates and adds a test plan corresponding to the given protocol. 
-	 * @param protocolName
+	 * @param protocolName a protocol name
 	 * @return a test plan. If the protocol does not exist or a test plan already
 	 *  exist, null is returned
 	 */
@@ -167,7 +167,7 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	public ISlaveManagement getSlaveManagement();
 	
 	/**
-	 * returns the current used protocol parser
+	 * Returns the current used protocol parser
 	 * @return a protocol parser or null
 	 */
 	public ProtocolParser getUsedProtocolParser();
@@ -216,11 +216,10 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	public void setDelayBetweenInstructions(AbstractMonitoredTest test, int delay);
 	
 	/**
-	 * Informs the tests that the maximum available count. Only scalability test 
-	 * are modified
-	 * of slaves changed
+	 * Informs the tests that the maximum available count changed. Only scalability test 
+	 * are modified of slaves changed
 	 * @param test a test
-	 * @param count number of affectetd slaves
+	 * @param count number of affected slaves
 	 */
 	public void setAffectedSlaves(AbstractMonitoredTest test, int count);
 	

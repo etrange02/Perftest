@@ -49,8 +49,8 @@ public interface ISlaveManagement extends SlaveListenable {
 
 	/**
 	 * Runs another slave. Useful in deployed Workload test
-	 * @param address of the tested server
-	 * @param port of the tested server
+	 * @param address address of the tested server
+	 * @param port port of the tested server
 	 * @return true on success
 	 */
 	public boolean runAnotherSlave(String address, int port);

@@ -11,7 +11,7 @@ import controls.cslavemanagement.interfaces.IDataBuffer;
 
 /**
  * A DataBuffer is a storage structure used to keep some data which comes from network.
- * It is a data keeper which accumulates data before released it (Buffer).
+ * It is a data keeper which accumulates data before releasing sit (Buffer).
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0

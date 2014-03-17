@@ -29,7 +29,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 	public AbstractTest(String name) {
 		this.name = name;
 		this.instructions = new ArrayList<IInstruction>();
-		this.instructionDelay = 0;
+		this.instructionDelay = 1;
 		this.status = Status.WAITING;
 	}
 

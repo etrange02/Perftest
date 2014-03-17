@@ -337,6 +337,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 	
 	public void updateMonitoringPanelWithMaxSlaveCount() {
+		if (null == this.getTestPlanManagement().getTestPlan())
+			return;
 		Iterator<AbstractMonitoredTest> iter = this.getTestPlanManagement().getTestPlan().getTests().iterator();
 		AbstractMonitoredTest test = null;
 		while (iter.hasNext()) {
