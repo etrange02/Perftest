@@ -13,8 +13,8 @@ import cslave.interfaces.IResponse;
  */
 public class Response implements IResponse {
 
-    private int delay;
-    private byte[] binaryRequest;
+    private long sendTimeMillis;
+    private long receptionTimeMillis;
     private byte[] expectedBinaryResponse;
     private byte[] serverBinaryResponse;
 
@@ -28,7 +28,6 @@ public class Response implements IResponse {
      * *********************************************************************/
     
     public Response() {
-	this.delay = 0;
 	this.serverBinaryResponse = new byte[0];
     }
 
@@ -41,22 +40,20 @@ public class Response implements IResponse {
      * GETTERS/SETTERS *****************************************************
      * *********************************************************************/
     
-    public int getDelay() {
-	return delay;
+    public void setSendTimeMillis(long sendTimeMillis) {
+	this.sendTimeMillis = sendTimeMillis;
     }
-
-    /**
-     * Modifies the time of response received. Should be positive.
-     * If negative, we consider that the wanted delay is 0.
-     * @param delay the delay
-     */
-    public void setDelay(int delay) {
-
-	this.delay = delay < 0 ? 0 : delay;
+    
+    public long getSendTimeMillis() {
+	return sendTimeMillis;
     }
-
-    public byte[] getServerBinaryResponse() {
-	return serverBinaryResponse;
+    
+    public void setReceptionTimeMillis(long receptionTimeMillis) {
+	this.receptionTimeMillis = receptionTimeMillis;
+    }
+    
+    public long getReceptionTimeMillis() {
+	return receptionTimeMillis;
     }
 
     /**
@@ -66,20 +63,9 @@ public class Response implements IResponse {
     public void setServerBinaryResponse(byte[] serverBinaryResponse) {
 	this.serverBinaryResponse = serverBinaryResponse;
     }
-
-    public byte[] getBinaryRequest() {
-	return binaryRequest;
-    }
-
-    /**
-     * @param binaryRequest the request that was given to the server
-     */
-    public void setBinaryRequest(byte[] binaryRequest) {
-	this.binaryRequest = binaryRequest;
-    }
-
-    public byte[] getExpectedBinaryResponse() {
-	return expectedBinaryResponse;
+    
+    public byte[] getServerBinaryResponse() {
+	return serverBinaryResponse;
     }
 
     /**
@@ -88,5 +74,9 @@ public class Response implements IResponse {
      */
     public void setExpectedBinaryResponse(byte[] expectedBinaryResponse) {
 	this.expectedBinaryResponse = expectedBinaryResponse;
+    }
+    
+    public byte[] getExpectedBinaryResponse() {
+	return expectedBinaryResponse;
     }
 }

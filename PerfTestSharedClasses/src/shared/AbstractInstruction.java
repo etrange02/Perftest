@@ -5,6 +5,8 @@ package shared;
 
 import java.io.Serializable;
 
+import shared.interfaces.IInstruction;
+
 
 /**
  * 

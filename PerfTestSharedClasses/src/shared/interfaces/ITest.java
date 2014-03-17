@@ -1,9 +1,11 @@
 /**
  * 
  */
-package shared;
+package shared.interfaces;
 
 import java.util.List;
+
+import shared.Status;
 
 /**
  * 

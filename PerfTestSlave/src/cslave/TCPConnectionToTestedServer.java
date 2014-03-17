@@ -20,19 +20,20 @@ implements ITCPConnectionToTestedServer {
     
 
 
-
-
-
     /* *********************************************************************
      * CONSTRUCTORS/CLEAN **************************************************
      * *********************************************************************/
 
     public 
     TCPConnectionToTestedServer() {
-
 	clientSocket = null;
     }
 
+    /**
+     * Handle the connection part of the initialization
+     * @param hostname the targeted-server hostname
+     * @param port the targeted-server port
+     */
     public 
     void init(String hostname, int port) {
 
@@ -50,13 +51,13 @@ implements ITCPConnectionToTestedServer {
 
 
 
-
-
-
     /* *********************************************************************
      * GETTERS/SETTERS *****************************************************
      * *********************************************************************/
 
+    /**
+     * @return The socket resulting from the connection to the targeted server.
+     */
     protected Socket getClientSocket() {
 	return clientSocket;
     }

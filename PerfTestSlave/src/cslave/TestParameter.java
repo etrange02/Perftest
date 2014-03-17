@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shared.AbstractTest;
-import shared.ITest;
+import shared.interfaces.ITest;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.IScenario;
 import cslave.interfaces.ITCPConnectionToTestedServer;
+import cslave.interfaces.ITestParameter;
 
 /**
  * 
@@ -21,7 +22,7 @@ import cslave.interfaces.ITCPConnectionToTestedServer;
  * @version 1.1
  * Add delay
  */
-public class TestParameter extends Thread {
+public class TestParameter implements ITestParameter {
 
     private final int POOL_MAX_SIZE = 32;
     private final int RESULT_PACK_SIZE = 1000;
@@ -54,8 +55,7 @@ public class TestParameter extends Thread {
 	pool = new ArrayList<TCPConnectionThread>();
     }
 
-    @Override
-    public void interrupt() {
+    public void stop() {
 	for(TCPConnectionThread tcpCT : pool) {
 	    tcpCT.interrupt();
 	}
@@ -90,10 +90,6 @@ public class TestParameter extends Thread {
 	this.test = abstractTest;
     }
 
-    public void setPool(List<TCPConnectionThread> pool) {
-	this.pool = pool;
-    }
-
     public void setTcpConnectionClazz(
 	    Class<? extends ITCPConnectionToTestedServer> tcpConnectionClazz) {
 	this.tcpConnectionClazz = tcpConnectionClazz;
@@ -108,7 +104,6 @@ public class TestParameter extends Thread {
      * IMPORTANTS METHODS **************************************************
      * *********************************************************************/
 
-    @Override
     public void run() {
 
 	boolean scheduled = false;
