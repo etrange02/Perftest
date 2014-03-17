@@ -1,10 +1,12 @@
-package monitoring;
+package monitoring.capacity;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.util.Iterator;
+import java.util.SortedMap;
 
 import javax.swing.JPanel;
 
@@ -19,28 +21,45 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
 
-public class ResponseTimeGraph extends JPanel {
+public class CapacityGraph extends JPanel {
 
 
-    private DataInfosProvider dataInfosProvider;
+    private CapacityDatasProvider capacityInfosProvider;
 
-    public ResponseTimeGraph(DataInfosProvider dataInfosProvider) {
-	this.dataInfosProvider = dataInfosProvider;
+    public CapacityGraph(CapacityDatasProvider capacityInfosProvider) {
+	this.capacityInfosProvider = capacityInfosProvider;
     }
 
-    public void createGraph() throws Exception {
+    private void createGraph() throws Exception {
 	
-	String[] xAxisLabels= 
-	    { 
-		"1", "2", "3", "4", "5", "6", "7", "8", "9", "10" 
-	    };
+	SortedMap<TimeInMillisFromTestStart, Double>  requestBySecAverages = 
+		capacityInfosProvider.getRequestBySecAverages();
+	Iterator<TimeInMillisFromTestStart> requestBySecAveragesIterator = 
+		requestBySecAverages.keySet().iterator();
+	int i = 0;
+	
+	String[] xAxisLabels= new String[requestBySecAverages.size()];
+	double[] values = new double[requestBySecAverages.size()];
+	
+	while(requestBySecAveragesIterator.hasNext()) {
+	    TimeInMillisFromTestStart tmfts = 
+		    requestBySecAveragesIterator.next();
+	    xAxisLabels[i] = Double.toString(
+		    tmfts.getTimeInMillisFromTestStart());
+	    values[i] = requestBySecAverages.get(tmfts);
+	    i++;
+	}
+	
 	String xAxisTitle= "s";
 	String yAxisTitle= "request/s";
 	String title= "Request handling capacity";
 	DataSeries dataSeries = new DataSeries( 
 		xAxisLabels, xAxisTitle, yAxisTitle, title );
 
-	double[][] data= new double[][]{ { 250, 45, -36, 66, 145, 80, 55 } };
+	double[][] data= new double[][] { values };
+	
+	
+	
 	String[] legendLabels= { "Bugs" };
 	Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
 
