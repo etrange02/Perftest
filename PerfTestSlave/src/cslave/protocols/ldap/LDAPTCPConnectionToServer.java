@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.List;
 
-import shared.IInstruction;
-import shared.ITest;
+import shared.interfaces.IInstruction;
+import shared.interfaces.ITest;
 import cslave.Response;
 import cslave.TCPConnectionToTestedServer;
 import cslave.interfaces.IScenario;
@@ -95,25 +95,22 @@ implements ITCPConnectionToTestedServer {
 		    Response response = new Response();
 
 
-		    
-		    response.setBinaryRequest(
-			    nextInstruction.getBinaryRequest());
+
 		    response.setExpectedBinaryResponse(
 			    nextInstruction.getBinaryResponse());
-		    
-		    
+		        
 		    
 		    wait();
 		    isRunning = true;
 
 		    
-		    
+		    response.setSendTimeMillis(System.currentTimeMillis());
 		    out.write(nextInstruction.getBinaryRequest());
 		    response.setServerBinaryResponse(read(in));
-		    scenario.addResponse(response);
+		    response.setReceptionTimeMillis(System.currentTimeMillis());
+		    scenario.addResponse(response);	    
 		    
-		    
-		    
+	
 		    nextInstructionPos = nextInstructionPos%nbInstructions;
 		    isRunning = false;
 		}

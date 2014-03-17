@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import shared.AbstractInstruction;
-import shared.IInstruction;
+import shared.interfaces.IInstruction;
 import tools.Factory;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;

@@ -5,7 +5,7 @@ package cslave.interfaces;
 
 import java.io.IOException;
 
-import shared.ITest;
+import shared.interfaces.ITest;
 
 /**
  * 
@@ -14,8 +14,20 @@ import shared.ITest;
  */
 public interface ITCPConnectionToTestedServer extends Runnable {
 
+    /**
+     * Init a connection to a targeted server and prepare for running a test.
+     * @param hostname targeted-server hostname
+     * @param port targeted-server port
+     * @param test the instruction provider
+     * @param scenario the responses storer
+     * @throws IOException
+     */
     public void init(String hostname, int port, ITest test, IScenario scenario)
 	    throws IOException;
 
+    /**
+     * @return "true" if this connection is currently handling an instruction,
+     * "false" otherwise.
+     */
     public boolean isRunning();
 }

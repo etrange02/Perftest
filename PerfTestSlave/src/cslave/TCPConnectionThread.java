@@ -35,6 +35,9 @@ public class TCPConnectionThread extends Thread {
      * GETTER/SETTER METHODS ***********************************************
      * *********************************************************************/
     
+    /**
+     * @return The connector that communicate with the targeted server.
+     */
     public ITCPConnectionToTestedServer getITCPConnectionToTestedServer() {
 	return tcpConnectionToTestedServer;
     }

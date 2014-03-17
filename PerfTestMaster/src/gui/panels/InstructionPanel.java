@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import shared.IInstruction;
+import shared.interfaces.IInstruction;
 import tools.GUIConstants;
 import tools.GUIFactory;
 import tools.widgets.InstructionCreator;

@@ -1,9 +1,27 @@
 package shared;
 
-public class SendableResponsePack {
+import shared.interfaces.ISendableResponsePack;
+
+public class SendableResponsePack implements ISendableResponsePack {
     
-    private int[] delays;
+    /**
+     * 
+     */
+    private long[] sendTimeMillis;
+    
+    /**
+     * 
+     */
+    private long[] receptionTimeMilis;
+    
+    /**
+     * 
+     */
     private int nbMiss;
+    
+    /**
+     * 
+     */
     private int nbSuccess;
     
     
@@ -15,9 +33,14 @@ public class SendableResponsePack {
      * CONSTRUCTORS/CLEANS METHODS *****************************************
      * *********************************************************************/
     
-    public SendableResponsePack(int[] delays, int nbMiss, int nbSuccess) {
+    public SendableResponsePack(
+	    long[] sendTimeMillis, 
+	    long[] receptionTimeMilis,
+	    int nbMiss, 
+	    int nbSuccess) {
 	
-	this.delays = delays;
+	this.sendTimeMillis = sendTimeMillis;
+	this.receptionTimeMilis = receptionTimeMilis;
 	this.nbSuccess = nbSuccess;
 	this.nbMiss = nbMiss;
     }
@@ -31,14 +54,34 @@ public class SendableResponsePack {
      * GETTER/SETTER METHODS ***********************************************
      * *********************************************************************/
     
-    public int[] getDelays() {
-	return delays;
+    /**
+     * 
+     * @return
+     */
+    public long[] getSendTimeMillis() {
+        return sendTimeMillis;
     }
     
+    /**
+     * 
+     * @return
+     */
+    public long[] getReceptionTimeMilis() {
+        return receptionTimeMilis;
+    }
+    
+    /**
+     * 
+     * @return
+     */
     public int getNbSuccess() {
 	return nbSuccess;
     }
     
+    /**
+     * 
+     * @return
+     */
     public int getNbMiss() {
 	return nbMiss;
     }

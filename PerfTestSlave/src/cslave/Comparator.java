@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import shared.SendableResponsePack;
-import shared.ldap.LDAPConstants;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
@@ -24,7 +23,9 @@ public abstract class Comparator {
     /* *********************************************************************
      * GETTERS/SETTERS *****************************************************
      * *********************************************************************/
-    
+    /**
+     * @return return the name of the protocol that this Comparator handle.
+     */
     public abstract String getProtocolName();
     
     /**
@@ -82,7 +83,8 @@ public abstract class Comparator {
     createSendableResponsePack(List<IResponse> responsePack) {
 
 	int responsePackSize = responsePack.size();
-	int[] delays = new int [responsePackSize];
+	long[] sendTimeMillis = new long[responsePackSize];
+	long[] receptionTimeMillis = new long[responsePackSize];
 	int nbMiss = 0;
 	int nbSuccess = 0;
 
@@ -90,7 +92,8 @@ public abstract class Comparator {
 	    for(int i = 0; i < responsePackSize; i++) {
 		IResponse response = responsePack.get(i);
 
-		delays[i] = response.getDelay();
+		sendTimeMillis[i] = response.getSendTimeMillis();
+		receptionTimeMillis[i] = response.getReceptionTimeMillis();
 
 		if(isExpectedResponse(response) == true) {
 		    nbSuccess++;
@@ -102,6 +105,10 @@ public abstract class Comparator {
 	}
 
 
-	return new SendableResponsePack(delays, nbSuccess, nbMiss);
+	return new SendableResponsePack(
+		sendTimeMillis, 
+		receptionTimeMillis, 
+		nbSuccess, 
+		nbMiss);
     }
 }

@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import shared.interfaces.IInstruction;
+import shared.interfaces.ITest;
+
 
 /**
  * 

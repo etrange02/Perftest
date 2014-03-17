@@ -3,59 +3,75 @@
  */
 package cslave.interfaces;
 
+import java.util.List;
+
+import shared.AbstractTest;
+
 /**
  * 
  * @author Jean-Luc Amitousa Mankoy jean-luc.amitousa-mankoy@hotmail.fr
  * @version 1.1
  * 
  */
-public interface ITestParameter {
+public interface ITestParameter extends Runnable {
 
-	/**
-	 * Modifies the port to send tests
-	 * @param port the port to send tests
-	 */
-	public void setPort(int port);
 
-	/**
-	 * Modifies the address of the server that the application has to test
-	 * @param IPAddress an address
-	 */
-	public void setIPAddress(String IPAddress);
+    /* *********************************************************************
+     * CLEANS METHODS ******************************************************
+     * *********************************************************************/
+    
+    /**
+     * Stop to run the test. Must be called by the current thread if it get
+     * interrupted.
+     */
+    public void stop();
+    
+    
 
-	/**
-	 * Returns the port
-	 * @return the port
-	 */
-	public int getPort();
+    /* *********************************************************************
+     * GETTER/SETTER METHODS ***********************************************
+     * *********************************************************************/
 
-	/**
-	 * Returns the address
-	 * @return the address
-	 */
-	public String getIPAddress();
+    /**
+     * Modifies the port to send tests
+     * @param port the port to send tests
+     */
+    public void setPort(int port);
 
-	/**
-	 * Modifies the protocol name which is used inside tests
-	 * @param protocolName
-	 */
-	public void setProtocolName(String protocolName);
+    /**
+     * Modifies the address of the server that the application has to test
+     * @param IPAddress an address
+     */
+    public void setIPAddress(String IPAddress);
 
-	/**
-	 * Returns the protocol name
-	 * @return the protocol name
-	 */
-	public String getProtocolName();
-	
-	/**
-	 * Modifies the delay between two instructions
-	 * @param delay
-	 */
-	public void setDelay(int delay);
-	
-	/**
-	 *  Returns the delay between two instructions
-	 * @return  the delay between two instructions
-	 */
-	public int getDelay();
+    /**
+     * Modifies the protocol name which is used inside tests
+     * @param protocolName
+     */
+    public void setProtocolName(String protocolName);
+
+    /**
+     * Set the test to run
+     * @param abstractTest
+     */
+    public void setAbstractTest(AbstractTest abstractTest);
+
+    /**
+     * Set the clazz that going to give use instances. Thoses intances
+     * know how communicate with the targeted server.
+     * @param tcpConnectionClazz
+     */
+    public void setTcpConnectionClazz(
+	    Class<? extends ITCPConnectionToTestedServer> tcpConnectionClazz);
+
+
+    /* *********************************************************************
+     * IMPORTANTS METHODS **************************************************
+     * *********************************************************************/
+
+    /**
+     * 
+     * @return the list of last target server responses.
+     */
+    List<IResponse> getResponsePack();
 }
