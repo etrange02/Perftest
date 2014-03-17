@@ -15,6 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+/**
+ * Dialog to create a test
+ * @author David Lecoconnier david.lecoconnier@gmail.com
+ * @version 1.0
+ */
 public class TestCreator extends JDialog {
 
 	private static final long serialVersionUID = 2255049912687221187L;
@@ -23,6 +28,12 @@ public class TestCreator extends JDialog {
 	private boolean sendData;
 	private JTextField testName;
 	
+	/**
+	 * Constructor
+	 * @param parent the parent
+	 * @param title a title
+	 * @param modal true if it is modal
+	 */
 	public TestCreator(JFrame parent, String title, boolean modal) {
 		super(parent, title, modal);
 		this.setSize(300, 160);
@@ -73,16 +84,28 @@ public class TestCreator extends JDialog {
 		this.add(control, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Show the dialog
+	 * @return true if the user clicks on OK
+	 */
 	public boolean showDialog() {
 		this.sendData = false;
 		this.setVisible(true);
 		return this.sendData;
 	}
 
+	/**
+	 * Returns true if the user selects the kind Scalability, false for a workload kind
+	 * @return true or false according to the test
+	 */
 	public boolean isScalabilityTest() {
 		return this.scalabilityRadioButton.isSelected();
 	}
 
+	/**
+	 * Returns the name of the test
+	 * @return a test name
+	 */
 	public String getTestName() {
 		return this.testName.getText();
 	}

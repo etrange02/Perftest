@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Dialog to create an instruction
+ * @author David Lecoconnier david.lecoconnier@gmail.com
+ * @version 1.0
+ */
 public class InstructionCreator extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -19,6 +24,12 @@ public class InstructionCreator extends JDialog {
 	private JTextField request;
 	private boolean sendData;
 
+	/**
+	 * Constructor
+	 * @param parent the parent
+	 * @param title a title
+	 * @param modal true if it is modal
+	 */
 	public InstructionCreator(JFrame parent, String title, boolean modal) {
 		super(parent, title, modal);
 		this.setSize(300, 160);
@@ -60,20 +71,37 @@ public class InstructionCreator extends JDialog {
 		this.add(control, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Show the dialog
+	 * @return true if the user clicks on OK
+	 */
 	public boolean showDialog() {
 		this.sendData = false;
 		this.setVisible(true);
 		return this.sendData;
 	}
 	
+	/**
+	 * Returns the name of the instruction
+	 * @return the name
+	 */
 	public String getName() {
 		return this.name.getText();
 	}
 	
+	/**
+	 * Returns the request value
+	 * @return a request value
+	 */
 	public String getRequest() {
 		return this.request.getText();
 	}
 	
+	/**
+	 * Modifies both name and request to update them
+	 * @param name a name
+	 * @param request a request
+	 */
 	public void setData(String name, String request) {
 		this.name.setText(name);
 		this.request.setText(request);

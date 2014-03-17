@@ -14,7 +14,7 @@ import controls.ctestplanmanagement.interfaces.IMonitored;
 import shared.AbstractTest;
 
 /**
- * 
+ * Manage data of a monitored test
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
@@ -51,6 +51,9 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 		this.testListeners.remove(listener);
 	}
 	
+	/**
+	 * Informs listeners that the list of instructions changed
+	 */
 	public void updateDataListeners() {
 		Iterator<AbstractMonitoredTestListener> iter = this.abstractMonitoredTestListeners.iterator();
 		while (iter.hasNext()) {
@@ -58,6 +61,10 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 		}
 	}
 	
+	/**
+	 * Informs listeners that the name of the test has changed
+	 * @param newName a name
+	 */
 	public void updateTestListeners() {
 		Iterator<TestListener> iter = this.testListeners.iterator();
 		while (iter.hasNext()) {
@@ -80,7 +87,10 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 			AbstractMonitoredTestMonitorListener listener) {
 		this.abstractMonitoredTestMonitorListeners.remove(listener);
 	}
-	
+	/**
+	 * Informs listeners that the delay between two instructions changed
+	 * @param delay a delay
+	 */
 	public void updateDelayListeners(int delay) {
 		Iterator<AbstractMonitoredTestMonitorListener> iter = this.abstractMonitoredTestMonitorListeners.iterator();
 		while (iter.hasNext()) {
@@ -88,6 +98,10 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 		}
 	}
 	
+	/**
+	 * Informs listeners that the number of slave affected to the test changed
+	 * @param count a number
+	 */
 	public void updateSlaveCountListeners(int count) {
 		Iterator<AbstractMonitoredTestMonitorListener> iter = this.abstractMonitoredTestMonitorListeners.iterator();
 		while (iter.hasNext()) {
@@ -97,6 +111,11 @@ public abstract class AbstractMonitoredTest extends AbstractTest implements IMon
 		System.out.println("update slave count listeners");
 	}
 	
+	/**
+	 * Informs listeners that the list of targets changed
+	 * @param targets the list of all targets
+	 * @param selectedTargets the list of selected targets affected to the test
+	 */
 	public void updateSelectedTargets(List<String> targets, List<String> selectedTargets) {
 		Iterator<AbstractMonitoredTestMonitorListener> iter = this.abstractMonitoredTestMonitorListeners.iterator();
 		while (iter.hasNext()) {

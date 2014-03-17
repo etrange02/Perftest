@@ -24,13 +24,15 @@ public abstract class Comparator {
      * GETTERS/SETTERS *****************************************************
      * *********************************************************************/
     /**
-     * @return return the name of the protocol that this Comparator handle.
+     * Returns the name of the protocol that this Comparator handle.
+     * @return the name of the protocol.
      */
     public abstract String getProtocolName();
     
     /**
-     * @return Returns a protocol specific connector class that going to 
-     * actually send request. 
+     * Returns a protocol specific connector class that going to actually send 
+     * request.
+     * @return a specific connector class
      */
     public abstract 
     Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz();

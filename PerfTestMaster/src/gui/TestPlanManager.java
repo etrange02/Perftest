@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * 
+ * Manages panels. Only one panel is visible at the same time
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0

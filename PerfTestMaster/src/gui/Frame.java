@@ -26,7 +26,7 @@ import tools.widgets.TestPlanCreator;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 
 /**
- * 
+ * Main frame
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
@@ -39,6 +39,10 @@ public class Frame extends JFrame {
 	private TestPlanTree testPlanTree;
 	private ITestPlanManagement testPlanManagement;
 
+	/**
+	 * Constructor
+	 * @param testPlanManagement a testPlanManagement
+	 */
 	public Frame(ITestPlanManagement testPlanManagement) {
 		super();
 		this.testPlanManagement = testPlanManagement;

@@ -65,10 +65,18 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 		}
 	}
 
+	/**
+	 * Specified - Returns the root value
+	 * @return the root value
+	 */
 	public String getRoot() {
 		return root;
 	}
 
+	/**
+	 * Specified - Modifies the root value
+	 * @param root a root value
+	 */
 	public void setRoot(String root) {
 		if (null == root)
 			return;
@@ -80,10 +88,18 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 		}
 	}
 
+	/**
+	 * Specified - Returns the login
+	 * @return a login
+	 */
 	public String getLogin() {
 		return login;
 	}
 
+	/**
+	 * Modifies the login
+	 * @param login a login
+	 */
 	public void setLogin(String login) {
 		if (null == login)
 			return;
@@ -95,10 +111,18 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 		}
 	}
 
+	/**
+	 * Specified - Returns the password
+	 * @return the password
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * Specified - Modifies the password
+	 * @param password a password
+	 */
 	public void setPassword(String password) {
 		if (null == password)
 			return;

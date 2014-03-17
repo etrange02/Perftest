@@ -82,6 +82,10 @@ public abstract class AbstractTestPlan implements ITestPlan, TestPlanListenable 
 		this.port = port;
 	}
 	
+	/**
+	 * Informs listeners that the name of the test plan has changed
+	 * @param name a new name
+	 */
 	public void updatePlanTestNameList(String name) {
 		Iterator<TestPlanListener> iter = this.planTestListenerList.iterator();
 		while (iter.hasNext()) {

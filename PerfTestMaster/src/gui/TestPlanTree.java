@@ -50,9 +50,15 @@ public class TestPlanTree extends JTree implements TestPlanListener, TestListene
 	private ITestPlanManagement testPlanManagement;
 	private JFrame frame;
 	
-	public TestPlanTree(JFrame frame, TestPlanManager testPlanPanel, ITestPlanManagement testPlanManagement) {
+	/**
+	 * Constructor
+	 * @param frame the parent frame
+	 * @param testPlanPanel a manager for panels
+	 * @param testPlanManagement a TestPlanManagement
+	 */
+	public TestPlanTree(JFrame frame, TestPlanManager testPlanManager, ITestPlanManagement testPlanManagement) {
 		super();
-		this.testPlanManager = testPlanPanel;
+		this.testPlanManager = testPlanManager;
 		this.testPlanManagement = testPlanManagement;
 		this.testPlanManagement.addTestPlanListener(this);
 		this.testPlanManagement.addTestListener(this);

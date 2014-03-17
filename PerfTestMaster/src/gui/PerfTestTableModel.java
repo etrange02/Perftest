@@ -5,7 +5,7 @@ import javax.swing.table.AbstractTableModel;
 import tools.GUIConstants;
 
 /**
- * 
+ * Rewriting of the AbstractTableModel
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
@@ -16,6 +16,11 @@ public class PerfTestTableModel extends AbstractTableModel {
 	private Object[][] data;
 	private String[] title;
 	
+	/**
+	 * Constructor
+	 * @param titles titles of columns
+	 * @param data data of the table
+	 */
 	public PerfTestTableModel(String[] titles, Object[][] data) {
 		this.title = titles;
 		this.data = new Object[0][0];
