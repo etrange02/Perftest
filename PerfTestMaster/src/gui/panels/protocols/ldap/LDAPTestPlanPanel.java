@@ -9,8 +9,8 @@ import gui.panels.AbstractTestPlanPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import constants.protocols.ldap.LDAPConstants;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import controls.protocols.ldap.LDAPConstants;
 
 /**
  * 

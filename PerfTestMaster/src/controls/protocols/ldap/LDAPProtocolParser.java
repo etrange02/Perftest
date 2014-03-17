@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 import shared.AbstractInstruction;
-import constants.protocols.ldap.LDAPConstants;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;

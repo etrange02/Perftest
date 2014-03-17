@@ -124,7 +124,7 @@ public class TestManager extends Thread {
 
     /**
      * Modifies the associated TestParameter
-     * @param testRunner a TestParameter
+     * @param testParameter a TestParameter
      */
     public void setTestParameter(ITestParameter testParameter) {
 	this.testParameter = testParameter;

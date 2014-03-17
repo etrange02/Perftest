@@ -79,7 +79,7 @@ public abstract class AbstractTest implements ITest, Serializable {
 
 	/**
 	 * Modifies the list of instructions
-	 * @param instruction a list of instructions
+	 * @param instructions a list of instructions
 	 */
 	public void setInstructions(List<IInstruction> instructions) {
 		this.instructions = instructions;

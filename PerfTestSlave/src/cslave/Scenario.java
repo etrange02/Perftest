@@ -36,7 +36,7 @@ public class Scenario implements IScenario {
     
     /**
      * Modifies the list of responses
-     * @param response a list of responses
+     * @param responses a list of responses
      */
     public void setResponse(List<IResponse> responses) {
 	this.responses = responses;

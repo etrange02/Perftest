@@ -20,8 +20,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import constants.protocols.ldap.LDAPConstants;
+
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import controls.protocols.ldap.LDAPConstants;
 import tools.GUIConstants;
 
 /**
