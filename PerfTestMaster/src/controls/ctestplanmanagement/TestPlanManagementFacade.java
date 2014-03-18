@@ -263,6 +263,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 				continu = false;
 			}
 		}
+		
+		//create the good TCPProxy and run it
+		//create the good AbstractClientForBlankTest and run it
+		//TODO the proxy will automatically complete instruction into test ????
+		
 		if (false == continu && null != this.usedProtocolParser) {
 			return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
 		}
