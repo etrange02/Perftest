@@ -12,49 +12,49 @@ import java.net.Socket;
  */
 public abstract class AbstractTCPServer implements Closeable {
 
-    private ServerSocket serverSocket;
-    private Socket clientSocket; 
+	private ServerSocket serverSocket;
+	private Socket clientSocket; 
 
 
 
 
 
 
-    /* *********************************************************************
-     * CONSTRUCTORS/CLEAN **************************************************
-     * *********************************************************************/
+	/* *********************************************************************
+	 * CONSTRUCTORS/CLEAN **************************************************
+	 * *********************************************************************/
 
-    public AbstractTCPServer() {
-	serverSocket = null;
-	clientSocket = null;
-    }
-
-    /**
-     * Start a TCP connection to a client.
-     * @param port Rhe port to listen on locahost
-     * @return The Socket that represent the established connection
-     * @throws IOException
-     */
-    protected Socket acceptConnection(int port) throws IOException {
-
-	serverSocket = new ServerSocket(port);
-	clientSocket = serverSocket.accept();
-
-	return clientSocket;
-    }
-
-    /**
-     * Close the connection established to the last client and stop
-     * listen. 
-     */
-    public void close() throws IOException {
-
-	if(clientSocket!=null && clientSocket.isClosed()==false) {
-	    clientSocket.close();
+	public AbstractTCPServer() {
+		serverSocket = null;
+		clientSocket = null;
 	}
 
-	if(serverSocket!=null && serverSocket.isClosed()==false) {
-	    serverSocket.close();
+	/**
+	 * Start a TCP connection to a client.
+	 * @param port Rhe port to listen on locahost
+	 * @return The Socket that represent the established connection
+	 * @throws IOException
+	 */
+	protected Socket acceptConnection(int port) throws IOException {
+
+		serverSocket = new ServerSocket(port);
+		clientSocket = serverSocket.accept();
+
+		return clientSocket;
 	}
-    }
+
+	/**
+	 * Close the connection established to the last client and stop
+	 * listen. 
+	 */
+	public void close() throws IOException {
+
+		if(clientSocket!=null && clientSocket.isClosed()==false) {
+			clientSocket.close();
+		}
+
+		if(serverSocket!=null && serverSocket.isClosed()==false) {
+			serverSocket.close();
+		}
+	}
 }
