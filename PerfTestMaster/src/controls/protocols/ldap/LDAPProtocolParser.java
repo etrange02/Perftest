@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 import shared.AbstractInstruction;
-import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
 import controls.ctestplanmanagement.TCPProxy;
@@ -23,21 +22,12 @@ public class LDAPProtocolParser extends ProtocolParser {
 
 	@Override
 	public String getProtocolName() {
-		return "LDAP";
+		return shared.protocols.ldap.LDAPConstants.PROTOCOL_NAME;
 	}
 
 	@Override
 	public AbstractInstruction createNewInstruction() {
 		return new LDAPInstruction();
-	}
-
-	/**
-	 * Useless ????
-	 */
-	@Override
-	public AbstractMonitoredTest createNewTest() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

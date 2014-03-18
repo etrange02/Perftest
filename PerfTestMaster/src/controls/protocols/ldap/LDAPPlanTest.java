@@ -53,13 +53,13 @@ public class LDAPPlanTest extends AbstractTestPlan implements LDAPTestPlanPanelL
 			return;
 		
 		switch (key) {
-			case "ROOT":
+			case LDAPConstants.LDAP_ROOT_PROPERTY:
 				this.setRoot(value.toString());
 				break;
-			case "LOGIN":
+			case LDAPConstants.LDAP_LOGIN_PROPERTY:
 				this.setLogin(value.toString());
 				break;
-			case "PASSWORD":
+			case LDAPConstants.LDAP_PASSWORD_PROPERTY:
 				this.setPassword(value.toString());
 				break;
 		}

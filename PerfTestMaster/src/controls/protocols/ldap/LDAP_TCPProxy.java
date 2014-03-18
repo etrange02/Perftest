@@ -30,16 +30,12 @@ public class LDAP_TCPProxy extends TCPProxy {
 	 */
 	private boolean isAnswer;
 	
-	
-	
-	
-	
-	
 	/* *********************************************************************
 	 * CONSTRUCTORS ********************************************************
 	 * *********************************************************************/
 	
 	/**
+	 * Constructor
 	 * @param hostname the hostname where find the tested server.
 	 * @param port the port to use to discuss with the tested server.
 	 * @param instructions the list of isntructions to complete.
@@ -55,11 +51,6 @@ public class LDAP_TCPProxy extends TCPProxy {
 		currentIndex = 0;
 		isAnswer = false; //1rst time we logically going to read a request part.
 	}
-
-	
-	
-	
-	
 	
 	/* *********************************************************************
 	 * IMPORTANT METHODS ***************************************************
