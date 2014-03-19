@@ -43,7 +43,7 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 			}
 			public void keyReleased(KeyEvent e) {
 				JTextField field = (JTextField) e.getSource();
-				getTestPlanManagement().testPlanGenericSet("ROOT", field.getText());
+				getTestPlanManagement().testPlanGenericSet(LDAPConstants.LDAP_ROOT_PROPERTY, field.getText());
 			}
 			public void keyPressed(KeyEvent e) {
 			}
@@ -53,7 +53,7 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 			}
 			public void keyReleased(KeyEvent e) {
 				JTextField field = (JTextField) e.getSource();
-				getTestPlanManagement().testPlanGenericSet("LOGIN", field.getText());
+				getTestPlanManagement().testPlanGenericSet(LDAPConstants.LDAP_LOGIN_PROPERTY, field.getText());
 			}
 			public void keyPressed(KeyEvent e) {
 			}
@@ -63,13 +63,13 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 			}
 			public void keyReleased(KeyEvent e) {
 				JTextField field = (JTextField) e.getSource();
-				getTestPlanManagement().testPlanGenericSet("PASSWORD", field.getText());
+				getTestPlanManagement().testPlanGenericSet(LDAPConstants.LDAP_PASSWORD_PROPERTY, field.getText());
 			}
 			public void keyPressed(KeyEvent e) {
 			}
 		});
 
-		this.addPropertyLine(new JLabel("Root"), this.rootField);
+		this.addPropertyLine(new JLabel(LDAPConstants.LDAP_TESTPLAN_ROOT), this.rootField);
 		this.addPropertyLine(new JLabel(LDAPConstants.LDAP_TESTPLAN_LOGIN), this.loginField);
 		this.addPropertyLine(new JLabel(LDAPConstants.LDAP_TESTPLAN_PASSWORD), this.passwordField);
 		

@@ -46,13 +46,6 @@ public abstract class ProtocolParser {
 	public abstract AbstractInstruction createNewInstruction();
 
 	/**
-	 * Useless ?? Returns a new instance of Test which is specified to the implemented
-	 * protocol
-	 * @return a new test
-	 */
-	public abstract AbstractMonitoredTest createNewTest();
-
-	/**
 	 * Returns a new instance of plan test which is specified to the implemented
 	 * protocol
 	 * @return a new plan test
