@@ -1,4 +1,4 @@
-package shared.ldap;
+package shared.protocols.ldap;
 
 public class LDAPConstants {
     

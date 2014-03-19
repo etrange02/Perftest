@@ -1,6 +1,6 @@
 package cslave.protocols.ldap;
 
-import shared.ldap.LDAPConstants;
+import shared.protocols.ldap.LDAPConstants;
 import cslave.Comparator;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
