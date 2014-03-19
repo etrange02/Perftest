@@ -16,7 +16,7 @@ import java.net.Socket;
  */
 public abstract class TCPProxy implements Runnable {
 
-	private static final int BERDATAS_MAXLENGTH = 9998;
+	private static final int DATA_MAXLENGTH = 9998;
 	private ServerSocket serverSocket;
 	private int proxyPort;
 	private String hostname;
@@ -147,11 +147,11 @@ public abstract class TCPProxy implements Runnable {
 	 */
 	private byte[] read(InputStream in) throws Exception {
 
-		byte[] tmpArray = new byte[BERDATAS_MAXLENGTH];
+		byte[] tmpArray = new byte[DATA_MAXLENGTH];
 		byte[] resizedArray = null;//the resized array 
 		int datasSize = -1;
 
-		datasSize = in.read(tmpArray, 0, BERDATAS_MAXLENGTH);
+		datasSize = in.read(tmpArray, 0, DATA_MAXLENGTH);
 
 		if(datasSize > 0) {
 			resizedArray = new byte[datasSize];
