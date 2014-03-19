@@ -33,6 +33,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private List<ProtocolParser> protocolParser;
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
+	private AbstractClientForBlankTest clientForBlanktest;
 	private ISlaveManagement slaveManagement;
 	private List<TestPlanListener> planTestListenerList;
 	private List<TestListener> testListenerList;
@@ -119,7 +120,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public TCPProxy getTCPProxy() {
 		return TCPProxy;
 	}
-
+	
+	public AbstractClientForBlankTest getClientForBlankTest() {
+		return clientForBlanktest;
+	}
+	
 	/**
 	 * Useless ?? Modifies the TCPProxy
 	 * @param TCPProxy a TCPProxy
@@ -279,15 +284,21 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 
 			try {
 				for(String target : testPlan.getTargets()) {
+					
+					TCPProxy = usedProtocolParser.createNewTCPProxy(
+							target, 
+							testPlan.getPort(), 
+							test.getInstructions());
+					clientForBlanktest = usedProtocolParser
+							.createNewClientForBlankTest(
+									testPlan, target, test);
+					
+					TCPProxy.setTestPlanManagementFacade(this);
+					
 					Thread proxy = 
-							new Thread(usedProtocolParser.createNewTCPProxy(
-									target, 
-									testPlan.getPort(), 
-									test.getInstructions()));
+							new Thread(TCPProxy);
 					Thread client = 
-							new Thread(usedProtocolParser
-									.createNewClientForBlankTest(
-											testPlan, target, test));
+							new Thread(clientForBlanktest);
 
 					proxy.start();
 

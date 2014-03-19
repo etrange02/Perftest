@@ -34,6 +34,7 @@ import javax.naming.directory.SearchControls;
 
 import shared.interfaces.IInstruction;
 import shared.interfaces.ITest;
+import controls.ctestplanmanagement.TCPProxy;
 import controls.protocols.AbstractClientForBlankTest;
 
 public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
@@ -48,6 +49,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 	private String password;
 
 	private ITest test;
+	private boolean toHandle;
 
 
 
@@ -62,13 +64,16 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 			String hostname, 
 			ITest test) {
 
+		super(test);
+		
 		this.dirContext = null;
-		this.hostname = hostname;
-		this.port = new Integer(ldapTestPlan.getPort()).toString();
+		this.hostname = "localhost";
+		this.port = new Integer(TCPProxy.PROXY_PORT).toString();
 		this.rootdn = ldapTestPlan.getRoot();
 		this.username = ldapTestPlan.getLogin();
 		this.password = ldapTestPlan.getPassword();
 		this.test = test;
+		this.toHandle = false;
 	}
 
 
@@ -189,6 +194,10 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 	 * OTHERS  *************************************************************
 	 * *********************************************************************/
 
+	public boolean toHandle() {
+		return toHandle;
+	}
+	
 	@Override
 	public void run() {
 
@@ -198,9 +207,12 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
 			connect(hostname, port, rootdn, username, password);
 
+			toHandle = true; //not need to handle connection tcp data.
+			
 			if(DEBUG) {
 				System.out.println("LDAPCLientForBlankTest.run(): DEBUG.searchTest ");
 				searchTest("", "(cn=admin)");
+				incrCurrentInstructionIndex();
 			}
 			else {
 				for(IInstruction inst : instructions) {
@@ -228,9 +240,13 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 						LDAPInstructionDelete delete = (LDAPInstructionDelete) inst;
 						deleteTest(delete.getToDelete());
 					}
+			
+					super.incrCurrentInstructionIndex();
 				}
 			}
 
+			toHandle = false; //not need to handle disconnection tcp data
+			
 			disconnect();
 
 		} catch (NamingException e) {
