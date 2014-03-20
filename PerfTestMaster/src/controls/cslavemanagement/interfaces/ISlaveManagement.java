@@ -119,4 +119,11 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * of slaves changed
 	 */
 	public void updateMonitoringPanelWithMaxSlaveCount();
+
+	/**
+	 * Runs slaves for a scalability test
+	 */
+	public void runSlave();
+	
+	public void runAnotherSlave();
 }

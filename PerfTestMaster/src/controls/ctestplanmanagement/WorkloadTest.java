@@ -13,9 +13,11 @@ public class WorkloadTest extends AbstractMonitoredTest {
 	
 	private static final long serialVersionUID = 4922590281574582110L;
 	private WorkloadMonitor workloadMonitor;
+	private int nextAddress;
 	
 	public WorkloadTest (String name) {
 		super(name);
+		this.nextAddress = 0;
 	}
 
 	/**
@@ -40,6 +42,22 @@ public class WorkloadTest extends AbstractMonitoredTest {
 
 	public Monitor getMonitor() {
 		return getWorkloadMonitor();
+	}
+	
+	/**
+	 * Returns a target address. If there are many addresses, each address can be used
+	 * by calling the method many times
+	 * @return an address
+	 */
+	public String getNextAddress() {
+		String res = "";
+		if (!this.getSelectedTargets().isEmpty()) {
+			// We have no guarantee about selected targets variations
+			this.nextAddress = this.nextAddress % this.getSelectedTargets().size();
+			res = this.getSelectedTargets().get(nextAddress);
+			this.nextAddress = (this.nextAddress++) % this.getSelectedTargets().size();
+		}
+		return res;
 	}
 
 }

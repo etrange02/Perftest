@@ -361,4 +361,24 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		}
 	}
 	
+	@Override
+	public void runSlave() {
+		if (null == this.monitoredTest)
+			return;
+		
+		if (this.monitoredTest instanceof ScalabilityTest) {
+			runSlaves(((ScalabilityTest) this.monitoredTest).getAffectedSlaveCount(), this.monitoredTest.getSelectedTargets(), this.testPlanManagement.getTestPlan().getPort());
+		}
+	}
+
+	@Override
+	public void runAnotherSlave() {
+		if (null == this.monitoredTest)
+			return;
+		
+		if (this.monitoredTest instanceof WorkloadTest) {
+			this.runAnotherSlave(((WorkloadTest) this.monitoredTest).getNextAddress(), this.testPlanManagement.getTestPlan().getPort());
+		}
+	}
+	
 }

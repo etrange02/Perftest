@@ -165,12 +165,14 @@ public class Frame extends JFrame {
 					return;
 				if (paths[0].getPathCount() < 2)
 					return;
+				testPlanManagement.getSlaveManagement().runSlave();
 				System.out.println("Run the test '" + paths[0].getPath()[1] + "'");
 				System.out.println("Pust all selected slaves in running mode");
 			}
 		});
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				testPlanManagement.getSlaveManagement().runAnotherSlave();
 				System.out.println("Puts a slave in running mode");
 			}
 		});
@@ -187,7 +189,6 @@ public class Frame extends JFrame {
 					return;
 				if (path.getPathCount() < 2)
 					return;
-				
 				
 				//TODO System.out.println(testPlanManagement.sendTest(path.getPath()[1].toString()));
 				System.out.println(testPlanManagement.deployTest(path.getPath()[1].toString()));
