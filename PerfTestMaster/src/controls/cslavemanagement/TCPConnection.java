@@ -257,7 +257,8 @@ public class TCPConnection {
 		try {
 
 			// SEND a command
-			commandTCPConnectionToSlave.write(Constants.RUN_CMD+"/\n");
+			commandTCPConnectionToSlave.write(
+					Constants.RUN_CMD+"/"+address+"/"+port+"/\n");
 
 			// WAIT for a response
 			if(Constants.OK_RESP.compareTo(

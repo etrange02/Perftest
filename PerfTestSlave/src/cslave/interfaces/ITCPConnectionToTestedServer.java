@@ -6,7 +6,6 @@ package cslave.interfaces;
 import java.io.IOException;
 
 import shared.SendableTest;
-import shared.interfaces.ITest;
 
 /**
  * 
@@ -29,10 +28,11 @@ public interface ITCPConnectionToTestedServer extends Runnable {
     		SendableTest test, 
     		IScenario scenario)
 	    throws IOException;
-
+    
     /**
-     * @return "true" if this connection is currently handling an instruction,
-     * "false" otherwise.
+     * Try to give work to this client
+     * @return "true" if the work has been give, "false" otherwise. "false" 
+     * means that the client is already working.
      */
-    public boolean isRunning();
+    public boolean tryGiveWork();
 }

@@ -70,26 +70,25 @@ public class TestManager extends Thread {
 	public void interrupt() {
 
 		super.interrupt();
-
-		try {
-
-			closeConnections();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		closeConnections();
 	}
 
 	/**
 	 * Close all connections
 	 * @throws IOException
 	 */
-	private void closeConnections() throws IOException {
+	private void closeConnections() {
 
-		closeConnectionToMaster();
+		try {
+			
+			closeConnectionToMaster();
 
-		if(testRunner != null) {
-			testRunner.interrupt();
+			if(testRunner != null) {
+				testRunner.interrupt();
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -165,67 +164,61 @@ public class TestManager extends Thread {
 
 		String lastReceivedCommand = null;
 
-		while(true) {
 
-			try {
 
-				lastReceivedCommand = commandTCPConnectionToMaster.read();
-				System.out.println("TestManager.start(), lastReceived="+lastReceivedCommand);
+		try {
 
-				if(lastReceivedCommand == null) {
-					closeConnections();
-					init();
-				}
-				else if(lastReceivedCommand.startsWith(Constants.RUN_CMD)) {
-
-					runTest(lastReceivedCommand);
-				}
-				else if(lastReceivedCommand.startsWith(Constants.STOP_CMD)) {
-
-					stopTest();
-				}
-				else if(lastReceivedCommand.startsWith(Constants.RESET_CMD)) {
-
-					resetTest(); 
-				}
-				else if(lastReceivedCommand.startsWith(Constants.DEPLOY_CMD)) {
-
-					deployTest(lastReceivedCommand);
-				}
-				else if(lastReceivedCommand.startsWith(Constants.RESULT_CMD)) {
-
-					sendResponses();
-				} 
-				else {
-					commandTCPConnectionToMaster.write(
-							Constants.KO_RESP+"/\n");
-				}
-			} 
-			catch(IOException e) {
-
-				break;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				break;
-			}
-			finally {
+			while(true) {
 
 				try {
 
-					if(commandTCPConnectionToMaster != null) {
-						commandTCPConnectionToMaster.close();
-					}
-					if(objectTCPConnectionToMaster != null) {
-						objectTCPConnectionToMaster.close();
-					}
+					System.out.println("TestManager.start(): wait a cmd");
+					lastReceivedCommand = commandTCPConnectionToMaster.read();
+					System.out.println("TestManager.start(), lastReceived="+lastReceivedCommand);
 
-					init();
+					if(lastReceivedCommand == null) {
+						closeConnections();
+						init();
+					}
+					else if(lastReceivedCommand.startsWith(Constants.RUN_CMD)) {
 
-				} catch (IOException e) {
-					e.printStackTrace();
+						runTest(lastReceivedCommand);
+					}
+					else if(lastReceivedCommand.startsWith(Constants.STOP_CMD)) {
+
+						stopTest();
+					}
+					else if(lastReceivedCommand.startsWith(Constants.RESET_CMD)) {
+
+						resetTest(); 
+					}
+					else if(lastReceivedCommand.startsWith(Constants.DEPLOY_CMD)) {
+
+						deployTest(lastReceivedCommand);
+						System.out.println("TestManager.start(): test deployed");
+					}
+					else if(lastReceivedCommand.startsWith(Constants.RESULT_CMD)) {
+
+						sendResponses();
+					} 
+					else {
+						commandTCPConnectionToMaster.write(
+								Constants.KO_RESP+"/\n");
+					}
 				}
+				catch(IOException e) {
+					
+					closeConnections();
+					init();
+				}
+
 			}
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			closeConnections();
 		}
 	}
 
@@ -296,7 +289,7 @@ public class TestManager extends Thread {
 							"TestManager.deployTest(): inst_"+i+"_request_"+
 									Utils.displayBinaryArray(
 											inst.getBinaryRequest()));
-					
+
 					System.out.println(
 							"TestManager.deployTest(): inst_"+i+"_response_"+
 									Utils.displayBinaryArray(

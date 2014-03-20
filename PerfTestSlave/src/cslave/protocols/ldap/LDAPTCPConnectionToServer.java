@@ -4,14 +4,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.List;
 
+import shared.Constants;
 import shared.SendableTest;
 import shared.interfaces.IInstruction;
-import shared.tcp.AbstractTCPClient;
-import cslave.Response;
+import cslave.TCPConnectionToTestedServer;
 import cslave.interfaces.IScenario;
-import cslave.interfaces.ITCPConnectionToTestedServer;
 
 
 
@@ -20,114 +18,44 @@ import cslave.interfaces.ITCPConnectionToTestedServer;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class LDAPTCPConnectionToServer 
-extends AbstractTCPClient
-implements ITCPConnectionToTestedServer {
-
-	private static final int BERDATAS_MAXLENGTH = 9998;
+public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 
 	private InputStream in;
 	private DataOutputStream out;
 
-	private boolean isRunning;
-	private SendableTest test;
-	private IScenario scenario;
-	private boolean initialized;
-
-
-
-
 
 
 	/* *********************************************************************
-	 * CONSTRUCTORS/CLEANS METHODS *****************************************
+	 * CONSTRUCTORS/INITS METHODS ******************************************
 	 * *********************************************************************/
 
-	public LDAPTCPConnectionToServer() {
-
-		super();
-
-		isRunning = false;
-
-		test = null;
-		scenario = null;
-		initialized = false;
-	}
-
-	public 
-	void init(
+	@Override
+	public void init(
 			String hostname, 
 			int port, 
 			SendableTest test, 
-			IScenario scenario) 
-			throws IOException {
+			IScenario scenario) throws IOException {
 
-		Socket clientSocket = super.startConnection(hostname, port);
+		Socket clientSocket = null;
 
+		super.init(hostname, port, test, scenario);
+		clientSocket = super.getClientSocket();
 
 		this.in = clientSocket.getInputStream();
 		this.out = new DataOutputStream(clientSocket.getOutputStream());
-		this.test = test;
-		this.scenario = scenario;
-		this.initialized = true;
 	}
 
-
-
-
-
+	
 
 	/* *********************************************************************
-	 * IMPORTANT METHODS ***************************************************
+	 * IMPORTANTS METHODS **************************************************
 	 * *********************************************************************/
-
+	
 	@Override
-	public void run() {
+	protected byte[] runInst(IInstruction instruction) throws Exception {
 
-		if(initialized) {
-
-			List<IInstruction> instructions = test.getInstructions();
-			int nbInstructions = instructions.size();
-			int nextInstructionPos = 0;
-
-			try {
-
-				while(true) {
-
-					IInstruction nextInstruction = 
-							instructions.get(nextInstructionPos);
-					Response response = new Response();
-
-
-
-					response.setExpectedBinaryResponse(
-							nextInstruction.getBinaryResponse());
-
-
-					wait();
-					isRunning = true;
-
-
-					response.setSendTimeMillis(System.currentTimeMillis());
-					out.write(nextInstruction.getBinaryRequest());
-					response.setServerBinaryResponse(read(in));
-					response.setReceptionTimeMillis(System.currentTimeMillis());
-					scenario.addResponse(response);	    
-
-
-					nextInstructionPos = nextInstructionPos%nbInstructions;
-					isRunning = false;
-				}
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public boolean isRunning() {
-		return isRunning;
+		out.write(instruction.getBinaryRequest());
+		return read(in);
 	}
 
 	/**
@@ -137,12 +65,12 @@ implements ITCPConnectionToTestedServer {
 	 */
 	private byte[] read(InputStream in) throws Exception {
 
-		byte[] tmpArray = new byte[BERDATAS_MAXLENGTH];
+		byte[] tmpArray = new byte[Constants.TCP_DATAS_MAXLENGTH];
 		byte[] resizedArray = null;//the resized array 
 		int datasSize = -1;
 
 
-		datasSize = in.read(tmpArray, 0, BERDATAS_MAXLENGTH);
+		datasSize = in.read(tmpArray, 0, Constants.TCP_DATAS_MAXLENGTH);
 
 		if(datasSize > 0) {
 			resizedArray = new byte[datasSize];
@@ -155,7 +83,7 @@ implements ITCPConnectionToTestedServer {
 			throw new Exception("Error while reading BER datas");
 		}
 
-
+		
 		return resizedArray;
 	}
 }

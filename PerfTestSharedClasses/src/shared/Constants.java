@@ -20,6 +20,11 @@ public class Constants {
 	 */
 	public static final int SOCKET_COMMAND_PORT = 2001;
 	
+	/**
+	 * The maximum number of bytes that can be transmit in one time
+	 */
+	public static final int TCP_DATAS_MAXLENGTH = 9998;
+	
 	
 	//Commands
 	public static final String RUN_CMD = "run";
