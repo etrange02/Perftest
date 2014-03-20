@@ -1,6 +1,6 @@
 package cslave.protocols.ldap;
 
-import shared.ldap.LDAPConstants;
+import shared.protocols.ldap.LDAPConstants;
 import cslave.Comparator;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
@@ -12,13 +12,13 @@ import cslave.interfaces.ITCPConnectionToTestedServer;
  */
 public class LDAPComparator extends Comparator {
 
-    @Override
-    public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
-	return LDAPTCPConnectionToServer.class;
-    }
+	@Override
+	public Class<? extends ITCPConnectionToTestedServer> getTcpConnectionClazz() {
+		return LDAPTCPConnectionToServer.class;
+	}
 
-    @Override
-    public String getProtocolName() {
-	return LDAPConstants.PROTOCOL_NAME;
-    }
+	@Override
+	public String getProtocolName() {
+		return LDAPConstants.PROTOCOL_NAME;
+	}
 }
