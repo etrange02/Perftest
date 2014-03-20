@@ -15,6 +15,7 @@ import controls.ctestplanmanagement.TCPProxy;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import controls.protocols.AbstractClientForBlankTest;
+import controls.protocols.ldap.instructions.LDAPInstruction;
 
 /**
  * 

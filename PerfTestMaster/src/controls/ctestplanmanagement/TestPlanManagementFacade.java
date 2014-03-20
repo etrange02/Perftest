@@ -120,11 +120,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public TCPProxy getTCPProxy() {
 		return TCPProxy;
 	}
-	
+
 	public AbstractClientForBlankTest getClientForBlankTest() {
 		return clientForBlanktest;
 	}
-	
+
 	/**
 	 * Useless ?? Modifies the TCPProxy
 	 * @param TCPProxy a TCPProxy
@@ -258,17 +258,15 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public boolean deployTest(String name) {
-		
-		System.out.println("TestPlanManagementFacade.deployTest(): BEGIN");
-		
+
 		if (null == getSlaveManagement())
 			return false;
 
-		boolean operationWellDone = true;
 		AbstractTestPlan testPlan = this.getTestPlan();
 		Iterator<AbstractMonitoredTest> iter = testPlan.getTests().iterator();
 		boolean continu = true;
 		AbstractMonitoredTest test = null;
+
 		while (iter.hasNext() && continu) {
 			test = iter.next();
 			if (name.equals(test.getName())) {
@@ -276,15 +274,24 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			}
 		}
 
-		//create the good TCPProxy and run it
-		//create the good AbstractClientForBlankTest and run it
-		//TODO the proxy will automatically complete instruction into test ????
-
+		
 		if (false == continu && null != this.usedProtocolParser) {
 
 			try {
-				for(String target : testPlan.getTargets()) {
-					
+
+				String target = 
+						testPlan.getTargets().size() <= 0 ?
+								null : testPlan.getTargets().get(0);
+
+
+				if(target == null) {
+					return false;
+				}
+				else {
+
+					Thread proxy = null, client = null;
+
+
 					TCPProxy = usedProtocolParser.createNewTCPProxy(
 							target, 
 							testPlan.getPort(), 
@@ -292,13 +299,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 					clientForBlanktest = usedProtocolParser
 							.createNewClientForBlankTest(
 									testPlan, target, test);
-					
+
 					TCPProxy.setTestPlanManagementFacade(this);
-					
-					Thread proxy = 
-							new Thread(TCPProxy);
-					Thread client = 
-							new Thread(clientForBlanktest);
+
+					proxy = new Thread(TCPProxy);
+					client = new Thread(clientForBlanktest);
 
 					proxy.start();
 
@@ -307,31 +312,20 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 					client.start();
 
 					client.join();
-					proxy.interrupt();
+					proxy.interrupt(); //TODO close stream
 
-					//TODO check that test is well initialized
-					System.out.println("TestPlanManagementFacade.deployTest(): "+
-							new Boolean(
-									test.getInstructions().get(0).getBinaryRequest().length>0));
-
-
-					//TODO must be send for each interface
-					//					operationWellDone = operationWellDone &&
-					//							getSlaveManagement().sendTest(
-					//									test, 
-					//									this.usedProtocolParser.getProtocolName());
-
-					operationWellDone = true; //TODO ERASE this line
+					System.out.println("TestPlanManagement.deployTest(): sending toSlaveManagement");
+					
+					return getSlaveManagement()
+							.sendTest(
+									test, 
+									this.usedProtocolParser.getProtocolName());
 				}
 			}
 
 			catch(Exception e) {
 				return false;
 			}
-
-
-
-			return operationWellDone;
 		}
 
 		return false;

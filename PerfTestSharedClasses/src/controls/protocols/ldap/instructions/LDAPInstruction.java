@@ -1,7 +1,7 @@
 /**
  * 
  */
-package controls.protocols.ldap;
+package controls.protocols.ldap.instructions;
 
 import shared.AbstractInstruction;
 

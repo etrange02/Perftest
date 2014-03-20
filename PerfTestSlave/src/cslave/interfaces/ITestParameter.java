@@ -6,6 +6,7 @@ package cslave.interfaces;
 import java.util.List;
 
 import shared.AbstractTest;
+import shared.SendableTest;
 
 /**
  * 
@@ -54,7 +55,7 @@ public interface ITestParameter extends Runnable {
      * Set the test to run
      * @param abstractTest
      */
-    public void setAbstractTest(AbstractTest abstractTest);
+    public void setTest(SendableTest test);
 
     /**
      * Set the clazz that going to give use instances. Thoses intances

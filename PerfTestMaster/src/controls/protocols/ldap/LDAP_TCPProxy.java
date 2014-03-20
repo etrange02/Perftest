@@ -54,38 +54,40 @@ public class LDAP_TCPProxy extends TCPProxy {
 		int currentInstructionIndex = 
 				clientForBlankTest.getCurrentInstructionIndex();
 
-		if(clientForBlankTest.toHandle()) {
+		if(clientForBlankTest.hasNext()) {
+			if(clientForBlankTest.toHandle()) {
 
-			if(tcpData==null) {
-				System.out.println("LDAP_TCPProxy.handleTCPData(): null arg");
-			}
-			else {
-				System.out.print("LDAP_TCPProxy.handleTCPData(): [");
-				for(int i = 0; i <  tcpData.length; i++) {
-					System.out.print(tcpData[i]);
+				if(tcpData==null) {
+					System.out.println("LDAP_TCPProxy.handleTCPData(): null arg");
 				}
-				System.out.println("]");
-			}
+				else {
+					System.out.print("LDAP_TCPProxy.handleTCPData(): [");
+					for(int i = 0; i <  tcpData.length; i++) {
+						System.out.print(tcpData[i]);
+					}
+					System.out.println("]");
+				}
 
-			byte[] request = instructions
+				byte[] request = instructions
+						.get(currentInstructionIndex)
+						.getBinaryRequest();
+
+				if(request==null||request.length==0){ //TODO ensure that this test is the one to do
+
+					System.out.println("LDAP_TCPProxy.handleTCPData(): handled as request");
+
+					instructions
 					.get(currentInstructionIndex)
-					.getBinaryRequest();
-			
-			if(request==null||request.length==0){ //TODO ensure that this test si the one to do
-				
-				System.out.println("LDAP_TCPProxy.handleTCPData(): handled as request");
-				
-				instructions
-				.get(currentInstructionIndex)
-				.setBinaryRequest(tcpData);
-			}
-			else {
-				
-				System.out.println("LDAP_TCPProxy.handleTCPData(): handled as response");
-				
-				instructions
-				.get(currentInstructionIndex)
-				.setBinaryResponse(tcpData);
+					.setBinaryRequest(tcpData);
+				}
+				else {
+
+					System.out.println("LDAP_TCPProxy.handleTCPData(): handled as response");
+
+					instructions
+					.get(currentInstructionIndex)
+					.setBinaryResponse(tcpData);
+				}
 			}
 		}
 	}

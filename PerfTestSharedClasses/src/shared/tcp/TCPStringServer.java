@@ -79,6 +79,14 @@ public final class TCPStringServer extends AbstractTCPServer {
 	 * @throws ClassNotFoundException
 	 */
 	public String read() throws IOException{
+		
+		if(in==null) {
+			System.out.println("TCPStringServer.read(): in is null");
+		}
+		else {
+			System.out.println("TCPStringServer.read(): in is not null");
+		}
+		
 		return in.readLine();
 	}
 

@@ -18,28 +18,22 @@
  *  Class realized from org.apache.jmeter.protocol.ldap.sampler.LdapClientExt
  *  that is an class from the project Apache JMeter version 2.11
  */
-package controls.protocols.ldap;
+package controls.protocols.ldap.instructions;
 
 /**
  * 
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class LDAPInstructionRead extends LDAPInstruction {
+public class LDAPInstructionDelete extends LDAPInstruction {
+
+	private String toDelete;
 	
-	private String searchBase;
-	private String searchFilter;
-	
-	public LDAPInstructionRead(String searchBase, String searchFilter) {
-		this.searchBase = searchBase;
-		this.searchFilter = searchFilter;
+	public LDAPInstructionDelete(String toDelete) {
+		this.toDelete = toDelete;
 	}
 
-	public String getSearchBase() {
-		return searchBase;
-	}
-
-	public String getSearchFilter() {
-		return searchFilter;
+	public String getToDelete() {
+		return toDelete;
 	}
 }

@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import shared.AbstractTest;
 import shared.Constants;
 import shared.SendableResponsePack;
+import shared.SendableTest;
 import shared.tcp.TCPObjectClient;
 import shared.tcp.TCPStringClient;
 
@@ -136,6 +137,8 @@ public class TCPConnection {
 	 */
 	public boolean send(AbstractTest test, String protocolName) {
 
+		System.out.println("TCPConnection.send(...)");
+
 		try {
 
 			if (this.objectTCPConnectionToSlave.isClosed() ||
@@ -152,15 +155,23 @@ public class TCPConnection {
 					Constants.DEPLOY_CMD+"/"+protocolName+"/\n");
 
 			//WAIT for response
-			if(Constants.OK_RESP.compareTo(
-					commandTCPConnectionToSlave.read()) == 0) {
+			if(isAnswer(
+					commandTCPConnectionToSlave.read(), 
+					Constants.OK_RESP+"/")) {
+
+				System.out.println("TCPConnection.deployTest(): sending test "+test.getClass());
 
 				//SEND test
-				objectTCPConnectionToSlave.write(test);
+				objectTCPConnectionToSlave.write(
+						new SendableTest(
+								test.getInstructionDelay(), 
+								test.getInstructions())
+						);
 
 
-				if(Constants.OK_RESP.compareTo(
-						commandTCPConnectionToSlave.read()) == 0) {
+				if(isAnswer(
+						commandTCPConnectionToSlave.read(), 
+						Constants.OK_RESP+"/")) {
 
 					//CHANGE slave status
 					slave.setDeployed(true);
@@ -181,7 +192,6 @@ public class TCPConnection {
 			return true;
 		}
 		catch(Exception e) {
-
 			stop();
 			e.printStackTrace();
 		}
@@ -206,8 +216,9 @@ public class TCPConnection {
 			commandTCPConnectionToSlave.write(Constants.STOP_CMD+"/\n");
 
 			//WAIT for response
-			if(Constants.OK_RESP.compareTo(
-					commandTCPConnectionToSlave.read()) == 0) {
+			if(isAnswer(
+					commandTCPConnectionToSlave.read(), 
+					Constants.OK_RESP+"/")){
 
 				slave.setRunning(false);
 				slave.setDeployed(false);
@@ -300,5 +311,18 @@ public class TCPConnection {
 		}
 
 		return false;
+	}
+
+	private boolean isAnswer(String actualAnswer, String wantedAnswer) {
+
+		if(actualAnswer==null&&wantedAnswer==null) {
+			return true;
+		}
+		else if (actualAnswer==null||wantedAnswer==null) {
+			return false;
+		}
+		else {
+			return actualAnswer.compareTo(wantedAnswer)==0;
+		}
 	}
 }

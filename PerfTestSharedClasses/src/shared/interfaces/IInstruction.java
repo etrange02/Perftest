@@ -3,13 +3,15 @@
  */
 package shared.interfaces;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author David Lecoconnier david.lecoconnier@gmail.com
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface IInstruction {
+public interface IInstruction extends Serializable {
 
 	/**
 	 * Returns the name of the instruction
