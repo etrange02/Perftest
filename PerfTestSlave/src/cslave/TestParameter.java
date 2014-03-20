@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shared.AbstractTest;
+import shared.SendableTest;
 import shared.interfaces.ITest;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.IScenario;
@@ -31,7 +32,7 @@ public class TestParameter implements ITestParameter {
     private String ipAddress;
     private String protocolName;
 
-    private ITest test;
+    private SendableTest test;
     private IScenario scenario;
     private  Class<? extends ITCPConnectionToTestedServer> tcpConnectionClazz;
     private List<TCPConnectionThread> pool;
@@ -86,8 +87,8 @@ public class TestParameter implements ITestParameter {
 	this.protocolName = protocolName;
     }
 
-    public void setAbstractTest(AbstractTest abstractTest) {
-	this.test = abstractTest;
+    public void setTest(SendableTest test) {
+	this.test = test;
     }
 
     public void setTcpConnectionClazz(

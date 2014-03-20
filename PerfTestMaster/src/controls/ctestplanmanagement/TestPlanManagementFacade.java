@@ -19,6 +19,7 @@ import tools.Factory;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
+import controls.protocols.AbstractClientForBlankTest;
 
 /**
  * 
@@ -32,18 +33,19 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	private List<ProtocolParser> protocolParser;
 	private ProtocolParser usedProtocolParser;
 	private TCPProxy TCPProxy;
+	private AbstractClientForBlankTest clientForBlanktest;
 	private ISlaveManagement slaveManagement;
 	private List<TestPlanListener> planTestListenerList;
 	private List<TestListener> testListenerList;
 	private List<TestPlanPanelListener> testPlanPanelListeners;
-	
+
 	public TestPlanManagementFacade() {
 		this.protocolParser = new ArrayList<ProtocolParser>();
 		this.planTestListenerList = new ArrayList<TestPlanListener>();
 		this.testListenerList = new ArrayList<TestListener>();
 		this.testPlanPanelListeners = new ArrayList<TestPlanPanelListener>();
 	}
-	
+
 	/**
 	 * Modifies the associated SlaveManagement
 	 * @param slaveManagement a SlaveManagement
@@ -54,7 +56,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			slaveManagement.setTestPlanManagement(this);
 		}
 	}
-	
+
 	/**
 	 * Returns the current SlaveManagement
 	 * @return the associated SlaveManagement
@@ -78,7 +80,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public void setTestPlan(AbstractTestPlan testPlan) {
 		this.testPlan = testPlan;
 	}
-	
+
 	/**
 	 * Returns the list of protocols parsers
 	 * @return a list
@@ -119,6 +121,10 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		return TCPProxy;
 	}
 
+	public AbstractClientForBlankTest getClientForBlankTest() {
+		return clientForBlanktest;
+	}
+
 	/**
 	 * Useless ?? Modifies the TCPProxy
 	 * @param TCPProxy a TCPProxy
@@ -154,7 +160,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			String instructionName) {
 		if (null == getTestPlan() || null == test || null == instructionName || instructionName.isEmpty())
 			return null;
-		
+
 		if (this.getTestPlan().getTests().contains(test)) {
 			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction();
 			instruction.setName(instructionName);
@@ -162,7 +168,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			test.updateDataListeners();
 			return instruction;
 		}
-		
+
 		return null;
 	}
 
@@ -206,7 +212,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		return test;
 	}
-	
+
 	/**
 	 * Indicates if it is possible to add a monitored test
 	 * @param testName a test name
@@ -237,14 +243,14 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		if (null == target || target.isEmpty())
 			return;
-		
+
 		Pattern p = Pattern.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
 		//((0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)\.){3}(0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)
-	    Matcher m = p.matcher(target);
-		
+		Matcher m = p.matcher(target);
+
 		if (!m.find())
 			return;
-		
+
 		if (!this.testPlan.getTargets().contains(target)) {
 			this.testPlan.getTargets().add(target);
 			this.updatePlanTestTargets();
@@ -252,28 +258,79 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	}
 
 	public boolean deployTest(String name) {
+
 		if (null == getSlaveManagement())
 			return false;
-		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+
+		AbstractTestPlan testPlan = this.getTestPlan();
+		Iterator<AbstractMonitoredTest> iter = testPlan.getTests().iterator();
 		boolean continu = true;
 		AbstractMonitoredTest test = null;
+
 		while (iter.hasNext() && continu) {
 			test = iter.next();
 			if (name.equals(test.getName())) {
 				continu = false;
 			}
 		}
-		
-		//create the good TCPProxy and run it
-		//create the good AbstractClientForBlankTest and run it
-		//TODO the proxy will automatically complete instruction into test ????
+
 		
 		if (false == continu && null != this.usedProtocolParser) {
-			return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
+
+			try {
+
+				String target = 
+						testPlan.getTargets().size() <= 0 ?
+								null : testPlan.getTargets().get(0);
+
+
+				if(target == null) {
+					return false;
+				}
+				else {
+
+					Thread proxy = null, client = null;
+
+
+					TCPProxy = usedProtocolParser.createNewTCPProxy(
+							target, 
+							testPlan.getPort(), 
+							test.getInstructions());
+					clientForBlanktest = usedProtocolParser
+							.createNewClientForBlankTest(
+									testPlan, target, test);
+
+					TCPProxy.setTestPlanManagementFacade(this);
+
+					proxy = new Thread(TCPProxy);
+					client = new Thread(clientForBlanktest);
+
+					proxy.start();
+
+					//TODO check proxy is running before run client
+
+					client.start();
+
+					client.join();
+					proxy.interrupt(); //TODO close stream
+
+					System.out.println("TestPlanManagement.deployTest(): sending toSlaveManagement");
+					
+					return getSlaveManagement()
+							.sendTest(
+									test, 
+									this.usedProtocolParser.getProtocolName());
+				}
+			}
+
+			catch(Exception e) {
+				return false;
+			}
 		}
+
 		return false;
 	}
-	
+
 	public void editInstruction(AbstractMonitoredTest test, int pos,
 			String name, String request) {
 		if (null == getTestPlan() || null == test || null == name || name.isEmpty() || null == request || request.isEmpty())
@@ -282,7 +339,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		if (pos >= test.getInstructions().size())
 			return;
-		
+
 		IInstruction instruction = test.getInstructions().get(pos);
 		if (null == instruction)
 			return;
@@ -332,7 +389,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			int instructionPosition) {
 		if (null == getTestPlan() || null == test || instructionPosition < 0)
 			return false;
-		
+
 		if (this.getTestPlan().getTests().contains(test)) {
 			if (test.getInstructions().size() > instructionPosition) {
 				test.getInstructions().remove(instructionPosition);
@@ -349,7 +406,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		this.testPlan.getTargets().remove(target);
 		this.updatePlanTestTargets();
 	}
-	
+
 	public boolean removeTest(String testName) {
 		if (null == this.testPlan)
 			return false;
@@ -369,9 +426,9 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		if (null == this.testPlan)
 			return false;
 		String res = this.testPlan.writeJSONString();
-		
+
 		updatePlanTestNameList(planTestName);
-		
+
 		System.out.println(res);
 		return false;
 	}
@@ -379,9 +436,9 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public void setPort(int port) {
 		if (port >= 0)
 			this.testPlan.setPort(port);
-		
+
 		System.out.println("Emitted " + this.testPlan.getPort());
-		
+
 		this.updatePortListener("" + this.testPlan.getPort());
 	}
 
@@ -419,28 +476,28 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public void removeTestListener(TestListener testListener) {
 		this.testListenerList.remove(testListener);
 	}
-	
+
 	private void addScalabilityTestListenerList(AbstractMonitoredTest abstractMonitoredTest) {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
 			iter.next().addScalabilityTestListener(abstractMonitoredTest);
 		}
 	}
-	
+
 	private void addWorkloadTestListener(AbstractMonitoredTest abstractMonitoredTest) {
 		Iterator<TestListener> iter = this.testListenerList.iterator();
 		while (iter.hasNext()) {
 			iter.next().addWorkloadTestListener(abstractMonitoredTest);
 		}
 	}
-	
+
 	private void updatePortListener(String port) {
 		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
 		while (iter.hasNext()) {
 			iter.next().updatePort(port);
 		}
 	}
-	
+
 	private void updatePlanTestTargets() {
 		Iterator<TestPlanPanelListener> iter = this.testPlanPanelListeners.iterator();
 		while (iter.hasNext()) {
@@ -467,23 +524,23 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			else if (oldName.equals(tmp.getName()))
 				test = tmp;
 		}
-		
+
 		if (null == test)
 			return;
-		
+
 		test.setName(newName);
 		test.updateTestListeners();
-		
+
 		Iterator<TestListener> iter2 = this.testListenerList.iterator();
 		while (iter2.hasNext()) {
 			iter2.next().renameTest(test.getName());
 		}
 	}
-	
+
 	public void renameTest(AbstractMonitoredTest test, String newName) {
 		if (null == getTestPlan() || null == test || null == newName || newName.isEmpty())
 			return;
-		
+
 		if (!this.getTestPlan().getTests().contains(test))
 			return;
 		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
@@ -492,11 +549,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			if (iter.next().getName().equals(newName))
 				return;
 		}
-		
+
 		test.setName(newName);
-		
+
 		test.updateTestListeners();
-		
+
 		Iterator<TestListener> iter2 = this.testListenerList.iterator();
 		while (iter2.hasNext()) {
 			iter2.next().renameTest(test.getName());
@@ -528,7 +585,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public boolean sendTest(String testName) {
 		if (null == getTestPlan() || null == testName || testName.isEmpty())
 			return false;
-		
+
 		AbstractMonitoredTest test = null;
 		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
 		while (iter.hasNext()) {
@@ -536,7 +593,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			if (testName.equals(test.getName()))
 				break;
 		}
-		
+
 		return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
 	}
 
@@ -558,12 +615,12 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		if (!getTestPlan().getTests().contains(test))
 			return;
-		
+
 		if (count > this.getSlaveManagement().count())
 			count = this.getSlaveManagement().count();
 		if (count < 0)
 			count = 0;
-		
+
 		if (test instanceof ScalabilityTest) {
 			ScalabilityTest scalabilityTest = (ScalabilityTest) test;
 			scalabilityTest.setAffectedSlaveCount(count);
@@ -577,9 +634,9 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		if (!getTestPlan().getTests().contains(test))
 			return;
-		
+
 		test.getSelectedTargets().clear();
-		
+
 		Iterator<String> iter = selectedTargets.iterator();
 		String target = "";
 		while (iter.hasNext()) {
@@ -589,5 +646,5 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		test.updateSelectedTargets(this.getTestPlan().getTargets(), test.getSelectedTargets());
 	}
-	
+
 }

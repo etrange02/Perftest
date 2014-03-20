@@ -5,6 +5,7 @@ package cslave.interfaces;
 
 import java.io.IOException;
 
+import shared.SendableTest;
 import shared.interfaces.ITest;
 
 /**
@@ -22,7 +23,11 @@ public interface ITCPConnectionToTestedServer extends Runnable {
      * @param scenario the responses storer
      * @throws IOException
      */
-    public void init(String hostname, int port, ITest test, IScenario scenario)
+    public void init(
+    		String hostname, 
+    		int port, 
+    		SendableTest test, 
+    		IScenario scenario)
 	    throws IOException;
 
     /**

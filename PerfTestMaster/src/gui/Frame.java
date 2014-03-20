@@ -187,7 +187,10 @@ public class Frame extends JFrame {
 					return;
 				if (path.getPathCount() < 2)
 					return;
-				System.out.println(testPlanManagement.sendTest(path.getPath()[1].toString()));
+				
+				
+				//TODO System.out.println(testPlanManagement.sendTest(path.getPath()[1].toString()));
+				System.out.println(testPlanManagement.deployTest(path.getPath()[1].toString()));
 				System.out.println("Deploy the test '" + path.getPath()[1] + "'");
 			}
 		});

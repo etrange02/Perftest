@@ -18,21 +18,24 @@
  *  Class realized from org.apache.jmeter.protocol.ldap.sampler.LdapClientExt
  *  that is an class from the project Apache JMeter version 2.11
  */
-package controls.protocols.ldap;
+package controls.protocols.ldap.instructions;
 
-import javax.naming.directory.Attribute;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.naming.directory.BasicAttribute;
-import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 
 /**
  * 
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public class LDAPInstructionCreate extends LDAPInstruction {
+public class LDAPInstructionUpdate extends LDAPInstruction {
 
 	private String dnEntry;
-	private BasicAttributes basicAttributes;
+	private List<ModificationItem> modifications;
 
 
 
@@ -44,10 +47,12 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	 * 
 	 * @param dnEntry
 	 */
-	public LDAPInstructionCreate(String dnEntry){
+	public LDAPInstructionUpdate(String dnEntry){
 		this.dnEntry = dnEntry;
-		basicAttributes = new BasicAttributes(false);
+		modifications = new ArrayList<>();
 	}
+
+
 
 
 
@@ -62,6 +67,20 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	public String getDNEntry() {
 		return dnEntry;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ModificationItem[] getModificationItems() {
+		return modifications.toArray(new ModificationItem[0]);
+	}
+
+
+
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
 
 	/**
 	 * 
@@ -82,24 +101,70 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 
 		if(validArgs) {
 
-			Attribute attr = basicAttributes.get(attributeName);
+			BasicAttribute attr = 
+					new BasicAttribute(attributeName, attributValue);
 
-			if(attr==null) {
-				attr = new BasicAttribute(attributeName, attributValue);
-			}
-			else {
-				attr.add(attributValue);
-			}
-
-			basicAttributes.put(attr);
+			modifications.add(
+					new ModificationItem(
+							DirContext.ADD_ATTRIBUTE, 
+							attr
+							)
+					);
 		}
 	}
 
 	/**
 	 * 
-	 * @return
+	 * @param attributeName
+	 * @param attributValue
 	 */
-	public BasicAttributes getBasicAttributes() {
-		return basicAttributes;
+	public void modifyAttribute(String attributeName, String attributValue) {
+		boolean validArgs = true;
+
+		//Check args
+		validArgs = validArgs && (attributeName!=null);
+		validArgs = validArgs && (attributeName.isEmpty()==false);
+		validArgs = validArgs && (attributValue!=null);
+		validArgs = validArgs && (attributValue.isEmpty()==false);
+
+
+
+		if(validArgs) {
+
+			BasicAttribute attr = 
+					new BasicAttribute(attributeName, attributValue);
+
+			modifications.add(
+					new ModificationItem(
+							DirContext.REPLACE_ATTRIBUTE, 
+							attr
+							)
+					);
+		}
+	}
+
+	/**
+	 * 
+	 * @param attributeName
+	 */
+	public void removeAtribute(String attributeName) {
+
+		boolean validArgs = 
+				(attributeName!=null) && 
+				(attributeName.isEmpty()==false);
+
+
+		if(validArgs) {
+
+			BasicAttribute attr = 
+					new BasicAttribute(attributeName);
+
+			modifications.add(
+					new ModificationItem(
+							DirContext.REMOVE_ATTRIBUTE, 
+							attr
+							)
+					);
+		}
 	}
 }

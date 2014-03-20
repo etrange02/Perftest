@@ -3,6 +3,7 @@
  */
 package shared.interfaces;
 
+import java.io.Serializable;
 import java.util.List;
 
 import shared.Status;
@@ -13,7 +14,7 @@ import shared.Status;
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
  * @version 1.0
  */
-public interface ITest {
+public interface ITest extends Serializable {
 
 	/**
 	 * Returns the delay in ms between two launched instructions

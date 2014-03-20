@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.List;
 
+import shared.SendableTest;
 import shared.interfaces.IInstruction;
-import shared.interfaces.ITest;
 import shared.tcp.AbstractTCPClient;
 import cslave.Response;
 import cslave.interfaces.IScenario;
@@ -30,7 +30,7 @@ implements ITCPConnectionToTestedServer {
 	private DataOutputStream out;
 
 	private boolean isRunning;
-	private ITest test;
+	private SendableTest test;
 	private IScenario scenario;
 	private boolean initialized;
 
@@ -55,7 +55,11 @@ implements ITCPConnectionToTestedServer {
 	}
 
 	public 
-	void init(String hostname, int port, ITest test, IScenario scenario) 
+	void init(
+			String hostname, 
+			int port, 
+			SendableTest test, 
+			IScenario scenario) 
 			throws IOException {
 
 		Socket clientSocket = super.startConnection(hostname, port);

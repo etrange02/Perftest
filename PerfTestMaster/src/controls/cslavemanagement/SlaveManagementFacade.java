@@ -205,7 +205,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	@Override
 	public boolean sendTest(
 		AbstractMonitoredTest test, String protocolName) {
-		if (null == test)
+		
+		if (null == test||test.getSelectedTargets().size()<=0)
 			return false;
 		
 		if (null != this.monitoredTest) {
@@ -216,10 +217,20 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		this.monitoredTest = test;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
+		
+		System.out.println("SlaveManagement.sendTest(): looking for slave");
+		
 		while (iter.hasNext()) {
+			
 			slave = iter.next();
+			
+
+			System.out.println("SlaveManagement.sendTest(): sending to "+slave.getAddress());
+			
+			
 			slave.getTCPClientSlave().send(test, protocolName);
 		}
+		
 		this.monitoredTest.setStatus(Status.DEPLOYED);		
 		return true;
 	}

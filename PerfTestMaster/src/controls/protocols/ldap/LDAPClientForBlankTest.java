@@ -32,42 +32,59 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 
-import controls.protocols.AbstractClientForBlankTest;
 import shared.interfaces.IInstruction;
 import shared.interfaces.ITest;
+import controls.ctestplanmanagement.TCPProxy;
+import controls.protocols.AbstractClientForBlankTest;
+import controls.protocols.ldap.instructions.LDAPInstructionConnect;
+import controls.protocols.ldap.instructions.LDAPInstructionCreate;
+import controls.protocols.ldap.instructions.LDAPInstructionDelete;
+import controls.protocols.ldap.instructions.LDAPInstructionDisconnect;
+import controls.protocols.ldap.instructions.LDAPInstructionRead;
+import controls.protocols.ldap.instructions.LDAPInstructionUpdate;
 
 public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
+	private static final boolean DEBUG=true;//TODO ERASEME
+
 	private DirContext dirContext;
-	private String hostname;
-	private String port;
-	private String rootdn;
-	private String username;
-	private String password;
-	
 	private ITest test;
 
 
 
 
-
+	
 	/* *********************************************************************
 	 * CONSTRUCTORS ********************************************************
 	 * *********************************************************************/
 
 	public LDAPClientForBlankTest(
-			String hostname, String port, String rootdn, 
-			String username, String password,
+			LDAPPlanTest ldapTestPlan, 
+			String hostname, 
 			ITest test) {
+
+		super(test);
+
+		List<IInstruction> instructions = test.getInstructions();
+		
 		
 		this.dirContext = null;
-		this.hostname = hostname;
-		this.port = port;
-		this.rootdn = rootdn;
-		this.username = username;
-		this.password = password;
-	}
+		this.test = test;	
 
+		
+		//add connect and disconnect instruction
+		instructions.add(0, 
+				new LDAPInstructionConnect(
+						"localhost", 
+						new Integer(TCPProxy.PROXY_PORT).toString(),
+						ldapTestPlan.getRoot(),
+						ldapTestPlan.getLogin(),
+						ldapTestPlan.getPassword()
+						)
+				);
+
+		instructions.add(instructions.size(), new LDAPInstructionDisconnect());
+	}
 
 
 
@@ -76,7 +93,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 	/* *********************************************************************
 	 * IMPORTANTS METHODS **************************************************
 	 * *********************************************************************/
-	
+
 	/**
 	 * Connect to server.
 	 */
@@ -188,43 +205,66 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 	 * *********************************************************************/
 
 	@Override
+	public boolean toHandle() {
+		return true;
+	}
+	
+	@Override
 	public void run() {
-		
+
 		List<IInstruction> instructions = test.getInstructions();
-		
+
 		try {
-			
-			connect(hostname, port, rootdn, username, password);
-			
+
 			for(IInstruction inst : instructions) {
-				
-				if(inst instanceof LDAPInstructionCreate) {
+
+				if(inst instanceof LDAPInstructionConnect) {
+
+					LDAPInstructionConnect connect = 
+							(LDAPInstructionConnect) inst;
+					connect(connect.getHost(), 
+							connect.getPort(),
+							connect.getRootdn(),
+							connect.getUsername(),
+							connect.getPassword());
+				}
+				else if (inst instanceof LDAPInstructionDisconnect) {
 					
-					LDAPInstructionCreate create = (LDAPInstructionCreate) inst;
+					disconnect();
+				}
+				else if(DEBUG) {
+					System.out.println("LDAPCLientForBlankTest.run(): DEBUG.searchTest ");
+					searchTest("", "(cn=admin)");
+				}
+				else if(inst instanceof LDAPInstructionCreate) {
+
+					LDAPInstructionCreate create = 
+							(LDAPInstructionCreate) inst;
 					createTest(
 							create.getBasicAttributes(), 
 							create.getDNEntry());
 				}
 				else if(inst instanceof LDAPInstructionRead) {
-					
+
 					LDAPInstructionRead read = (LDAPInstructionRead) inst;
 					searchTest(read.getSearchBase(), read.getSearchFilter());
 				}
 				else if (inst instanceof LDAPInstructionUpdate) {
-					
+
 					LDAPInstructionUpdate update = (LDAPInstructionUpdate)inst;
 					modifyTest(
 							update.getModificationItems(), 
 							update.getDNEntry());
 				}
 				else if (inst instanceof LDAPInstructionDelete) {
+
 					LDAPInstructionDelete delete = (LDAPInstructionDelete) inst;
 					deleteTest(delete.getToDelete());
 				}
+
+				super.incrCurrentInstructionIndex();
 			}
-			
-			disconnect();
-			
+
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

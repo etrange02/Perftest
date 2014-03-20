@@ -16,9 +16,9 @@ import java.net.Socket;
  */
 public abstract class TCPProxy implements Runnable {
 
-	private static final int BERDATAS_MAXLENGTH = 9998;
+	public static final int PROXY_PORT = 3000;
+	private static final int DATA_MAXLENGTH = 9998;
 	private ServerSocket serverSocket;
-	private int proxyPort;
 	private String hostname;
 	private int port;
 
@@ -33,8 +33,14 @@ public abstract class TCPProxy implements Runnable {
 	 * CONSTRUCTORS ********************************************************
 	 * *********************************************************************/
 
+	/**
+	 * @param hostname the hostname where find the tested server.
+	 * @param port the port to use to discuss with the tested server.
+	 * @param instructions the list of instructions to complete.
+	 * @throws IOException
+	 */
 	public TCPProxy(String hostname, int port) throws IOException {
-		serverSocket = new ServerSocket(proxyPort);
+		serverSocket = new ServerSocket(PROXY_PORT);
 		this.hostname = hostname;
 		this.port = port;
 	}
@@ -74,8 +80,8 @@ public abstract class TCPProxy implements Runnable {
 	 * *********************************************************************/
 
 	/**
-	 * 
-	 * @param tcpData
+	 * Here, we going to used readed tcpData to complete instructions
+	 * @param tcpData the readed tcp data
 	 */
 	protected abstract void handleTCPData(byte[] tcpData);
 
@@ -140,18 +146,18 @@ public abstract class TCPProxy implements Runnable {
 	}
 
 	/**
-	 * 
-	 * @param in
-	 * @return
+	 * Read a byte array from an tcp byte stream
+	 * @param in the readed tcp byte stream
+	 * @return the readed byte array
 	 * @throws Exception
 	 */
 	private byte[] read(InputStream in) throws Exception {
 
-		byte[] tmpArray = new byte[BERDATAS_MAXLENGTH];
+		byte[] tmpArray = new byte[DATA_MAXLENGTH];
 		byte[] resizedArray = null;//the resized array 
 		int datasSize = -1;
 
-		datasSize = in.read(tmpArray, 0, BERDATAS_MAXLENGTH);
+		datasSize = in.read(tmpArray, 0, DATA_MAXLENGTH);
 
 		if(datasSize > 0) {
 			resizedArray = new byte[datasSize];
