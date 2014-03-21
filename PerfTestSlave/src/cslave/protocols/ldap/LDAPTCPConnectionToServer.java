@@ -4,9 +4,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.Arrays;
 
 import shared.Constants;
 import shared.SendableTest;
+import shared.Utils;
 import shared.interfaces.IInstruction;
 import cslave.TCPConnectionToTestedServer;
 import cslave.interfaces.IScenario;
@@ -29,6 +31,10 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 	 * CONSTRUCTORS/INITS METHODS ******************************************
 	 * *********************************************************************/
 
+	public LDAPTCPConnectionToServer() {
+		super();
+	}
+	
 	@Override
 	public void init(
 			String hostname, 
@@ -53,9 +59,25 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 	
 	@Override
 	protected byte[] runInst(IInstruction instruction) throws Exception {
-
+		
+		byte[] answer = null;
+		
+		
+		System.out.println("LDAPTCPConnectionToServer.runInst(): sending "+
+		Utils.toStringBinaryArray(instruction.getBinaryRequest()));
+		
 		out.write(instruction.getBinaryRequest());
-		return read(in);
+		
+		answer = read(in);
+		
+		System.out.println("LDAPTCPConnectionToServer.runInst(): received "+
+				Utils.toStringBinaryArray(answer));
+		
+		System.out.println("LDAPTCPConnectionToServer.runInst(): isMatching="+
+		Arrays.equals(answer, instruction.getBinaryResponse()));
+		
+		
+		return answer;
 	}
 
 	/**

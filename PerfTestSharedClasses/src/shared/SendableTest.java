@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import shared.interfaces.IInstruction;
+import shared.interfaces.ISendableTest;
 
-public class SendableTest implements Serializable {
+public class SendableTest implements ISendableTest {
 
 	private int instructionDelay;
 	private List<IInstruction> instructions;

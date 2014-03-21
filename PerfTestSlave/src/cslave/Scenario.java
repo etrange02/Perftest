@@ -16,37 +16,32 @@ import cslave.interfaces.IScenario;
  */
 public class Scenario implements IScenario {
 
-    private List<IResponse> responses;
+	private List<IResponse> responses;
 
-    
-    
-    /* *********************************************************************
-     * CONSTRUCTORS ********************************************************
-     * *********************************************************************/
-    
-    public Scenario() {
-	this.responses = new ArrayList<>();
-    }
 
-    
-    
-    /* *********************************************************************
-     * GETTER/SETTER *******************************************************
-     * *********************************************************************/
-    
-    /**
-     * Modifies the list of responses
-     * @param responses a list of responses
-     */
-    public void setResponse(List<IResponse> responses) {
-	this.responses = responses;
-    }
 
-    public void addResponse(IResponse response) {
-	this.responses.add(response);
-    }
+	/* *********************************************************************
+	 * CONSTRUCTORS ********************************************************
+	 * *********************************************************************/
 
-    public List<IResponse> getResponses() {
-	return this.responses;
-    }
+	public Scenario() {
+		this.responses = new ArrayList<>();
+	}
+
+
+
+	/* *********************************************************************
+	 * GETTER/SETTER *******************************************************
+	 * *********************************************************************/
+
+	public void addResponse(IResponse response) {
+		
+		synchronized(responses) {
+			this.responses.add(response);
+		}
+	}
+
+	public List<IResponse> getResponses() {
+		return this.responses;
+	}
 }

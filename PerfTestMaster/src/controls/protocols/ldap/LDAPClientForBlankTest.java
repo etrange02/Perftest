@@ -264,6 +264,8 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
 				super.incrCurrentInstructionIndex();
 			}
+			
+			instructions.remove(instructions.size()-1); //remove disconnection instruction TODO proprify
 
 		} catch (NamingException e) {
 			e.printStackTrace();

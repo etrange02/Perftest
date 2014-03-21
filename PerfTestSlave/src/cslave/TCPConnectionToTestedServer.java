@@ -41,7 +41,9 @@ implements ITCPConnectionToTestedServer {
 		this.workLock = new ReentrantLock();
 		this.haveToWork = workLock.newCondition();
 
-		workLock.lock();
+		
+		System.out.println("TCPConnectionToTestedServer.constructor(): "+
+				Thread.currentThread().getId());
 	}
 
 	public void init(
@@ -83,6 +85,7 @@ implements ITCPConnectionToTestedServer {
 
 			haveToWork.signal();
 			workLock.unlock();
+			System.out.println("TCPConnectionToTestdServer.tryGiveWork(): was here");
 			return true;
 		}
 		else {
@@ -99,20 +102,27 @@ implements ITCPConnectionToTestedServer {
 			int nbInstructions = instructions.size();
 			int nextInstructionPos = 0;
 
+			
 			try {
 
+				workLock.lock();
+				
 				while(true) {
 
 					IInstruction nextInst = 
 							instructions.get(nextInstructionPos);
 
+					System.out.println("TCPConnectionToTestedServer.run(): nextInst="+nextInstructionPos);
+					
 					Response response = new Response();
 					response.setExpectedBinaryResponse(
 							nextInst.getBinaryResponse());
 
+					System.out.println("TCPConnectionToTestedServer.run(): ID="+
+							Thread.currentThread().getId());
 
 					haveToWork.await();
-
+					System.out.println("TCPConnectionToTestdServer.run(): finish wait");
 
 					response.setSendTimeMillis(System.currentTimeMillis());
 					response.setServerBinaryResponse(runInst(nextInst));
@@ -120,7 +130,7 @@ implements ITCPConnectionToTestedServer {
 					scenario.addResponse(response);	    
 
 
-					nextInstructionPos = nextInstructionPos%nbInstructions;
+					nextInstructionPos = (nextInstructionPos+1)%nbInstructions;
 				}
 			}
 			catch(Exception e) {

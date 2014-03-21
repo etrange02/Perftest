@@ -80,7 +80,7 @@ public class TestManager extends Thread {
 	private void closeConnections() {
 
 		try {
-			
+
 			closeConnectionToMaster();
 
 			if(testRunner != null) {
@@ -207,7 +207,7 @@ public class TestManager extends Thread {
 					}
 				}
 				catch(IOException e) {
-					
+
 					closeConnections();
 					init();
 				}
@@ -287,12 +287,12 @@ public class TestManager extends Thread {
 
 					System.out.println(
 							"TestManager.deployTest(): inst_"+i+"_request_"+
-									Utils.displayBinaryArray(
+									Utils.toStringBinaryArray(
 											inst.getBinaryRequest()));
 
 					System.out.println(
 							"TestManager.deployTest(): inst_"+i+"_response_"+
-									Utils.displayBinaryArray(
+									Utils.toStringBinaryArray(
 											inst.getBinaryResponse()));
 				}
 
@@ -344,6 +344,8 @@ public class TestManager extends Thread {
 			};
 			testRunner.start();
 
+			System.out.println("TestManaget.run(): isRunning");
+
 			commandTCPConnectionToMaster.write(
 					Constants.OK_RESP+"/\n");
 		}
@@ -359,9 +361,21 @@ public class TestManager extends Thread {
 	 */
 	private void sendResponses() throws IOException {
 
-		objectTCPConnectionToMaster.write(
-				testComparator.createSendableResponsePack(
-						testParameter.getResponsePack()));
+		System.out.println("TestManager.sendResponses(): gonna send resposnes");
+
+		try {
+			objectTCPConnectionToMaster.write(
+					testComparator.createSendableResponsePack(
+							testParameter.getResponsePack()));
+
+			commandTCPConnectionToMaster.write(
+					Constants.OK_RESP+"/\n");
+		}
+		catch(IOException e){
+			
+			commandTCPConnectionToMaster.write(
+					Constants.KO_RESP+"/\n");
+		}
 	}
 
 	/**

@@ -105,11 +105,14 @@ public class TestParameter implements ITestParameter {
 	public void run() {
 
 		boolean scheduled = false;
+		int instructionDelay = test.getInstructionDelay();
 
 		//TODO check every things is ok before start run
 
 		try {
 			while(true) {
+
+				//System.out.println("TestParameter.run(): newInstruction, poolSize="+pool.size());
 
 				for(TCPConnectionThread connection : pool) {
 					ITCPConnectionToTestedServer tcpCTTS =
@@ -134,13 +137,13 @@ public class TestParameter implements ITestParameter {
 					pool.get(pool.size()-1).start();
 
 
+					System.out.println("TestParameter.run(): "+tcpCTTS.getClass());
+					System.out.println("TestParameter.run(): before tcpCTTS.tryGiveWork()");
 					tcpCTTS.tryGiveWork();  //should return true
 				}
 
 				scheduled = false;
-
-				//TODO Put the real unit
-				Thread.sleep(test.getInstructionDelay()*1000); 
+				Thread.sleep(instructionDelay); 
 			}
 		}
 		catch(Exception e) {
@@ -150,15 +153,25 @@ public class TestParameter implements ITestParameter {
 
 	public List<IResponse> getResponsePack() {
 
+		System.out.println("TestParameter.getResponsePack(): start");
+		
 		List<IResponse> responses = scenario.getResponses();
 		List<IResponse> resultPack = null;
-		int packSize = Math.min(
-				RESULT_PACK_SIZE, responses.size());
 
+		synchronized (responses) {
 
-		resultPack = responses.subList(0, packSize);
-		responses.removeAll(resultPack);
+			int packSize = Math.min(
+					RESULT_PACK_SIZE, responses.size());
+			ArrayList<IResponse> copy = null;
 
-		return resultPack;
+			resultPack = responses.subList(0, packSize);
+			System.out.println("TestParameter.getResponsePack(): gonna copy");
+			copy = new ArrayList<IResponse>(resultPack);
+			responses.removeAll(resultPack);
+			
+			System.out.println("TestParameter.getResponsePack(): finish copy");
+			
+			return copy;
+		}
 	}
 }

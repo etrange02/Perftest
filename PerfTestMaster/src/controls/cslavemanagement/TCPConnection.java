@@ -261,11 +261,22 @@ public class TCPConnection {
 					Constants.RUN_CMD+"/"+address+"/"+port+"/\n");
 
 			// WAIT for a response
-			if(Constants.OK_RESP.compareTo(
-					commandTCPConnectionToSlave.read()) == 0) {
+			if(isAnswer(
+					commandTCPConnectionToSlave.read(), 
+					Constants.OK_RESP+"/")) {
 
 				// Change Slave state
 				slave.setRunning(true);
+
+				try {
+					System.out.println("TCPConnection.run(): ERASEME");
+					Thread.sleep(5000);
+					result();
+				}
+				catch(Exception e) {
+
+				}
+
 				return true;
 			}
 			else {
@@ -291,11 +302,12 @@ public class TCPConnection {
 			lastResponsePack = null;
 
 			// SEND a command
-			commandTCPConnectionToSlave.write(Constants.RUN_CMD+"/\n");
+			commandTCPConnectionToSlave.write(Constants.RESULT_CMD+"/\n");
 
 			// WAIT for a response
-			if(Constants.OK_RESP.compareTo(
-					commandTCPConnectionToSlave.read()) == 0) {
+			if(isAnswer(
+					commandTCPConnectionToSlave.read(), 
+					Constants.OK_RESP+"/")) {
 
 				lastResponsePack = (SendableResponsePack) 
 						objectTCPConnectionToSlave.read();

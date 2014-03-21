@@ -2,7 +2,7 @@ package shared;
 
 public class Utils {
 	
-	public static String displayBinaryArray(byte[] array) {
+	public static String toStringBinaryArray(byte[] array) {
 
 		String str = "[";
 
