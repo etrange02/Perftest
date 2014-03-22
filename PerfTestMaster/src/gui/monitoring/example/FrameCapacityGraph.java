@@ -1,14 +1,14 @@
-package monitoring.example;
+package gui.monitoring.example;
+
+import gui.monitoring.capacity.DelaysAveragesGraph;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import monitoring.capacity.CapacityGraph;
-
 public class FrameCapacityGraph extends JFrame {
-	CapacityGraph graphPanel;
+	DelaysAveragesGraph graphPanel;
 	
-	public FrameCapacityGraph(CapacityGraph graphPanel) throws Exception {
+	public FrameCapacityGraph(DelaysAveragesGraph graphPanel) throws Exception {
 		this.graphPanel = graphPanel;
 		initComponents();
 	}

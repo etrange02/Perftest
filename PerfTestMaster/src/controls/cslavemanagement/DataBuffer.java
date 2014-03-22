@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import shared.SendableResponsePack;
 import controls.cslavemanagement.interfaces.IDataBuffer;
 
 /**
@@ -18,21 +19,21 @@ import controls.cslavemanagement.interfaces.IDataBuffer;
  */
 public class DataBuffer implements IDataBuffer {
 
-	private List<TCPDataBuffer> tCPDataBuffer;
+	private List<SendableResponsePack> tCPDataBuffer;
 	
 	public DataBuffer() {
 		this.tCPDataBuffer = new ArrayList<>();
 	}
 
-	public List<TCPDataBuffer> getTCPDataBuffer() {
+	public List<SendableResponsePack> getTCPDataBuffer() {
 		return this.tCPDataBuffer;
 	}
 
 	public int countReceivedInstructions() {
 		int sum = 0;
-		Iterator<TCPDataBuffer> iter = this.tCPDataBuffer.iterator();
+		Iterator<SendableResponsePack> iter = this.tCPDataBuffer.iterator();
 		while (iter.hasNext()) {
-			sum += 0;//iter.next().;
+			sum += iter.next().getReceptionTimeMilis().length;
 		}
 		return sum;
 	}

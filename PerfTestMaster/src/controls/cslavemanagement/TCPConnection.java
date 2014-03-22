@@ -3,12 +3,13 @@
  */
 package controls.cslavemanagement;
 
+import gui.monitoring.capacity.DelaysAveragesGraph;
+import gui.monitoring.capacity.DelaysInfosProvider;
+import gui.monitoring.example.FrameCapacityGraph;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import monitoring.capacity.CapacityDatasProvider;
-import monitoring.capacity.CapacityGraph;
-import monitoring.example.FrameCapacityGraph;
 import shared.AbstractTest;
 import shared.Constants;
 import shared.SendableResponsePack;
@@ -275,10 +276,10 @@ public class TCPConnection {
 
 				try {
 					System.out.println("TCPConnection.run(): ERASEME");
-					CapacityDatasProvider cdp = new CapacityDatasProvider(1);
-					CapacityGraph cg = new CapacityGraph(cdp);
-
-					for(int i = 0; i < 10; i++) {
+					DelaysAveragesGraph cg = new DelaysAveragesGraph(1);
+					DelaysInfosProvider cdp = cg.getDelaysInfosProvider();
+					
+					for(int i = 0; i < 3; i++) {
 						Thread.sleep(3000);
 						result();
 						cdp.addInfos(lastResponsePack);

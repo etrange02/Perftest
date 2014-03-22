@@ -1,4 +1,4 @@
-package monitoring.capacity;
+package gui.monitoring.capacity;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,20 +21,48 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
 
-public class CapacityGraph extends JPanel {
+public class DelaysAveragesGraph extends JPanel {
 
 
-	private CapacityDatasProvider capacityInfosProvider;
+	private DelaysInfosProvider delaysInfosProvider;
 
-	public CapacityGraph(CapacityDatasProvider capacityInfosProvider) {
-		this.capacityInfosProvider = capacityInfosProvider;
+	
+	
+	/* *********************************************************************
+	 * CONSTRUCTORS ********************************************************
+	 * *********************************************************************/
+
+	/**
+	 * @param timeInterval Forall k natural, all request sent into 
+	 * [0 + k*timeInterval,(k+1)*timeInterval[ are considered to have 
+	 * been sent at (k+1)*(timeInterval/2.0). timeInterval is in millisec.
+	 * @throws Exception 
+	 */
+	public DelaysAveragesGraph(int timeInterval) {
+		this.delaysInfosProvider = new DelaysInfosProvider(timeInterval);
 	}
 
+	
+	
+	/* *********************************************************************
+	 * GETTERS/SETTERS *****************************************************
+	 * *********************************************************************/
+	
+	public DelaysInfosProvider getDelaysInfosProvider() {
+		return delaysInfosProvider;
+	}
+	
+	
+	
+	/* *********************************************************************
+	 * IMPORTANTS **********************************************************
+	 * *********************************************************************/
+	
 	public void createGraph() throws Exception {
 
-		SortedMap<TimeInMillis, Double>  requestBySecAverages = 
-				capacityInfosProvider.getDelaysAverages();
-		Iterator<TimeInMillis> requestBySecAveragesIterator = 
+		SortedMap<Double, Double>  requestBySecAverages = 
+				delaysInfosProvider.getDelaysAverages();
+		Iterator<Double> requestBySecAveragesIterator = 
 				requestBySecAverages.keySet().iterator();
 		int i = 0;
 
@@ -42,17 +70,16 @@ public class CapacityGraph extends JPanel {
 		double[] values = new double[requestBySecAverages.size()];
 
 		while(requestBySecAveragesIterator.hasNext()) {
-			TimeInMillis tmfts = 
+			Double timeFromOriginInMillis = 
 					requestBySecAveragesIterator.next();
-			xAxisLabels[i] = Double.toString(
-					tmfts.getTimeInMillisFromTestStart());
-			values[i] = requestBySecAverages.get(tmfts);
+			xAxisLabels[i] = timeFromOriginInMillis.toString();
+			values[i] = requestBySecAverages.get(timeFromOriginInMillis);
 			i++;
 		}
 
 		String xAxisTitle= "ms";
 		String yAxisTitle= "delay average";
-		String title= "Request handling capacity";
+		String title= "delays average";
 		DataSeries dataSeries = new DataSeries( 
 				xAxisLabels, xAxisTitle, yAxisTitle, title );
 
@@ -60,7 +87,7 @@ public class CapacityGraph extends JPanel {
 
 
 
-		String[] legendLabels= { "Bugs" };
+		String[] legendLabels= { "No legend" };
 		Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
 
 		Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE };
@@ -84,7 +111,7 @@ public class CapacityGraph extends JPanel {
 		axisChart.setGraphics2D((Graphics2D) getGraphics());
 		axisChart.render();
 	}
-
+	
 	@Override
 	public void paint(Graphics g) {
 		try {
