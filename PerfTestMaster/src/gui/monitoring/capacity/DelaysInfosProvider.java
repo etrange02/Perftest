@@ -16,7 +16,8 @@ public class DelaysInfosProvider {
 
 	private SortedMap<Double, List<Long>> delaysInfos;
 	private int timeInterval;
-	long timeOrigin;
+	long absoluteTimeOrigin; 
+	long relativeTimeOrigin;
 	private List<LightWeightResponse> lightWeightResponses;
 
 
@@ -38,7 +39,9 @@ public class DelaysInfosProvider {
 						MAX_TIME_INTERVAL);
 		delaysInfos = new TreeMap<>();
 		this.lightWeightResponses = new ArrayList<>();
-		
+		relativeTimeOrigin = 0;
+		absoluteTimeOrigin = 0;
+
 		refreshTimeOrigin();
 	}
 
@@ -65,13 +68,24 @@ public class DelaysInfosProvider {
 					);
 		}
 	}
-	
+
 	public void refreshTimeOrigin() {
-		 timeOrigin = System.currentTimeMillis();
+
+		long oldAbsoluteTimeOrigin = absoluteTimeOrigin;
+		
+		
+		absoluteTimeOrigin = System.currentTimeMillis();
+		
+		if(relativeTimeOrigin > 0) {
+			relativeTimeOrigin+= (absoluteTimeOrigin-oldAbsoluteTimeOrigin);
+		} 
+		else { //it's the first time we display the graph so start to
+			relativeTimeOrigin = 0;
+		}
 	}
 
-	
-	
+
+
 	/* *********************************************************************
 	 * IMPORTANT ***********************************************************
 	 * *********************************************************************/
@@ -82,11 +96,11 @@ public class DelaysInfosProvider {
 	public SortedMap<Double, Double> getDelaysAverages() {
 
 		SortedMap<Double, Double> datas = new TreeMap<>();
-		
-		
+
+
 		refreshInfos();
-		
-		
+
+
 		for(Double timeFromOriginInMillis : delaysInfos.keySet()) {
 
 			List<Long> delays = delaysInfos.get(timeFromOriginInMillis);
@@ -104,21 +118,22 @@ public class DelaysInfosProvider {
 
 		return datas;
 	}
-	
+
 	private void refreshInfos() {
 
 		//Responses to delete
 		List<LightWeightResponse> staleResponses = new ArrayList<>(); 
-		
+
 
 
 		delaysInfos.clear();
+		refreshTimeOrigin();
 
 
 		for(LightWeightResponse r : lightWeightResponses) {
 
 			//this response was sent at ((k+1)*timeInterval/2.0) from timeOrigin
-			long k = ((r.getSendTimeMillis()-timeOrigin) / timeInterval) + 1;
+			long k = ((r.getSendTimeMillis()-absoluteTimeOrigin) / timeInterval) + 1;
 
 
 			if(k < 0) {
@@ -127,7 +142,8 @@ public class DelaysInfosProvider {
 			else {
 
 				Double timeFromOriginInMillis = 
-						new Double(((k+1)*(timeInterval/2.0)));
+						new Double(
+								relativeTimeOrigin+((k+1)*(timeInterval/2.0)));
 				List<Long> delays = delaysInfos.get(timeFromOriginInMillis);
 
 				if(delays==null) {
@@ -144,7 +160,7 @@ public class DelaysInfosProvider {
 					delaysInfos.put(timeFromOriginInMillis, delays);
 				}
 				else {
-					
+
 					delays.add(
 							new Long(
 									r.getReceptionTimeMillis() -
@@ -156,7 +172,7 @@ public class DelaysInfosProvider {
 		}
 
 		lightWeightResponses.removeAll(staleResponses);
-		
+
 		System.out.println("DelaysInfosProvider: size="+delaysInfos.size());
 	}
 }
