@@ -24,76 +24,76 @@ import org.jCharts.types.ChartType;
 public class CapacityGraph extends JPanel {
 
 
-    private CapacityDatasProvider capacityInfosProvider;
+	private CapacityDatasProvider capacityInfosProvider;
 
-    public CapacityGraph(CapacityDatasProvider capacityInfosProvider) {
-	this.capacityInfosProvider = capacityInfosProvider;
-    }
-
-    private void createGraph() throws Exception {
-	
-	SortedMap<TimeInMillisFromTestStart, Double>  requestBySecAverages = 
-		capacityInfosProvider.getRequestBySecAverages();
-	Iterator<TimeInMillisFromTestStart> requestBySecAveragesIterator = 
-		requestBySecAverages.keySet().iterator();
-	int i = 0;
-	
-	String[] xAxisLabels= new String[requestBySecAverages.size()];
-	double[] values = new double[requestBySecAverages.size()];
-	
-	while(requestBySecAveragesIterator.hasNext()) {
-	    TimeInMillisFromTestStart tmfts = 
-		    requestBySecAveragesIterator.next();
-	    xAxisLabels[i] = Double.toString(
-		    tmfts.getTimeInMillisFromTestStart());
-	    values[i] = requestBySecAverages.get(tmfts);
-	    i++;
+	public CapacityGraph(CapacityDatasProvider capacityInfosProvider) {
+		this.capacityInfosProvider = capacityInfosProvider;
 	}
-	
-	String xAxisTitle= "s";
-	String yAxisTitle= "request/s";
-	String title= "Request handling capacity";
-	DataSeries dataSeries = new DataSeries( 
-		xAxisLabels, xAxisTitle, yAxisTitle, title );
 
-	double[][] data= new double[][] { values };
-	
-	
-	
-	String[] legendLabels= { "Bugs" };
-	Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
+	public void createGraph() throws Exception {
 
-	Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE };
-	Shape[] shapes= { PointChartProperties.SHAPE_CIRCLE };
-	LineChartProperties lineChartProperties= new LineChartProperties( 
-		strokes, shapes );
+		SortedMap<TimeInMillis, Double>  requestBySecAverages = 
+				capacityInfosProvider.getDelaysAverages();
+		Iterator<TimeInMillis> requestBySecAveragesIterator = 
+				requestBySecAverages.keySet().iterator();
+		int i = 0;
 
-	AxisChartDataSet axisChartDataSet= new AxisChartDataSet( 
-		data, legendLabels, paints, ChartType.LINE, 
-		lineChartProperties );
-	dataSeries.addIAxisPlotDataSet( axisChartDataSet );
+		String[] xAxisLabels= new String[requestBySecAverages.size()];
+		double[] values = new double[requestBySecAverages.size()];
 
-	ChartProperties chartProperties= new ChartProperties();
-	AxisProperties axisProperties= new AxisProperties();
-	LegendProperties legendProperties= new LegendProperties();
+		while(requestBySecAveragesIterator.hasNext()) {
+			TimeInMillis tmfts = 
+					requestBySecAveragesIterator.next();
+			xAxisLabels[i] = Double.toString(
+					tmfts.getTimeInMillisFromTestStart());
+			values[i] = requestBySecAverages.get(tmfts);
+			i++;
+		}
 
-	AxisChart axisChart= new AxisChart( 
-		dataSeries, chartProperties, 
-		axisProperties, legendProperties, 450, 400 );
+		String xAxisTitle= "ms";
+		String yAxisTitle= "delay average";
+		String title= "Request handling capacity";
+		DataSeries dataSeries = new DataSeries( 
+				xAxisLabels, xAxisTitle, yAxisTitle, title );
 
-	axisChart.setGraphics2D((Graphics2D) getGraphics());
-	axisChart.render();
-    }
+		double[][] data= new double[][] { values };
 
-    @Override
-    public void paint(Graphics g) {
-	try {
 
-	    createGraph();
-	    super.paint(g);
 
-	} catch (Exception e) {
-	    e.printStackTrace();
+		String[] legendLabels= { "Bugs" };
+		Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
+
+		Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE };
+		Shape[] shapes= { PointChartProperties.SHAPE_CIRCLE };
+		LineChartProperties lineChartProperties= new LineChartProperties( 
+				strokes, shapes );
+
+		AxisChartDataSet axisChartDataSet= new AxisChartDataSet( 
+				data, legendLabels, paints, ChartType.LINE, 
+				lineChartProperties );
+		dataSeries.addIAxisPlotDataSet( axisChartDataSet );
+
+		ChartProperties chartProperties= new ChartProperties();
+		AxisProperties axisProperties= new AxisProperties();
+		LegendProperties legendProperties= new LegendProperties();
+
+		AxisChart axisChart= new AxisChart( 
+				dataSeries, chartProperties, 
+				axisProperties, legendProperties, 650, 600 );
+
+		axisChart.setGraphics2D((Graphics2D) getGraphics());
+		axisChart.render();
 	}
-    }
+
+	@Override
+	public void paint(Graphics g) {
+		try {
+
+			createGraph();
+			super.paint(g);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

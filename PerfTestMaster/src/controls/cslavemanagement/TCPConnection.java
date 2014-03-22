@@ -6,6 +6,9 @@ package controls.cslavemanagement;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import monitoring.capacity.CapacityDatasProvider;
+import monitoring.capacity.CapacityGraph;
+import monitoring.example.FrameCapacityGraph;
 import shared.AbstractTest;
 import shared.Constants;
 import shared.SendableResponsePack;
@@ -220,13 +223,15 @@ public class TCPConnection {
 					commandTCPConnectionToSlave.read(), 
 					Constants.OK_RESP+"/")){
 
+				System.out.println("TCPConnectionstop(): OK/ received");
+				
 				slave.setRunning(false);
 				slave.setDeployed(false);
 
 				return true;
 			}
 			else {
-
+				System.out.println("TCPConnectionstop(): OK/ received not received");
 				return false;
 			}
 
@@ -270,8 +275,17 @@ public class TCPConnection {
 
 				try {
 					System.out.println("TCPConnection.run(): ERASEME");
+					CapacityDatasProvider cdp = new CapacityDatasProvider(1);
+					CapacityGraph cg = new CapacityGraph(cdp);
+
+					for(int i = 0; i < 10; i++) {
+						Thread.sleep(3000);
+						result();
+						cdp.addInfos(lastResponsePack);
+					}
+					System.out.println("TCPConnection.run(): now display");
+					new FrameCapacityGraph(cg);
 					Thread.sleep(5000);
-					result();
 				}
 				catch(Exception e) {
 

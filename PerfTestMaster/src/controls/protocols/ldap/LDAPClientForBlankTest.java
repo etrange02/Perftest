@@ -53,7 +53,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
 
 
-	
+
 	/* *********************************************************************
 	 * CONSTRUCTORS ********************************************************
 	 * *********************************************************************/
@@ -66,13 +66,25 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 		super(test);
 
 		List<IInstruction> instructions = test.getInstructions();
-		
-		
+
+
 		this.dirContext = null;
 		this.test = test;	
 
-		
-		//add connect and disconnect instruction
+
+		if(instructions.size() > 0) {
+
+			//remove connect/disconnect stuff from last test if necessary
+			if(instructions.get(0) instanceof LDAPInstructionConnect) {
+				instructions.remove(0);
+			}
+			if(instructions.get(instructions.size()-1) 
+					instanceof LDAPInstructionDisconnect) {
+				instructions.remove(instructions.size()-1);
+			}
+		}
+
+		//add connect/disconnect stuff
 		instructions.add(0, 
 				new LDAPInstructionConnect(
 						"localhost", 
@@ -82,7 +94,6 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 						ldapTestPlan.getPassword()
 						)
 				);
-
 		instructions.add(instructions.size(), new LDAPInstructionDisconnect());
 	}
 
@@ -208,7 +219,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 	public boolean toHandle() {
 		return true;
 	}
-	
+
 	@Override
 	public void run() {
 
@@ -217,6 +228,8 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 		try {
 
 			for(IInstruction inst : instructions) {
+
+				System.out.println("LDAPClientForBlankTest(): handle "+inst.getClass().getSimpleName());
 
 				if(inst instanceof LDAPInstructionConnect) {
 
@@ -229,7 +242,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 							connect.getPassword());
 				}
 				else if (inst instanceof LDAPInstructionDisconnect) {
-					
+
 					disconnect();
 				}
 				else if(DEBUG) {
@@ -264,7 +277,7 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
 				super.incrCurrentInstructionIndex();
 			}
-			
+
 			instructions.remove(instructions.size()-1); //remove disconnection instruction TODO proprify
 
 		} catch (NamingException e) {

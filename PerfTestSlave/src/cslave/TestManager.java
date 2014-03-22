@@ -227,8 +227,16 @@ public class TestManager extends Thread {
 	 * @throws IOException
 	 */
 	private void stopTest() throws IOException {
+		
+		System.out.println("TestManager.stoTest(): going to stop");
 
 		testRunner.interrupt();
+	
+		
+		commandTCPConnectionToMaster.write(
+				Constants.OK_RESP+"/\n");
+		
+		System.out.println("TestManager.stoTest(): stopped");
 	}
 
 	/**
@@ -372,7 +380,7 @@ public class TestManager extends Thread {
 					Constants.OK_RESP+"/\n");
 		}
 		catch(IOException e){
-			
+
 			commandTCPConnectionToMaster.write(
 					Constants.KO_RESP+"/\n");
 		}

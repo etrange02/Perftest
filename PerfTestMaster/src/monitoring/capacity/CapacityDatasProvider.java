@@ -9,100 +9,105 @@ import shared.SendableResponsePack;
 
 public class CapacityDatasProvider {
 
-    private final int MIN_TIME_INTERVAL  = 100;
-    private final int MAX_TIME_INTERVAL = 1000;
+	private final int MIN_TIME_INTERVAL  = 100;
+	private final int MAX_TIME_INTERVAL = 1000;
 
-    private SortedMap<TimeInMillisFromTestStart, List<Double>> timeInfos;
-    private int timeInterval;
-
-
-
-    /* *********************************************************************
-     * CONSTRUCTORS ********************************************************
-     * *********************************************************************/
-
-    /**
-     * @param timeInterval Forall k natural, all request sent into 
-     * [0 + k*timeInterval,(k+1)*timeInterval[ are considered to have 
-     * been sent at (k+1)*(timeInterval/2). timeInterval is in millisec.
-     */
-    public CapacityDatasProvider(int timeInterval) throws Exception {
-
-	//ensure timeInterval is in [MIN_TIME_INTERVAL, MAX_TIME_INTERVAL]
-	this.timeInterval = 
-		Math.min(Math.max(timeInterval, MIN_TIME_INTERVAL), 
-			MAX_TIME_INTERVAL);
-	this.timeInfos = new TreeMap<>();
-    }
+	private SortedMap<TimeInMillis, List<Long>> delaysInfos;
+	private int timeInterval;
+	private long timeOrigin;
 
 
 
+	/* *********************************************************************
+	 * CONSTRUCTORS ********************************************************
+	 * *********************************************************************/
 
+	/**
+	 * @param timeInterval Forall k natural, all request sent into 
+	 * [0 + k*timeInterval,(k+1)*timeInterval[ are considered to have 
+	 * been sent at (k+1)*(timeInterval/2). timeInterval is in millisec.
+	 */
+	public CapacityDatasProvider(int timeInterval) throws Exception {
 
-    /* *********************************************************************
-     * IMPORTANT ***********************************************************
-     * *********************************************************************/
-
-    public void addInfos(SendableResponsePack sendableResponsePack) {
-
-	long[] sendTimeMillis = sendableResponsePack.getSendTimeMillis();
-	long[] receptionTimeMillis = 
-		sendableResponsePack.getReceptionTimeMilis();
-	int nbResponses = sendTimeMillis.length;
-
-	for(int i = 0; i < nbResponses; i++) {
-
-	    //this response was sent at ((k+1)*timeInterval/2)
-	    int k = ((int)(sendTimeMillis[i] / timeInterval)) + 1;
-
-	    TimeInMillisFromTestStart tmfts = 
-		    new TimeInMillisFromTestStart((k+1)*timeInterval/2);
-	    List<Double> receptionTimesMillis = timeInfos.get(tmfts);
-
-	    if(receptionTimesMillis==null) {
-
-		receptionTimesMillis = new ArrayList<>(); 
-
-		receptionTimesMillis.add(new Double(receptionTimeMillis[i]));
-		timeInfos.put(tmfts, receptionTimesMillis);
-	    }
-	    else {
-		receptionTimesMillis.add(new Double(receptionTimeMillis[i]));
-	    }
-	}
-    }
-
-    /**
-     * @return the list of request/s average for times in millisec
-     */
-    public SortedMap<TimeInMillisFromTestStart, Double> getRequestBySecAverages() {
-
-	SortedMap<TimeInMillisFromTestStart, Double> datas = new TreeMap<>();
-
-	for(TimeInMillisFromTestStart tmfts : timeInfos.keySet()) {
-
-	    //compute average
-
-	    List<Double> receptionTimesMillis = timeInfos.get(tmfts);
-	    double accum = 0;
-	    double nbTimes = 0;
-	    double nbReqBySecAverage = -1;
-
-	    for(Double d : receptionTimesMillis) {
-		accum += d;
-		nbTimes++;
-	    }
-
-	    if(nbTimes > 0.0) {
-		nbReqBySecAverage = 
-			new Double(
-				receptionTimesMillis.size()*
-				(accum/nbTimes));
-	    }
-
-	    datas.put(tmfts, nbReqBySecAverage);
+		//ensure timeInterval is in [MIN_TIME_INTERVAL, MAX_TIME_INTERVAL]
+		this.timeInterval = 
+				Math.min(Math.max(timeInterval, MIN_TIME_INTERVAL), 
+						MAX_TIME_INTERVAL);
+		this.delaysInfos = new TreeMap<>();
+		this.timeOrigin=System.currentTimeMillis();
 	}
 
-	return datas;
-    }
+
+
+
+
+	/* *********************************************************************
+	 * IMPORTANT ***********************************************************
+	 * *********************************************************************/
+
+	public void addInfos(SendableResponsePack sendableResponsePack) {
+
+		long[] sendTimeMillis = sendableResponsePack.getSendTimeMillis();
+		long[] receptionTimeMillis = 
+				sendableResponsePack.getReceptionTimeMilis();
+		int nbResponses = sendTimeMillis.length;
+
+		for(int i = 0; i < nbResponses; i++) {
+
+			//this response was sent at ((k+1)*timeInterval/2)*timeOrigin
+			int k = ((int)((sendTimeMillis[i]-timeOrigin) / timeInterval)) + 1;
+
+			if(k > 0) {
+				System.out.println("CapacityDatasProvider.addResponsePack(): k="+k);
+
+				TimeInMillis tm = 
+						new TimeInMillis(((k+1)*timeInterval/2));
+				List<Long> delays = delaysInfos.get(tm);
+
+				if(delays==null) {
+
+					delays = new ArrayList<>(); 
+
+					System.out.println("CapacityDatasProvider.addResponsePack(): "+receptionTimeMillis[i]+", goto: "+new Double(receptionTimeMillis[i]));
+
+					delays.add(new Long(
+							receptionTimeMillis[i]-sendTimeMillis[i]));
+					delaysInfos.put(tm, delays);
+				}
+				else {
+					delays.add(new Long(
+							receptionTimeMillis[i]-sendTimeMillis[i]));
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return the list of request/s average for times in millisec
+	 */
+	public SortedMap<TimeInMillis, Double> getDelaysAverages() {
+
+		SortedMap<TimeInMillis, Double> datas = new TreeMap<>();
+
+		for(TimeInMillis tmfts : delaysInfos.keySet()) {
+
+			//compute average
+
+			List<Long> delays = delaysInfos.get(tmfts);
+			double accum = 0;
+
+			if(delays.size() > 0) {
+				
+				for(Long delay : delays) {
+					accum += delay;
+				}
+				
+				datas.put(tmfts, accum/delays.size());
+			}
+			
+			
+		}
+
+		return datas;
+	}
 }

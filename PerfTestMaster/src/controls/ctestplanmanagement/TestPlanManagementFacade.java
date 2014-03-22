@@ -259,6 +259,8 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 
 	public boolean deployTest(String name) {
 
+		System.out.println("TestPlanManagementFacade.deployTest() BEGIN");
+		
 		if (null == getSlaveManagement())
 			return false;
 
@@ -314,6 +316,9 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 					client.join();
 					proxy.interrupt(); //TODO close stream
 
+					TCPProxy.close();
+					clientForBlanktest.close();
+					
 					System.out.println("TestPlanManagement.deployTest(): sending toSlaveManagement");
 					
 					return getSlaveManagement()

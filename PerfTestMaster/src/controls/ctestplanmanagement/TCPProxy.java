@@ -45,7 +45,11 @@ public abstract class TCPProxy implements Runnable {
 		this.port = port;
 	}
 
-
+	public void close() throws IOException {
+		if(serverSocket != null && serverSocket.isClosed()==false) {
+			serverSocket.close();
+		}
+	}
 
 
 

@@ -62,6 +62,6 @@ public class AbstractTCPClient implements Closeable {
 	 * *********************************************************************/
 
 	public boolean isClosed() {
-		return (clientSocket!=null && clientSocket.isClosed());
+		return (clientSocket==null || clientSocket.isClosed());
 	}
 }
