@@ -1,11 +1,11 @@
 package gui.monitoring;
 
-public class LightWeightResponse {
+public class RawData {
 	
 	private long sendTimeMillis;
 	private long receptionTimeMillis;
 	
-	public LightWeightResponse(long sendTimeMillis, long receptionTimeMillis) {
+	public RawData(long sendTimeMillis, long receptionTimeMillis) {
 		this.sendTimeMillis = sendTimeMillis;
 		this.receptionTimeMillis = receptionTimeMillis;
 	}

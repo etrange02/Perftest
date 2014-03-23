@@ -78,7 +78,7 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	public void addTarget(String target);
 
 	/**
-	 * Deploys a test into slave application
+	 * Deploys a test into slaves applications
 	 * @param name a test name
 	 * @return true on success, false otherwise
 	 */
@@ -200,13 +200,13 @@ public interface ITestPlanManagement extends TestPlanListenable, TestListenable,
 	 */
 	public void testPlanGenericSet(String key, Object value);
 	
-	/**
-	 * Deploys a test on every slaves applications. It internally delegates the 
-	 * sending to ISlaveManagement
-	 * @param testName a name of a test to deploy
-	 * @return true on success, false otherwise
-	 */
-	public boolean sendTest(String testName);
+//	/**
+//	 * Deploys a test on every slaves applications. It internally delegates the 
+//	 * sending to ISlaveManagement
+//	 * @param testName a name of a test to deploy
+//	 * @return true on success, false otherwise
+//	 */
+//	public boolean sendTest(String testName);
 	
 	/**
 	 * Modifies the delay between two instructions for the given test

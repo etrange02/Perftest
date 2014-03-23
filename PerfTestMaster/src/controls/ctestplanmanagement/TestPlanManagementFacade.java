@@ -6,7 +6,9 @@ package controls.ctestplanmanagement;
 import gui.interfaces.TestListener;
 import gui.interfaces.TestPlanListener;
 import gui.interfaces.TestPlanPanelListener;
+import gui.monitoring.interfaces.IGUIMonitor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -260,7 +262,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	public boolean deployTest(String name) {
 
 		System.out.println("TestPlanManagementFacade.deployTest() BEGIN");
-		
+
 		if (null == getSlaveManagement())
 			return false;
 
@@ -276,7 +278,7 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			}
 		}
 
-		
+
 		if (false == continu && null != this.usedProtocolParser) {
 
 			try {
@@ -291,38 +293,11 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 				}
 				else {
 
-					Thread proxy = null, client = null;
-
-
-					TCPProxy = usedProtocolParser.createNewTCPProxy(
-							target, 
-							testPlan.getPort(), 
-							test.getInstructions());
-					clientForBlanktest = usedProtocolParser
-							.createNewClientForBlankTest(
-									testPlan, target, test);
-
-					TCPProxy.setTestPlanManagementFacade(this);
-
-					proxy = new Thread(TCPProxy);
-					client = new Thread(clientForBlanktest);
-
-					proxy.start();
-
-					//TODO check proxy is running before run client
-
-					client.start();
-
-					client.join();
-					proxy.interrupt(); //TODO close stream
-
-					TCPProxy.close();
-					clientForBlanktest.close();
+					playBlankTest(target, test);
 					
-					System.out.println("TestPlanManagement.deployTest(): sending toSlaveManagement");
-					
+
 					return getSlaveManagement()
-							.sendTest(
+							.deployTest(
 									test, 
 									this.usedProtocolParser.getProtocolName());
 				}
@@ -334,6 +309,39 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 
 		return false;
+	}
+
+	private void playBlankTest(
+			String target, 
+			AbstractMonitoredTest test) throws Exception {
+
+		Thread proxy = null, client = null;
+
+
+		TCPProxy = usedProtocolParser.createNewTCPProxy(
+				target, 
+				testPlan.getPort(), 
+				test.getInstructions());
+		clientForBlanktest = usedProtocolParser
+				.createNewClientForBlankTest(
+						testPlan, target, test);
+
+		TCPProxy.setTestPlanManagementFacade(this);
+
+		proxy = new Thread(TCPProxy);
+		client = new Thread(clientForBlanktest);
+
+		proxy.start();
+
+		//TODO check proxy is running before run client
+
+		client.start();
+
+		client.join();
+		proxy.interrupt(); //TODO close stream
+
+		TCPProxy.close();
+		clientForBlanktest.close();
 	}
 
 	public void editInstruction(AbstractMonitoredTest test, int pos,
@@ -586,21 +594,21 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		this.testPlan.set(key, value);
 	}
 
-	@Override
-	public boolean sendTest(String testName) {
-		if (null == getTestPlan() || null == testName || testName.isEmpty())
-			return false;
-
-		AbstractMonitoredTest test = null;
-		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
-		while (iter.hasNext()) {
-			test = iter.next();
-			if (testName.equals(test.getName()))
-				break;
-		}
-
-		return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
-	}
+//	@Override
+//	public boolean sendTest(String testName) {
+//		if (null == getTestPlan() || null == testName || testName.isEmpty())
+//			return false;
+//
+//		AbstractMonitoredTest test = null;
+//		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
+//		while (iter.hasNext()) {
+//			test = iter.next();
+//			if (testName.equals(test.getName()))
+//				break;
+//		}
+//
+//		return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
+//	}
 
 	@Override
 	public void setDelayBetweenInstructions(AbstractMonitoredTest test, int delay) {
@@ -651,5 +659,4 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 		}
 		test.updateSelectedTargets(this.getTestPlan().getTargets(), test.getSelectedTargets());
 	}
-
 }

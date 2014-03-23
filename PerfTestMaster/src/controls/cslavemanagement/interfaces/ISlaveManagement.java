@@ -7,7 +7,7 @@ import gui.interfaces.SlaveListenable;
 
 import java.util.List;
 
-import controls.cslavemanagement.DataBuffer;
+import shared.DataBuffer;
 import controls.cslavemanagement.Slave;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
@@ -34,12 +34,14 @@ public interface ISlaveManagement extends SlaveListenable {
 	public boolean addSlave(String ipAddress);
 
 	/**
-	 * Deploys a test on every slaves applications
+	 * Deploys a test on slaves applications
 	 * @param test a test to deploy
 	 * @param protocolName the protocol name
 	 * @return true on success, false otherwise
 	 */
-	public boolean sendTest(AbstractMonitoredTest test, String protocolName);
+	public boolean deployTest(
+			AbstractMonitoredTest test, 
+			String protocolName);
 
 	/**
 	 * Returns the number of slaves applications the master is dealing with
@@ -87,7 +89,7 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * Returns a list of DataBuffer managed by the slave manager.
 	 * @return a list
 	 */
-	public List<DataBuffer> getDataBuffer();
+	public List<DataBuffer> getLastReceivedResponsesPack();
 
 	/**
 	 * Returns the current associated TestPlanManagement
@@ -126,4 +128,9 @@ public interface ISlaveManagement extends SlaveListenable {
 	public void runSlave();
 	
 	public void runAnotherSlave();
+	
+	/**
+	 * Update all slave listeners
+	 */
+	public void updateAllSlaveListeners();
 }

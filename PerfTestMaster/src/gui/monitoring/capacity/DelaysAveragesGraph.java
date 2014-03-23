@@ -1,5 +1,7 @@
 package gui.monitoring.capacity;
 
+import gui.monitoring.interfaces.IGUIMonitor;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -21,11 +23,12 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
 
-public class DelaysAveragesGraph extends JPanel {
+import controls.cslavemanagement.SlaveManagementFacade;
+
+public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 
 
 	private DelaysInfosProvider delaysInfosProvider;
-
 	
 	
 	/* *********************************************************************
@@ -38,8 +41,16 @@ public class DelaysAveragesGraph extends JPanel {
 	 * been sent at (k+1)*(timeInterval/2.0). timeInterval is in millisec.
 	 * @throws Exception 
 	 */
-	public DelaysAveragesGraph(int timeInterval) {
-		this.delaysInfosProvider = new DelaysInfosProvider(timeInterval);
+	public DelaysAveragesGraph(
+			int timeInterval,
+			SlaveManagementFacade slaveManagementFacade) {
+		
+		super(true);
+		
+		this.delaysInfosProvider = 
+				new DelaysInfosProvider(
+						timeInterval,
+						slaveManagementFacade);
 	}
 
 	
@@ -53,12 +64,11 @@ public class DelaysAveragesGraph extends JPanel {
 	}
 	
 	
-	
 	/* *********************************************************************
 	 * IMPORTANTS **********************************************************
 	 * *********************************************************************/
 	
-	public void createGraph() throws Exception {
+	private void createGraph() throws Exception {
 
 		SortedMap<Double, Double>  requestBySecAverages = 
 				delaysInfosProvider.getDelaysAverages();
@@ -108,19 +118,24 @@ public class DelaysAveragesGraph extends JPanel {
 				dataSeries, chartProperties, 
 				axisProperties, legendProperties, 650, 600 );
 
-		axisChart.setGraphics2D((Graphics2D) getGraphics());
+		Graphics g = this.getGraphics();
+		
+		if(g==null) {
+			System.out.println("DelaysAvaragesGraph.createGraph(): g is null");
+		}
+		
+		axisChart.setGraphics2D((Graphics2D) this.getGraphics());
 		axisChart.render();
 	}
 	
 	@Override
-	public void paint(Graphics g) {
+	public void update() {
+		
 		try {
-
 			createGraph();
-			super.paint(g);
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}	
 	}
 }

@@ -22,14 +22,6 @@ public class ScalabilityTest extends AbstractMonitoredTest {
 	}
 
 	/**
-	 * Returns the associated ScalabilityMonitor
-	 * @return a ScalabilityMonitor
-	 */
-	public ScalabilityMonitor getScalabilityMonitor() {
-		return scalabilityMonitor;
-	}
-
-	/**
 	 * Modifies the associated ScalabilityMonitor
 	 * @param scalabilityMonitor a ScalabilityMonitor
 	 */
@@ -41,8 +33,8 @@ public class ScalabilityTest extends AbstractMonitoredTest {
 		return null;
 	}
 
-	public Monitor getMonitor() {
-		return getScalabilityMonitor();
+	public ScalabilityMonitor getMonitor() {
+		return scalabilityMonitor;
 	}
 
 	public int getAffectedSlaveCount() {

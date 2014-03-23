@@ -6,7 +6,7 @@ package cslave;
 import java.util.Arrays;
 import java.util.List;
 
-import shared.SendableResponsePack;
+import shared.DataBuffer;
 import cslave.interfaces.IResponse;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
@@ -81,7 +81,7 @@ public abstract class Comparator {
 	 * @param responsePack the list of all server responses
 	 * @return the created sendable response pack.
 	 */
-	public SendableResponsePack 
+	public DataBuffer 
 	createSendableResponsePack(List<IResponse> responsePack) {
 
 		int responsePackSize = responsePack.size();
@@ -107,7 +107,7 @@ public abstract class Comparator {
 		}
 
 
-		return new SendableResponsePack(
+		return new DataBuffer(
 				sendTimeMillis, 
 				receptionTimeMillis, 
 				nbSuccess, 
