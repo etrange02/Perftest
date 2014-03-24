@@ -3,6 +3,7 @@ package controls.cslavemanagement;
 import java.util.ArrayList;
 import java.util.List;
 
+import shared.Constants;
 import shared.DataBuffer;
 
 public class DatasUpdater implements Runnable {
@@ -17,14 +18,17 @@ public class DatasUpdater implements Runnable {
 
 		try {
 
+			//Wait for slaves to get its first responses
+			Thread.sleep(2*Constants.SECS_IN_INTERVAL_FOREACH_RESPPACK*1000);
+			
 			while(true){
 
 				List<DataBuffer> responsesPacks = new ArrayList<>();
 
-				Thread.sleep(5000);
+				
+				Thread.sleep(Constants.SECS_IN_INTERVAL_FOREACH_RESPPACK*1000);
 
 				
-				System.out.println("DatasUpdater.run(): going to update ");
 				for(Slave slave : slaveManagementFacade.getSlave()){
 
 					if(slave.isRunning()) {
@@ -37,9 +41,7 @@ public class DatasUpdater implements Runnable {
 
 				slaveManagementFacade.setLastReceivedResponsesPack(
 						responsesPacks);
-				System.out.println("DatasUpdater.run(): done ");
 				slaveManagementFacade.updateAllSlaveListeners();
-				System.out.println("DatasUpdater.run(): notified ");
 			}
 		}
 		catch(Exception e) {

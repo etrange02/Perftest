@@ -6,7 +6,7 @@ package controls.ctestplanmanagement;
 import gui.interfaces.TestListener;
 import gui.interfaces.TestPlanListener;
 import gui.interfaces.TestPlanPanelListener;
-import gui.monitoring.interfaces.IGUIMonitor;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
 
 import java.io.IOException;
 import java.util.ArrayList;

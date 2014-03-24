@@ -37,4 +37,14 @@ public class Constants {
 	public static final String OK_RESP = "ok";
 	public static final String KO_RESP = "ko";
 	
+	/**
+	 * Each sent response pack contains all responses for an time-interval.
+	 * This constant specifies the size of this interval.
+	 */
+	public static final long SECS_IN_INTERVAL_FOREACH_RESPPACK = 3;
+	
+	/**
+	 * The max number of responses we want for each responses pack
+	 */
+	public static final long MAXSIZE_FOREACH_RESPPACK = 100000;
 }

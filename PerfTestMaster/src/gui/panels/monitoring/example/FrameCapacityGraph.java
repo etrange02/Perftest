@@ -1,24 +1,21 @@
-package gui.monitoring.example;
+package gui.panels.monitoring.example;
 
-import gui.monitoring.capacity.DelaysAveragesGraph;
-import gui.monitoring.capacity.DelaysInfosProvider;
+import gui.panels.monitoring.delays.DelaysAveragesGraph;
+import gui.panels.monitoring.delays.DelaysInfosProvider;
+
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import controls.cslavemanagement.SlaveManagementFacade;
 
 public class FrameCapacityGraph extends JFrame {
 	DelaysAveragesGraph graphPanel;
 
-	public FrameCapacityGraph(
-			int timeInterval, 
-			SlaveManagementFacade slaveManagementFacade) throws Exception {
+	public FrameCapacityGraph(SlaveManagementFacade slaveManagementFacade) {
 		
-		this.graphPanel = 
-				new DelaysAveragesGraph(
-						timeInterval, 
-						slaveManagementFacade);
+		this.graphPanel = new DelaysAveragesGraph(slaveManagementFacade);
+
 	}
 	
 	public  DelaysInfosProvider getDelaysInfosProvider() {
@@ -31,9 +28,23 @@ public class FrameCapacityGraph extends JFrame {
 		graphPanel.setSize( 500, 500 );
 		this.getContentPane().add( graphPanel );
 		this.setVisible( true );
-		graphPanel.update();
+		
+		addWindowListener( new java.awt.event.WindowAdapter()
+		{
+			public void windowClosing( WindowEvent windowEvent )
+			{
+				exitForm( windowEvent );
+			}
+		});
+		
+		graphPanel.update();		
 	}
 
+	private void exitForm( WindowEvent windowEvent )
+	{
+		System.exit( 0 );
+	}
+	
 	@Override
 	public void repaint() {
 

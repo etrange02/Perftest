@@ -1,4 +1,4 @@
-package gui.monitoring;
+package gui.panels.monitoring;
 
 public class RawData {
 	

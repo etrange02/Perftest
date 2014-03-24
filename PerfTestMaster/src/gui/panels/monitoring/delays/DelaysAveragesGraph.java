@@ -1,8 +1,7 @@
-package gui.monitoring.capacity;
+package gui.panels.monitoring.delays;
 
-import gui.monitoring.interfaces.IGUIMonitor;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
@@ -41,16 +40,12 @@ public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 	 * been sent at (k+1)*(timeInterval/2.0). timeInterval is in millisec.
 	 * @throws Exception 
 	 */
-	public DelaysAveragesGraph(
-			int timeInterval,
-			SlaveManagementFacade slaveManagementFacade) {
+	public DelaysAveragesGraph(SlaveManagementFacade slaveManagementFacade) {
 		
 		super(true);
 		
 		this.delaysInfosProvider = 
-				new DelaysInfosProvider(
-						timeInterval,
-						slaveManagementFacade);
+				new DelaysInfosProvider(slaveManagementFacade);
 	}
 
 	
@@ -70,9 +65,9 @@ public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 	
 	private void createGraph() throws Exception {
 
-		SortedMap<Double, Double>  requestBySecAverages = 
+		SortedMap<Long, Double>  requestBySecAverages = 
 				delaysInfosProvider.getDelaysAverages();
-		Iterator<Double> requestBySecAveragesIterator = 
+		Iterator<Long> requestBySecAveragesIterator = 
 				requestBySecAverages.keySet().iterator();
 		int i = 0;
 
@@ -80,7 +75,7 @@ public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 		double[] values = new double[requestBySecAverages.size()];
 
 		while(requestBySecAveragesIterator.hasNext()) {
-			Double timeFromOriginInMillis = 
+			Long timeFromOriginInMillis = 
 					requestBySecAveragesIterator.next();
 			xAxisLabels[i] = timeFromOriginInMillis.toString();
 			values[i] = requestBySecAverages.get(timeFromOriginInMillis);
@@ -117,12 +112,6 @@ public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 		AxisChart axisChart= new AxisChart( 
 				dataSeries, chartProperties, 
 				axisProperties, legendProperties, 650, 600 );
-
-		Graphics g = this.getGraphics();
-		
-		if(g==null) {
-			System.out.println("DelaysAvaragesGraph.createGraph(): g is null");
-		}
 		
 		axisChart.setGraphics2D((Graphics2D) this.getGraphics());
 		axisChart.render();

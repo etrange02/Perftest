@@ -23,7 +23,6 @@ import cslave.interfaces.ITestParameter;
 public class TestParameter implements ITestParameter {
 
 	private final int POOL_MAX_SIZE = 32;
-	private final int RESULT_PACK_SIZE = 1000;
 
 	private int port;
 	private String ipAddress;
@@ -48,7 +47,7 @@ public class TestParameter implements ITestParameter {
 		ipAddress = null;
 		protocolName = null;
 		test = null;
-		scenario = new Scenario();
+		scenario = null;
 		tcpConnectionClazz = null;
 		pool = new ArrayList<TCPConnectionThread>();
 	}
@@ -93,6 +92,9 @@ public class TestParameter implements ITestParameter {
 		this.tcpConnectionClazz = tcpConnectionClazz;
 	}
 
+	public List<IResponse> getNextResponses() {
+		return scenario.getNextResponses();
+	}
 
 
 
@@ -107,12 +109,12 @@ public class TestParameter implements ITestParameter {
 		boolean scheduled = false;
 		int instructionDelay = test.getInstructionDelay();
 
-		//TODO check every things is ok before start run
+		
+		scenario = new Scenario(System.currentTimeMillis());
+		
 
 		try {
 			while(true) {
-
-				//System.out.println("TestParameter.run(): newInstruction, poolSize="+pool.size());
 
 				for(TCPConnectionThread connection : pool) {
 					ITCPConnectionToTestedServer tcpCTTS =
@@ -139,7 +141,7 @@ public class TestParameter implements ITestParameter {
 
 					System.out.println("TestParameter.run(): "+tcpCTTS.getClass());
 					System.out.println("TestParameter.run(): before tcpCTTS.tryGiveWork()");
-					tcpCTTS.tryGiveWork();  //should return true
+					tcpCTTS.tryGiveWork();  //should always return true
 				}
 
 				scheduled = false;
@@ -148,30 +150,6 @@ public class TestParameter implements ITestParameter {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public List<IResponse> getResponsePack() {
-
-		System.out.println("TestParameter.getResponsePack(): start");
-		
-		List<IResponse> responses = scenario.getResponses();
-		List<IResponse> resultPack = null;
-
-		synchronized (responses) {
-
-			int packSize = Math.min(
-					RESULT_PACK_SIZE, responses.size());
-			ArrayList<IResponse> copy = null;
-
-			resultPack = responses.subList(0, packSize);
-			System.out.println("TestParameter.getResponsePack(): gonna copy");
-			copy = new ArrayList<IResponse>(resultPack);
-			responses.removeAll(resultPack);
-			
-			System.out.println("TestParameter.getResponsePack(): finish copy");
-			
-			return copy;
 		}
 	}
 }

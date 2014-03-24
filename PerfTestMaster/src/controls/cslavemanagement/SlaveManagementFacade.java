@@ -4,10 +4,10 @@
 package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
-import gui.monitoring.capacity.DelaysAveragesGraph;
-import gui.monitoring.capacity.DelaysInfosProvider;
-import gui.monitoring.example.Displayer;
-import gui.monitoring.example.FrameCapacityGraph;
+import gui.panels.monitoring.delays.DelaysAveragesGraph;
+import gui.panels.monitoring.delays.DelaysInfosProvider;
+import gui.panels.monitoring.example.Displayer;
+import gui.panels.monitoring.example.FrameCapacityGraph;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -75,7 +75,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	@Override
-	public List<DataBuffer> getLastReceivedResponsesPack() {
+	public List<DataBuffer> getLastReceivedData() {
 		return lastReceivedResponsesPacks;
 	}
 

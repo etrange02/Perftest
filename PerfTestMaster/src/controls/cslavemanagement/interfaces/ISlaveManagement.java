@@ -89,7 +89,7 @@ public interface ISlaveManagement extends SlaveListenable {
 	 * Returns a list of DataBuffer managed by the slave manager.
 	 * @return a list
 	 */
-	public List<DataBuffer> getLastReceivedResponsesPack();
+	public List<DataBuffer> getLastReceivedData();
 
 	/**
 	 * Returns the current associated TestPlanManagement

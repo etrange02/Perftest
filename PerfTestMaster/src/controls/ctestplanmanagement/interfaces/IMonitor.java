@@ -3,7 +3,7 @@
  */
 package controls.ctestplanmanagement.interfaces;
 
-import gui.monitoring.interfaces.IGUIMonitor;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
 import controls.cslavemanagement.DataBuffer;
 
 /**
