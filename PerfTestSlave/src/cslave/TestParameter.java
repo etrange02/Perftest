@@ -141,7 +141,10 @@ public class TestParameter implements ITestParameter {
 		}
 
 		scheduled = false;
-		Thread.sleep(instructionDelay); 
+
+		if(instructionDelay > 0) {
+		    Thread.sleep(instructionDelay); 
+		}
 	    }
 	}
 	catch(Exception e) {
