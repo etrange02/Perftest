@@ -6,9 +6,7 @@ package controls.ctestplanmanagement;
 import gui.interfaces.TestListener;
 import gui.interfaces.TestPlanListener;
 import gui.interfaces.TestPlanPanelListener;
-import gui.panels.monitoring.interfaces.IGUIMonitor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -616,8 +614,8 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 			return;
 		if (!getTestPlan().getTests().contains(test))
 			return;
-		if (delay < 1)
-			delay = 1;
+		if (delay < 0)
+			delay = 0;
 		test.setInstructionDelay(delay);
 		test.updateDelayListeners(delay);
 	}

@@ -4,10 +4,7 @@
 package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
-import gui.panels.monitoring.delays.DelaysAveragesGraph;
-import gui.panels.monitoring.delays.DelaysInfosProvider;
 import gui.panels.monitoring.example.Displayer;
-import gui.panels.monitoring.example.FrameCapacityGraph;
 
 import java.io.IOException;
 import java.net.SocketException;

@@ -17,125 +17,115 @@ public abstract class TCPConnectionToTestedServer
 extends AbstractTCPClient
 implements ITCPConnectionToTestedServer {
 
-	private Socket clientSocket;
-	private SendableTest test;
-	private IScenario scenario;
-	private boolean initialized;
+    private Socket clientSocket;
+    private SendableTest test;
+    private IScenario scenario;
+    private boolean initialized;
 
-	private Lock workLock;
-	private Condition haveToWork;
+    private Lock workLock;
+    private Condition haveToWork;
 
 
 
-	/* *********************************************************************
-	 * CONSTRUCTORS/CLEANS METHODS *****************************************
-	 * *********************************************************************/
+    /* *********************************************************************
+     * CONSTRUCTORS/CLEANS METHODS *****************************************
+     * *********************************************************************/
 
-	public TCPConnectionToTestedServer() {
+    public TCPConnectionToTestedServer() {
 
-		super();
+	super();
 
-		this.test = null;
-		this.scenario = null;
-		this.initialized = false;
-		this.workLock = new ReentrantLock();
-		this.haveToWork = workLock.newCondition();
+	this.test = null;
+	this.scenario = null;
+	this.initialized = false;
+	this.workLock = new ReentrantLock();
+	this.haveToWork = workLock.newCondition();
+    }
 
-		
-		System.out.println("TCPConnectionToTestedServer.constructor(): "+
-				Thread.currentThread().getId());
+    public void init(
+	    String hostname, 
+	    int port, 
+	    SendableTest test, 
+	    IScenario scenario) 
+		    throws IOException {
+
+	clientSocket = super.startConnection(hostname, port);
+
+	this.test = test;
+	this.scenario = scenario;
+	this.initialized = true;
+    }
+
+
+
+    /* *********************************************************************
+     * GETTERS/SETTERS  ****************************************************
+     * *********************************************************************/
+
+    public Socket getClientSocket() {
+	return clientSocket;
+    }
+
+
+
+    /* *********************************************************************
+     * IMPORTANT METHODS ***************************************************
+     * *********************************************************************/
+
+    protected abstract 
+    byte[] runInst(IInstruction instruction) throws Exception;
+
+    public boolean tryGiveWork() {
+
+	if(workLock.tryLock()) {
+
+	    haveToWork.signal();
+	    workLock.unlock();
+	    return true;
 	}
-
-	public void init(
-			String hostname, 
-			int port, 
-			SendableTest test, 
-			IScenario scenario) 
-					throws IOException {
-
-		clientSocket = super.startConnection(hostname, port);
-
-		this.test = test;
-		this.scenario = scenario;
-		this.initialized = true;
+	else {
+	    return false;
 	}
+    }
+
+    @Override
+    public void run() {
+
+	if(initialized) {
+
+	    List<IInstruction> instructions = test.getInstructions();
+	    int nbInstructions = instructions.size();
+	    int nextInstructionPos = 0;
 
 
+	    try {
 
-	/* *********************************************************************
-	 * GETTERS/SETTERS  ****************************************************
-	 * *********************************************************************/
+		workLock.lock();
 
-	public Socket getClientSocket() {
-		return clientSocket;
-	}
+		while(true) {
+
+		    IInstruction nextInst = 
+			    instructions.get(nextInstructionPos);
+		    Response response = new Response();
+		    response.setExpectedBinaryResponse(
+			    nextInst.getBinaryResponse());
 
 
+		    haveToWork.await();
 
-	/* *********************************************************************
-	 * IMPORTANT METHODS ***************************************************
-	 * *********************************************************************/
 
-	protected abstract 
-	byte[] runInst(IInstruction instruction) throws Exception;
+		    response.setSendTimeMillis(System.currentTimeMillis());
+		    response.setServerBinaryResponse(runInst(nextInst));
+		    response.setReceptionTimeMillis(System.currentTimeMillis());
+		    scenario.addResponse(response);	    
 
-	public boolean tryGiveWork() {
 
-		if(workLock.tryLock()) {
-
-			haveToWork.signal();
-			workLock.unlock();
-			System.out.println("TCPConnectionToTestdServer.tryGiveWork(): was here");
-			return true;
+		    nextInstructionPos = (nextInstructionPos+1)%nbInstructions;
 		}
-		else {
-			return false;
-		}
+	    }
+	    catch(Exception e) {
+		e.printStackTrace();
+	    }
 	}
-
-	@Override
-	public void run() {
-
-		if(initialized) {
-
-			List<IInstruction> instructions = test.getInstructions();
-			int nbInstructions = instructions.size();
-			int nextInstructionPos = 0;
-
-			
-			try {
-
-				workLock.lock();
-				
-				while(true) {
-
-					IInstruction nextInst = 
-							instructions.get(nextInstructionPos);
-
-					System.out.println("TCPConnectionToTestedServer.run(): nextInst="+nextInstructionPos);
-					
-					Response response = new Response();
-					response.setExpectedBinaryResponse(
-							nextInst.getBinaryResponse());
-
-					System.out.println("TCPConnectionToTestedServer.run(): ID="+
-							Thread.currentThread().getId());
-
-					haveToWork.await();
-					System.out.println("TCPConnectionToTestdServer.run(): finish wait");
-
-					response.setSendTimeMillis(System.currentTimeMillis());
-					response.setServerBinaryResponse(runInst(nextInst));
-					response.setReceptionTimeMillis(System.currentTimeMillis());
-					scenario.addResponse(response);	    
-
-
-					nextInstructionPos = (nextInstructionPos+1)%nbInstructions;
-				}
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    }
 }

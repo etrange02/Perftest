@@ -19,72 +19,70 @@ import cslave.interfaces.IScenario;
  */
 public class Scenario implements IScenario {
 
-	private long absoluteStartInMillis;
-	private Map<Long,List<IResponse>> responses;
-	private long nextPackKey; //the key of the next pack that will be give
+    private long absoluteStartInMillis;
+    private Map<Long,List<IResponse>> responses;
+    private long nextPackKey; //the key of the next pack that will be give
 
 
 
-	/* *********************************************************************
-	 * CONSTRUCTORS ********************************************************
-	 * *********************************************************************/
+    /* *********************************************************************
+     * CONSTRUCTORS ********************************************************
+     * *********************************************************************/
 
-	/**
-	 * 
-	 * @param absoluteStartTimeInMillis specifie the start of the test
-	 */
-	public Scenario(long absoluteStartTimeInMillis) {
-		this.absoluteStartInMillis = absoluteStartTimeInMillis;
-		this.responses = new HashMap<>();
-		this.nextPackKey = 0;
-	}
+    /**
+     * 
+     * @param absoluteStartTimeInMillis specifie the start of the test
+     */
+    public Scenario(long absoluteStartTimeInMillis) {
+	this.absoluteStartInMillis = absoluteStartTimeInMillis;
+	this.responses = new HashMap<>();
+	this.nextPackKey = 0;
+    }
 
 
 
-	/* *********************************************************************
-	 * GETTER/SETTER *******************************************************
-	 * *********************************************************************/
+    /* *********************************************************************
+     * GETTER/SETTER *******************************************************
+     * *********************************************************************/
 
-	public void addResponse(IResponse r) {
+    public void addResponse(IResponse r) {
 
-		synchronized(responses) {
+	synchronized(responses) {
 
-			Long key = 
-					new Long(
-							(r.getSendTimeMillis() - absoluteStartInMillis) / 
-							(Constants.SECS_IN_INTERVAL_FOREACH_RESPPACK * 1000)
-							);
-			List<IResponse> listR = responses.get(key);
+	    Long key = 
+		    new Long(
+			    (r.getSendTimeMillis() - absoluteStartInMillis) / 
+			    (Constants.SECS_IN_INTERVAL_FOREACH_RESPPACK * 1000)
+			    );
+	    List<IResponse> listR = responses.get(key);
 
-			System.out.println("Scenario.addResponse(): key="+key);
-			
-			if(listR==null) {
+	    if(listR==null) {
 
-				listR = new ArrayList<>();
-				listR.add(r);
-				responses.put(key, listR);
-			}
-			else {
+		listR = new ArrayList<>();
+		listR.add(r);
+		responses.put(key, listR);
+	    }
+	    else {
 
-				int size = listR.size();
-				if(0 < size && size < Constants.MAXSIZE_FOREACH_RESPPACK) {
-					listR.add(r);
-				}
-			}
+		int size = listR.size();
+		if(0 < size && size < Constants.MAXSIZE_FOREACH_RESPPACK) {
+		    listR.add(r);
 		}
+	    }
 	}
+    }
 
-	public List<IResponse> getNextResponses() {
+    public List<IResponse> getNextResponses() {
 
-		synchronized (responses) {
+	synchronized (responses) {
 
-			List<IResponse> nextResponses = responses.get(nextPackKey);
+	    List<IResponse> nextResponses = responses.get(nextPackKey);
 
-			//force size 0 in order to discard new value in this pack
-			responses.put(nextPackKey, new ArrayList<IResponse>());
-			nextPackKey++;
-			
-			return nextResponses;
-		}
+	    //force size 0 in order to discard new value in this pack
+	    responses.put(nextPackKey, new ArrayList<IResponse>());
+	    nextPackKey++;
+
+	    return nextResponses;
 	}
+    }
 }
