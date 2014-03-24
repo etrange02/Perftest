@@ -177,6 +177,7 @@ public class TestManager extends Thread {
 					System.out.println("TestManager.start(), lastReceived="+lastReceivedCommand);
 
 					if(lastReceivedCommand == null) {
+
 						closeConnections();
 						init();
 					}
@@ -227,15 +228,15 @@ public class TestManager extends Thread {
 	 * @throws IOException
 	 */
 	private void stopTest() throws IOException {
-		
+
 		System.out.println("TestManager.stoTest(): going to stop");
 
 		testRunner.interrupt();
-	
-		
+
+
 		commandTCPConnectionToMaster.write(
 				Constants.OK_RESP+"/\n");
-		
+
 		System.out.println("TestManager.stoTest(): stopped");
 	}
 

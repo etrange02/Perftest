@@ -77,6 +77,8 @@ public class TCPConnection {
 	 */
 	public boolean close() {
 
+		System.out.println("TCPConnection.close(): BEGIN");
+		
 		try {
 
 			commandTCPConnectionToSlave.close();

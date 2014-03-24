@@ -171,6 +171,9 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public boolean addSlave(String ipAddress) {
+	
+		System.out.println("SlaveManagement.addSlave(): BEGIN");
+		
 		if (null == ipAddress || ipAddress.isEmpty())
 			return false;
 		Iterator<Slave> iter = this.slave.iterator();
