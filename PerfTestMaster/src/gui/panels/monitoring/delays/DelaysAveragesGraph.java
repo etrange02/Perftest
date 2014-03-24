@@ -1,6 +1,7 @@
-package gui.monitoring.capacity;
+package gui.panels.monitoring.delays;
 
-import java.awt.Graphics;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
+
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
@@ -21,11 +22,12 @@ import org.jCharts.properties.PointChartProperties;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
 
-public class DelaysAveragesGraph extends JPanel {
+import controls.cslavemanagement.SlaveManagementFacade;
+
+public class DelaysAveragesGraph extends JPanel implements IGUIMonitor {
 
 
 	private DelaysInfosProvider delaysInfosProvider;
-
 	
 	
 	/* *********************************************************************
@@ -38,8 +40,12 @@ public class DelaysAveragesGraph extends JPanel {
 	 * been sent at (k+1)*(timeInterval/2.0). timeInterval is in millisec.
 	 * @throws Exception 
 	 */
-	public DelaysAveragesGraph(int timeInterval) {
-		this.delaysInfosProvider = new DelaysInfosProvider(timeInterval);
+	public DelaysAveragesGraph(SlaveManagementFacade slaveManagementFacade) {
+		
+		super(true);
+		
+		this.delaysInfosProvider = 
+				new DelaysInfosProvider(slaveManagementFacade);
 	}
 
 	
@@ -53,16 +59,15 @@ public class DelaysAveragesGraph extends JPanel {
 	}
 	
 	
-	
 	/* *********************************************************************
 	 * IMPORTANTS **********************************************************
 	 * *********************************************************************/
 	
-	public void createGraph() throws Exception {
+	private void createGraph() throws Exception {
 
-		SortedMap<Double, Double>  requestBySecAverages = 
+		SortedMap<Long, Double>  requestBySecAverages = 
 				delaysInfosProvider.getDelaysAverages();
-		Iterator<Double> requestBySecAveragesIterator = 
+		Iterator<Long> requestBySecAveragesIterator = 
 				requestBySecAverages.keySet().iterator();
 		int i = 0;
 
@@ -70,7 +75,7 @@ public class DelaysAveragesGraph extends JPanel {
 		double[] values = new double[requestBySecAverages.size()];
 
 		while(requestBySecAveragesIterator.hasNext()) {
-			Double timeFromOriginInMillis = 
+			Long timeFromOriginInMillis = 
 					requestBySecAveragesIterator.next();
 			xAxisLabels[i] = timeFromOriginInMillis.toString();
 			values[i] = requestBySecAverages.get(timeFromOriginInMillis);
@@ -107,20 +112,19 @@ public class DelaysAveragesGraph extends JPanel {
 		AxisChart axisChart= new AxisChart( 
 				dataSeries, chartProperties, 
 				axisProperties, legendProperties, 650, 600 );
-
-		axisChart.setGraphics2D((Graphics2D) getGraphics());
+		
+		axisChart.setGraphics2D((Graphics2D) this.getGraphics());
 		axisChart.render();
 	}
 	
 	@Override
-	public void paint(Graphics g) {
+	public void update() {
+		
 		try {
-
 			createGraph();
-			super.paint(g);
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}	
 	}
 }

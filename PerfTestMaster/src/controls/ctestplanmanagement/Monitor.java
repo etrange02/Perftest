@@ -3,7 +3,7 @@
  */
 package controls.ctestplanmanagement;
 
-import gui.IGUIMonitor;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
 
 import java.util.ArrayList;
 import java.util.List;

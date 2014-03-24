@@ -1,4 +1,6 @@
-package gui;
+package gui.panels.monitoring.interfaces;
+
+import javax.swing.JPanel;
 
 
 /**

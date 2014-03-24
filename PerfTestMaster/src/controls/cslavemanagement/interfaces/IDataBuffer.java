@@ -5,7 +5,7 @@ package controls.cslavemanagement.interfaces;
 
 import java.util.List;
 
-import shared.SendableResponsePack;
+import shared.DataBuffer;
 
 /**
  * 
@@ -20,7 +20,7 @@ public interface IDataBuffer {
 	 *  A new list is created on internal
 	 * @return a list
 	 */
-	public List<SendableResponsePack> getTCPDataBuffer();
+	public List<DataBuffer> getTCPDataBuffer();
 
 	/**
 	 * Returns the number of received instructions

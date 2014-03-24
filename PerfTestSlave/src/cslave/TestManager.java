@@ -374,7 +374,7 @@ public class TestManager extends Thread {
 		try {
 			objectTCPConnectionToMaster.write(
 					testComparator.createSendableResponsePack(
-							testParameter.getResponsePack()));
+							testParameter.getNextResponses()));
 
 			commandTCPConnectionToMaster.write(
 					Constants.OK_RESP+"/\n");

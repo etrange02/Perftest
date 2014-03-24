@@ -73,5 +73,5 @@ public interface ITestParameter extends Runnable {
      * 
      * @return the list of last target server responses.
      */
-    List<IResponse> getResponsePack();
+    List<IResponse> getNextResponses();
 }

@@ -17,10 +17,10 @@ public interface IScenario {
      * @param response the response to add
      */
     public void addResponse(IResponse response);
-
+    
     /**
-     * Returns the list responses handled by the scenario
+     * Returns the tested-server responses for the next second
      * @return a list of responses
      */
-    public List<IResponse> getResponses();
+    public List<IResponse> getNextResponses();
 }

@@ -3,16 +3,12 @@
  */
 package controls.cslavemanagement;
 
-import gui.monitoring.capacity.DelaysAveragesGraph;
-import gui.monitoring.capacity.DelaysInfosProvider;
-import gui.monitoring.example.FrameCapacityGraph;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 import shared.AbstractTest;
 import shared.Constants;
-import shared.SendableResponsePack;
+import shared.DataBuffer;
 import shared.SendableTest;
 import shared.tcp.TCPObjectClient;
 import shared.tcp.TCPStringClient;
@@ -31,7 +27,7 @@ public class TCPConnection {
 	private Slave slave;
 	private TCPStringClient commandTCPConnectionToSlave;
 	private TCPObjectClient objectTCPConnectionToSlave;
-	private SendableResponsePack lastResponsePack;
+	private DataBuffer lastResponsePack;
 
 
 
@@ -122,7 +118,7 @@ public class TCPConnection {
 		}		
 	}
 
-	public SendableResponsePack getLastResponsePack() {
+	public DataBuffer getLastResponsePack() {
 		return lastResponsePack;
 	}
 
@@ -274,23 +270,23 @@ public class TCPConnection {
 				// Change Slave state
 				slave.setRunning(true);
 
-				try {
-					System.out.println("TCPConnection.run(): ERASEME");
-					DelaysAveragesGraph cg = new DelaysAveragesGraph(1);
-					DelaysInfosProvider cdp = cg.getDelaysInfosProvider();
-					
-					for(int i = 0; i < 3; i++) {
-						Thread.sleep(3000);
-						result();
-						cdp.addInfos(lastResponsePack);
-					}
-					System.out.println("TCPConnection.run(): now display");
-					new FrameCapacityGraph(cg);
-					Thread.sleep(5000);
-				}
-				catch(Exception e) {
-
-				}
+//				try {
+//					System.out.println("TCPConnection.run(): ERASEME");
+//					DelaysAveragesGraph cg = new DelaysAveragesGraph(1);
+//					DelaysInfosProvider cdp = cg.getDelaysInfosProvider();
+//					
+//					for(int i = 0; i < 3; i++) {
+//						Thread.sleep(3000);
+//						result();
+//						cdp.addInfos(lastResponsePack);
+//					}
+//					System.out.println("TCPConnection.run(): now display");
+//					new FrameCapacityGraph(cg);
+//					Thread.sleep(5000);
+//				}
+//				catch(Exception e) {
+//
+//				}
 
 				return true;
 			}
@@ -324,7 +320,7 @@ public class TCPConnection {
 					commandTCPConnectionToSlave.read(), 
 					Constants.OK_RESP+"/")) {
 
-				lastResponsePack = (SendableResponsePack) 
+				lastResponsePack = (DataBuffer) 
 						objectTCPConnectionToSlave.read();
 
 				return true;

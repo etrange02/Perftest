@@ -1,4 +1,4 @@
-package gui.monitoring.example;
+package gui.panels.monitoring.example;
 
 import java.awt.Graphics2D;
 import java.awt.Paint;

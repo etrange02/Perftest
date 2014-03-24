@@ -4,6 +4,10 @@
 package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
+import gui.panels.monitoring.delays.DelaysAveragesGraph;
+import gui.panels.monitoring.delays.DelaysInfosProvider;
+import gui.panels.monitoring.example.Displayer;
+import gui.panels.monitoring.example.FrameCapacityGraph;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -14,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import shared.Constants;
+import shared.DataBuffer;
 import shared.Status;
 import tools.Factory;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
@@ -33,16 +38,21 @@ public class SlaveManagementFacade implements ISlaveManagement {
 
 	private List<Slave> slave;
 	private List<TCPConnection> TCPConnection;
-	private List<DataBuffer> dataBuffer;
+	private List<DataBuffer> lastReceivedResponsesPacks;
 	private ITestPlanManagement testPlanManagement;
 	private List<SlaveListener> slaveListeners;
 	private AbstractMonitoredTest monitoredTest;
-	
+	private Thread updaterThread;
+
+	//DELETEME, DEBUG PURPOSE
+	private Thread displayer;
+
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
 		this.TCPConnection = new ArrayList<TCPConnection>();
-		this.dataBuffer = new ArrayList<DataBuffer>();
+		this.lastReceivedResponsesPacks = new ArrayList<DataBuffer>();
 		this.slaveListeners = new ArrayList<SlaveListener>();
+		this.updaterThread = null;
 	}
 
 	/**
@@ -62,6 +72,20 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		if (testPlanManagement.getSlaveManagement() != this) {
 			testPlanManagement.setSlaveManagement(this);
 		}
+	}
+
+	@Override
+	public List<DataBuffer> getLastReceivedData() {
+		return lastReceivedResponsesPacks;
+	}
+
+	/**
+	 * Update the last received responses packs
+	 * @param lastReceivedResponsesPacks the last receivedPack
+	 */
+	public void setLastReceivedResponsesPack(
+			List<DataBuffer> lastReceivedResponsesPacks) {
+		this.lastReceivedResponsesPacks = lastReceivedResponsesPacks;
 	}
 
 	/**
@@ -96,37 +120,21 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		this.TCPConnection = TCPConnection;
 	}
 
-	/**
-	 * Returns the list of buffered data
-	 * @return a list
-	 */
-	public List<DataBuffer> getDataBuffer() {
-		return dataBuffer;
-	}
-
-	/**
-	 * Modifies the list of DataBuffer
-	 * @param dataBuffer a list
-	 */
-	public void setDataBuffer(List<DataBuffer> dataBuffer) {
-		this.dataBuffer = dataBuffer;
-	}
-
 	public void detectSlaves(String ipAddress) {
 		if (null == ipAddress || ipAddress.isEmpty())
 			return;
-		
+
 		Pattern p = Pattern.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
 		//((0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)\.){3}(0|1[0-9]{0,2}|2[0-9]?|2[0-4][0-9]|25[0-5]|[3-9][0-9]?)
-	    Matcher m = p.matcher(ipAddress);
-		
+		Matcher m = p.matcher(ipAddress);
+
 		if (!m.find())
 			return;
-		
+
 		String[] tab = ipAddress.split("\\.");		
 		if (4 != tab.length)
 			return;
-		
+
 		int level = 3;
 		int index = 4;
 		while ("0".equals(tab[--index])) {
@@ -141,23 +149,23 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		System.out.println(rootNetwork);
 		recursiveAdd(rootNetwork, level);		
 	}
-	
+
 	private void recursiveAdd(final String rootNetwork, final int level) {
-		
+
 		//new Thread(new Runnable() {	
 		//public void run() {
-			String subNet = "";
-			for (int i = 0; i<255; ++i) {
-				subNet = rootNetwork + i;
-				if (level == 3) {
-					System.out.println(subNet);
-					addSlave(subNet);
-				} else {
-					subNet += ".";
-					int nextLevel = level +1;
-					recursiveAdd(subNet, nextLevel);
-				}
+		String subNet = "";
+		for (int i = 0; i<255; ++i) {
+			subNet = rootNetwork + i;
+			if (level == 3) {
+				System.out.println(subNet);
+				addSlave(subNet);
+			} else {
+				subNet += ".";
+				int nextLevel = level +1;
+				recursiveAdd(subNet, nextLevel);
 			}
+		}
 		//}
 		//}).start();
 	}
@@ -172,7 +180,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			}
 		}
 		TCPConnection tcpConnection = null;
-		
+
 		try {
 			tcpConnection = Factory.createTCPConnection();
 			tcpConnection.connect(ipAddress, Constants.SOCKET_COMMAND_PORT, Constants.SOCKET_OBJECT_PORT);
@@ -183,54 +191,53 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		Slave slave = new Slave();
 		slave.setAddress(ipAddress);
 		slave.setTCPClientSlave(tcpConnection);
 		System.out.println("Ajout: " + ipAddress);
-		
+
 		synchronized (this.TCPConnection) {
 			this.TCPConnection.add(tcpConnection);			
 		}
 		synchronized (this.slave) {
 			this.slave.add(slave);			
 		}
-		
+
 		updateAllSlaveListeners();
 		this.updateMonitoringPanelWithMaxSlaveCount();
-		
+
 		return true;
 	}
 
-	@Override
-	public boolean sendTest(
-		AbstractMonitoredTest test, String protocolName) {
-		
+	@Override public 
+	boolean deployTest(AbstractMonitoredTest test, String protocolName) {
+
 		if (null == test||test.getSelectedTargets().size()<=0)
 			return false;
-		
+
 		if (null != this.monitoredTest) {
 			this.stop();
 			this.monitoredTest.setStatus(Status.WAITING);
 		}
-		
+
 		this.monitoredTest = test;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
-		
+
 		System.out.println("SlaveManagement.sendTest(): looking for slave");
-		
+
 		while (iter.hasNext()) {
-			
+
 			slave = iter.next();
-			
+
 
 			System.out.println("SlaveManagement.sendTest(): sending to "+slave.getAddress());
-			
-			
+
+
 			slave.getTCPClientSlave().send(test, protocolName);
 		}
-		
+
 		this.monitoredTest.setStatus(Status.DEPLOYED);		
 		return true;
 	}
@@ -249,7 +256,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	public boolean runAnotherSlave(String address, int port) {
 		if (null == this.monitoredTest || this.monitoredTest.getStatus() == Status.WAITING)
 			return false;
-		
+
 		if (this.monitoredTest instanceof WorkloadTest) {
 			Iterator<Slave> iter = this.slave.iterator();
 			Slave slave = null;
@@ -257,6 +264,19 @@ public class SlaveManagementFacade implements ISlaveManagement {
 				slave = iter.next();
 				if (!slave.isRunning() && slave.isDeployed()) {
 					slave.getTCPClientSlave().run(address, port);
+
+					if(updaterThread==null) {
+						try {
+							updaterThread = new Thread(new DatasUpdater(this));
+							displayer = new Thread(new Displayer(this));
+							updaterThread.start();
+							displayer.start();
+						}
+						catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+
 					return true;
 				}
 			}
@@ -267,20 +287,33 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	public boolean runSlaves(int count, List<String> addresses, int port) {
 		if (null == this.monitoredTest || this.monitoredTest.getStatus() != Status.DEPLOYED)
 			return false;
-		
+
 		if (count > this.slave.size())
 			return false;
-		
+
 		if (this.monitoredTest instanceof ScalabilityTest) {
 			String[] addressArray = addresses.toArray(new String[0]);
 			int index = 0;
-			
+
 			Iterator<Slave> iter = this.slave.iterator();
 			for (int i = 0; i < count && iter.hasNext(); ++i) {
 				iter.next().getTCPClientSlave().run(addressArray[index], port);
 				index = (index+1) % addressArray.length;
 			}
 		}		
+
+		if(updaterThread==null) {
+			try {
+				updaterThread = new Thread(new DatasUpdater(this));
+				displayer = new Thread(new Displayer(this));
+				updaterThread.start();
+				displayer.start();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return true;
 	}
 
@@ -292,6 +325,14 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			iter.next().getTCPClientSlave().stop();
 		}
 		this.monitoredTest.setStatus(Status.WAITING);
+
+		if(updaterThread!=null) {
+			updaterThread.interrupt();
+			displayer.interrupt();
+			updaterThread=null;
+			displayer=null;
+		}
+
 		return true;
 	}
 
@@ -306,7 +347,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
 		boolean result = false;
-		
+
 		while (iter.hasNext() && !result) {
 			slave = iter.next();
 			if (name.equals(slave.getAddress())) {
@@ -339,14 +380,14 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	public void removeSlaveListener(SlaveListener slaveListener) {
 		this.slaveListeners.remove(slaveListener);
 	}
-	
-	private void updateAllSlaveListeners() {
+
+	public void updateAllSlaveListeners() {
 		Iterator<SlaveListener> iter = this.slaveListeners.iterator();
 		while (iter.hasNext()) {
 			iter.next().updateData();
 		}
 	}
-	
+
 	public void updateMonitoringPanelWithMaxSlaveCount() {
 		if (null == this.getTestPlanManagement().getTestPlan())
 			return;
@@ -360,12 +401,12 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			}
 		}
 	}
-	
+
 	@Override
 	public void runSlave() {
 		if (null == this.monitoredTest)
 			return;
-		
+
 		if (this.monitoredTest instanceof ScalabilityTest) {
 			runSlaves(((ScalabilityTest) this.monitoredTest).getAffectedSlaveCount(), this.monitoredTest.getSelectedTargets(), this.testPlanManagement.getTestPlan().getPort());
 		}
@@ -375,10 +416,9 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	public void runAnotherSlave() {
 		if (null == this.monitoredTest)
 			return;
-		
+
 		if (this.monitoredTest instanceof WorkloadTest) {
 			this.runAnotherSlave(((WorkloadTest) this.monitoredTest).getNextAddress(), this.testPlanManagement.getTestPlan().getPort());
 		}
 	}
-	
 }

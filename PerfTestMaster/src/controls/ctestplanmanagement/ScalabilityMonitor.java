@@ -3,7 +3,7 @@
  */
 package controls.ctestplanmanagement;
 
-import gui.IGUIMonitor;
+import gui.panels.monitoring.interfaces.IGUIMonitor;
 import controls.cslavemanagement.DataBuffer;
 
 /**
@@ -23,5 +23,4 @@ public class ScalabilityMonitor extends Monitor {
 
 	public void setDataBuffer(DataBuffer dataBuffer) {
 	}
-
 }
