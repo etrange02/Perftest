@@ -125,5 +125,8 @@ public interface ISlaveManagement extends SlaveListenable {
 	 */
 	public void runSlave();
 	
+	/**
+	 * Runs another slave for a workload test
+	 */
 	public void runAnotherSlave();
 }
