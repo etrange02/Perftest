@@ -4,10 +4,7 @@
 package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
-import gui.panels.monitoring.delays.DelaysAveragesGraph;
-import gui.panels.monitoring.delays.DelaysInfosProvider;
 import gui.panels.monitoring.example.Displayer;
-import gui.panels.monitoring.example.FrameCapacityGraph;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -171,6 +168,9 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	}
 
 	public boolean addSlave(String ipAddress) {
+	
+		System.out.println("SlaveManagement.addSlave(): BEGIN");
+		
 		if (null == ipAddress || ipAddress.isEmpty())
 			return false;
 		Iterator<Slave> iter = this.slave.iterator();
@@ -258,28 +258,28 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			return false;
 
 		if (this.monitoredTest instanceof WorkloadTest) {
-			Iterator<Slave> iter = this.slave.iterator();
-			Slave slave = null;
-			while (iter.hasNext()) {
-				slave = iter.next();
-				if (!slave.isRunning() && slave.isDeployed()) {
-					slave.getTCPClientSlave().run(address, port);
+		    Iterator<Slave> iter = this.slave.iterator();
+		    Slave slave = null;
+		    while (iter.hasNext()) {
+			slave = iter.next();
+			if (!slave.isRunning() && slave.isDeployed()) {
+			    slave.getTCPClientSlave().run(address, port);
 
-					if(updaterThread==null) {
-						try {
-							updaterThread = new Thread(new DatasUpdater(this));
-							displayer = new Thread(new Displayer(this));
-							updaterThread.start();
-							displayer.start();
-						}
-						catch(Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-					return true;
+			    if(updaterThread==null) {
+				try {
+				    updaterThread = new Thread(new DatasUpdater(this));
+				    displayer = new Thread(new Displayer(this));
+				    updaterThread.start();
+				    displayer.start();
 				}
+				catch(Exception e) {
+				    e.printStackTrace();
+				}
+			    }
+
+			    return true;
 			}
+		    }
 		}
 		return false;
 	}

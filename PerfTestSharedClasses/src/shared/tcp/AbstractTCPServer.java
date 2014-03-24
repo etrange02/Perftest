@@ -57,4 +57,11 @@ public abstract class AbstractTCPServer implements Closeable {
 			serverSocket.close();
 		}
 	}
+
+	public boolean isClosed() {
+		return (clientSocket==null ||
+				clientSocket.isClosed() ||
+				serverSocket==null ||
+				serverSocket.isClosed());
+	}
 }

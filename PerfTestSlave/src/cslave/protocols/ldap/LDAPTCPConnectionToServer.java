@@ -4,11 +4,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Arrays;
 
 import shared.Constants;
 import shared.SendableTest;
-import shared.Utils;
 import shared.interfaces.IInstruction;
 import cslave.TCPConnectionToTestedServer;
 import cslave.interfaces.IScenario;
@@ -62,21 +60,8 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 		
 		byte[] answer = null;
 		
-		
-		System.out.println("LDAPTCPConnectionToServer.runInst(): sending "+
-		Utils.toStringBinaryArray(instruction.getBinaryRequest()));
-		
 		out.write(instruction.getBinaryRequest());
-		
-		answer = read(in);
-		
-		System.out.println("LDAPTCPConnectionToServer.runInst(): received "+
-				Utils.toStringBinaryArray(answer));
-		
-		System.out.println("LDAPTCPConnectionToServer.runInst(): isMatching="+
-		Arrays.equals(answer, instruction.getBinaryResponse()));
-		
-		
+		answer = read(in);		
 		return answer;
 	}
 
