@@ -4,7 +4,7 @@
 package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
-import gui.panels.monitoring.example.Displayer;
+import gui.panels.monitoring.delays.DelaysAverageDisplayer;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -42,7 +42,7 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private Thread updaterThread;
 
 	//DELETEME, DEBUG PURPOSE
-	private Thread displayer;
+	private Thread delaysDisplayer;
 
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
@@ -268,9 +268,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 			    if(updaterThread==null) {
 				try {
 				    updaterThread = new Thread(new DatasUpdater(this));
-				    displayer = new Thread(new Displayer(this));
+				    delaysDisplayer = new Thread(
+					    new DelaysAverageDisplayer(this));
 				    updaterThread.start();
-				    displayer.start();
+				    delaysDisplayer.start();
 				}
 				catch(Exception e) {
 				    e.printStackTrace();
@@ -305,9 +306,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		if(updaterThread==null) {
 			try {
 				updaterThread = new Thread(new DatasUpdater(this));
-				displayer = new Thread(new Displayer(this));
+				delaysDisplayer = new Thread(
+					new DelaysAverageDisplayer(this));
 				updaterThread.start();
-				displayer.start();
+				delaysDisplayer.start();
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -328,9 +330,9 @@ public class SlaveManagementFacade implements ISlaveManagement {
 
 		if(updaterThread!=null) {
 			updaterThread.interrupt();
-			displayer.interrupt();
+			delaysDisplayer.interrupt();
 			updaterThread=null;
-			displayer=null;
+			delaysDisplayer=null;
 		}
 
 		return true;

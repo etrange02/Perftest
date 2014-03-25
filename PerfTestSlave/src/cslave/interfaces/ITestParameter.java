@@ -5,7 +5,6 @@ package cslave.interfaces;
 
 import java.util.List;
 
-import shared.AbstractTest;
 import shared.SendableTest;
 
 /**
