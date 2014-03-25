@@ -2,6 +2,7 @@ package gui.panels.monitoring;
 
 import javax.swing.JFrame;
 
+import shared.Constants;
 import controls.cslavemanagement.SlaveManagementFacade;
 
 public abstract class Displayer extends JFrame implements Runnable {
@@ -43,7 +44,8 @@ public abstract class Displayer extends JFrame implements Runnable {
 	    slaveManagement.addSlaveListener(graph.getInfosProvider());
 
 	    while(true) {
-		Thread.sleep(1000);
+		Thread.sleep(
+			(Constants.SECS_IN_INTERVAL_FOREACH_RESPPACK+1)*1000);
 		graph.updatePanel();
 	    }
 	    

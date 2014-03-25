@@ -9,6 +9,6 @@ public class DelaysAverageDisplayer extends Displayer {
     public DelaysAverageDisplayer(SlaveManagementFacade slaveManagementFacade) {
 	
 	super(slaveManagementFacade, 
-		new DelaysAveragesGraph(slaveManagementFacade));
+		new DelaysAveragesGraph(slaveManagementFacade, 30));
     }
 }

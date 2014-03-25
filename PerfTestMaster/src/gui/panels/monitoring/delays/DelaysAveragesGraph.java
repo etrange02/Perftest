@@ -33,7 +33,8 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
      * The last displayed time (in the X axis). Use to create a more realist
      * default graph when we got no value from infos providers.
      */
-    private Long lastTime; 
+    private Long lastTime;
+    private int nbSectoDisplay;
 
 
     /* *********************************************************************
@@ -44,14 +45,20 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
      * @param timeInterval Forall k natural, all request sent into 
      * [0 + k*timeInterval,(k+1)*timeInterval[ are considered to have 
      * been sent at (k+1)*(timeInterval/2.0). timeInterval is in millisec.
+     * @param nbSecToDisplay the number of second to display in the graph. By 
+     * example, if nbSecToDisplay = 5, the at 7, averages for 3,4,5,6,7 will be
+     * displayed.
      * @throws Exception 
      */
-    public DelaysAveragesGraph(SlaveManagementFacade slaveManagementFacade) {
+    public DelaysAveragesGraph(
+	    SlaveManagementFacade slaveManagementFacade,
+	    int nbSecToDisplay) {
 
 	this.delaysInfosProvider = 
-		new DelaysInfosProvider(slaveManagementFacade);
-	requestBySecAverages = null;
-	lastTime = new Long(0);
+		new DelaysInfosProvider(slaveManagementFacade, nbSecToDisplay);
+	this.requestBySecAverages = null;
+	this.lastTime = new Long(0);
+	this.nbSectoDisplay=nbSecToDisplay;
     }
 
 
@@ -97,7 +104,9 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	String xAxisTitle= "time(ms)";
 	String yAxisTitle= "delay average(ms)";
-	String title= "delays averages";
+	String title= 
+		"Delays averages. Total success: "+delaysInfosProvider.getTotalSuccess()+
+		", Total miss: "+delaysInfosProvider.getTotalMiss();
 	DataSeries dataSeries = new DataSeries( 
 		xAxisLabels, xAxisTitle, yAxisTitle, title );
 
@@ -105,8 +114,7 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	String[] legendLabels= 
 	    { 
-		"Total success: "+delaysInfosProvider.getTotalSuccess(),
-		"Total miss: "+delaysInfosProvider.getTotalMiss()
+		"delays averages"
 	    };
 	Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
 

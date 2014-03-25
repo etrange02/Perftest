@@ -4,7 +4,9 @@ import gui.panels.monitoring.AbstractInfosProvider;
 import gui.panels.monitoring.RawData;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -24,6 +26,8 @@ public class DelaysInfosProvider extends AbstractInfosProvider {
 
     private SortedMap<Long, List<Long>> delaysInfos;
 
+    private int nbSecToSave;
+
 
 
     /* *********************************************************************
@@ -33,12 +37,16 @@ public class DelaysInfosProvider extends AbstractInfosProvider {
     /**
      * @param slaveManagementFacade give us information about last received
      * responses from slaves.
+     * @param nbSecToSave The number of past second to save from now.
      */
-    public DelaysInfosProvider(SlaveManagementFacade slaveManagementFacade) {
+    public DelaysInfosProvider(
+	    SlaveManagementFacade slaveManagementFacade,
+	    int nbSecToSave) {
 
 	super(slaveManagementFacade);
-	
-	delaysInfos = new TreeMap<>();
+
+	this.delaysInfos = new TreeMap<>();
+	this.nbSecToSave = nbSecToSave;
     }
 
 
@@ -55,7 +63,7 @@ public class DelaysInfosProvider extends AbstractInfosProvider {
 	SortedMap<Long, Double> datas = new TreeMap<>();
 
 
-	computeInfos();
+	refreshInfos();
 
 
 	for(Long timeFromOriginInMillis : delaysInfos.keySet()) {
@@ -73,18 +81,18 @@ public class DelaysInfosProvider extends AbstractInfosProvider {
 	    }
 	}
 
+
 	return datas;
     }
 
-    private void computeInfos() {
+    private void refreshInfos() {
 
 	List<RawData> rawData = super.getData();
 	long absoluteTimeOrigin = super.getAbsoluteTimeOrigin();
-	
-	
-	delaysInfos.clear();
 
 
+
+	//Add last received data for treatment
 	for(RawData r : rawData) {
 
 	    long relativeSendTime = r.getSendTimeMillis()-absoluteTimeOrigin;
@@ -116,6 +124,40 @@ public class DelaysInfosProvider extends AbstractInfosProvider {
 				)
 			);
 	    }
+	}
+
+
+
+	//Remove old data
+	removeOutdatedData();
+    }
+
+    /**
+     * Remove outdated data
+     */
+    private void removeOutdatedData() {
+
+	Set<Long> keySet = delaysInfos.keySet();
+	Iterator<Long> keySetIterator = null;
+	int nbOfFirstDataList = keySet.size() - nbSecToSave;
+	List<Long> keyToRemove = null;
+
+	if(nbOfFirstDataList > 0) {
+
+	    keySetIterator = keySet.iterator();
+	    keyToRemove = new ArrayList<Long>();
+
+	    while(nbOfFirstDataList > 0 && keySetIterator.hasNext()) {
+
+		Long key = keySetIterator.next();
+		keyToRemove.add(key);
+		nbOfFirstDataList--;
+	    }
+
+	    for(Long key : keyToRemove) {
+		delaysInfos.remove(key);
+	    }
+
 	}
     }
 }

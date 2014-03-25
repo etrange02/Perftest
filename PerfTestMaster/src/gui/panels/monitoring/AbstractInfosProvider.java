@@ -22,7 +22,7 @@ public class AbstractInfosProvider implements SlaveListener {
     private int nbMiss;
     private int nbSuccess;
     private SlaveManagementFacade slaveManagement;
-
+    
 
 
     /* *********************************************************************
@@ -65,17 +65,6 @@ public class AbstractInfosProvider implements SlaveListener {
     }
 
     /**
-     * Drop all received data.
-     */
-    public void clearData() {
-
-	synchronized(rawData) {
-
-	    rawData.clear();
-	}
-    }
-    
-    /**
      * Return the total of successful request since the beginning of the 
      * test (comparison actual/expected) .
      * @return an integer that represent the total of success since the 
@@ -84,7 +73,7 @@ public class AbstractInfosProvider implements SlaveListener {
     public int getTotalSuccess() {
 	return nbSuccess;
     }
-    
+
     /**
      * Return the total of missed request since the beginning of the 
      * test (comparison actual/expected).
@@ -110,56 +99,61 @@ public class AbstractInfosProvider implements SlaveListener {
 
 	long minAbsoluteTimeOrigin = Long.MAX_VALUE;
 
-	
-	for(DataBuffer dataBuffer : dataBuffers) {
 
-	    long[] sendTimeMillis = dataBuffer.getSendTimeMillis();
-	    long[] receptionTimeMillis = 
-		    dataBuffer.getReceptionTimeMilis();
-	    int nbResponses = sendTimeMillis.length;
+	synchronized(rawData) {
 
-
-	    nbMiss += dataBuffer.getNbMiss();
-	    nbSuccess += dataBuffer.getNbSuccess();
 	    
-	    
-	    for(int i = 0; i < nbResponses; i++) {
+	    rawData.clear();
 
-		if(absoluteTimeOrigin==ABS_TIME_ORIGIN_UNINITIALIZED_VALUE) {
-		    minAbsoluteTimeOrigin = Math.min(
-			    minAbsoluteTimeOrigin, 
-			    sendTimeMillis[i]);
+
+	    for(DataBuffer dataBuffer : dataBuffers) {
+
+		long[] sendTimeMillis = dataBuffer.getSendTimeMillis();
+		long[] receptionTimeMillis = 
+			dataBuffer.getReceptionTimeMilis();
+		int nbResponses = sendTimeMillis.length;
+
+
+		nbMiss += dataBuffer.getNbMiss();
+		nbSuccess += dataBuffer.getNbSuccess();
+
+
+		for(int i = 0; i < nbResponses; i++) {
+
+		    if(absoluteTimeOrigin==ABS_TIME_ORIGIN_UNINITIALIZED_VALUE) {
+			minAbsoluteTimeOrigin = Math.min(
+				minAbsoluteTimeOrigin, 
+				sendTimeMillis[i]);
+		    }
+
+		    rawData.add(
+			    new RawData(
+				    sendTimeMillis[i], 
+				    receptionTimeMillis[i]
+				    )
+			    );
 		}
-
-		rawData.add(
-			new RawData(
-				sendTimeMillis[i], 
-				receptionTimeMillis[i]
-				)
-			);
 	    }
+
+
+	    absoluteTimeOrigin = 
+		    absoluteTimeOrigin == ABS_TIME_ORIGIN_UNINITIALIZED_VALUE ? 
+			    minAbsoluteTimeOrigin :
+				absoluteTimeOrigin;
 	}
-
-
-	absoluteTimeOrigin = 
-		absoluteTimeOrigin == ABS_TIME_ORIGIN_UNINITIALIZED_VALUE ? 
-			minAbsoluteTimeOrigin :
-			    absoluteTimeOrigin;
     }
 
 
     @Override
     public void updateData() {
 
-	synchronized(rawData) {
+	List<DataBuffer> dataBuffers = new ArrayList<>();
 
-	    List<DataBuffer> dataBuffers = new ArrayList<>();
-
-	    for(DataBuffer dataBuffer : slaveManagement.getLastReceivedData()) {
-		dataBuffers.add(dataBuffer);
-	    }
-
-	    feedWithLastReceivedData(dataBuffers);
+	for(DataBuffer dataBuffer : slaveManagement.getLastReceivedData()) {
+	    dataBuffers.add(dataBuffer);
 	}
+
+
+	feedWithLastReceivedData(dataBuffers);
     }
 }
