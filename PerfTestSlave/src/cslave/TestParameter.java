@@ -56,6 +56,8 @@ public class TestParameter implements ITestParameter {
 	for(TCPConnectionThread tcpCT : pool) {
 	    tcpCT.interrupt();
 	}
+	
+	pool.clear();
     }
 
 
