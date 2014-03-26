@@ -37,6 +37,7 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
     private int nbSectoDisplay;
 
 
+    
     /* *********************************************************************
      * CONSTRUCTORS ********************************************************
      * *********************************************************************/
@@ -112,10 +113,7 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	double[][] data= new double[][] { values };
 
-	String[] legendLabels= 
-	    { 
-		"delays averages"
-	    };
+	String[] legendLabels= { "delays averages" };
 	Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
 
 	Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE };

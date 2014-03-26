@@ -1,10 +1,9 @@
 package gui.panels.monitoring.delays;
 
+import gui.panels.monitoring.AbstractDisplayer;
 import controls.cslavemanagement.SlaveManagementFacade;
-import gui.panels.monitoring.AbstractGraphPanel;
-import gui.panels.monitoring.Displayer;
 
-public class DelaysAverageDisplayer extends Displayer {
+public class DelaysAverageDisplayer extends AbstractDisplayer {
 
     public DelaysAverageDisplayer(SlaveManagementFacade slaveManagementFacade) {
 	

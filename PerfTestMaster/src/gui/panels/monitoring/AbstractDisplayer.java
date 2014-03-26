@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import shared.Constants;
 import controls.cslavemanagement.SlaveManagementFacade;
 
-public abstract class Displayer extends JFrame implements Runnable {
+public abstract class AbstractDisplayer extends JFrame implements Runnable {
 
     private SlaveManagementFacade slaveManagement;
     private AbstractGraphPanel graph;
@@ -16,7 +16,7 @@ public abstract class Displayer extends JFrame implements Runnable {
      * CONSTRUCTORS/INITIALIZER ********************************************
      * *********************************************************************/
 
-    public Displayer(
+    public AbstractDisplayer(
 	    SlaveManagementFacade slaveManagementFacade,
 	    AbstractGraphPanel graph) {
 

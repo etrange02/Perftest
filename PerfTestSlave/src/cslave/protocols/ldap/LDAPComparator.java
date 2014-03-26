@@ -28,23 +28,9 @@ public class LDAPComparator extends Comparator {
     @Override
     public boolean isExpectedResponse(IResponse response) {
 
-	byte[] expected = response.getExpectedBinaryResponse();
-	byte[] actual = response.getServerBinaryResponse();
-
-	//TODO This comparison method need to be fixed
-	//It's seem that the received response can be the expected one 
-	//concatenated with connection data.
-	
-	for(int i = actual.length; i > 0; i--) {
-	    
-	    byte[] subArray = Arrays.copyOf(actual,i);
-
-	    if(Arrays.equals(subArray, expected)) {
-		return true;
-	    }
-	}
-
-	
-	return false;
+	return Arrays.equals(
+		response.getExpectedBinaryResponse(),
+		response.getServerBinaryResponse()
+		);
     }
 }
