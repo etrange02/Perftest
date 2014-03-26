@@ -25,45 +25,45 @@ public class VarianceGraph extends AbstractGraphPanel {
 
     private VarianceInfosProvider varianceInfosProvider;
     private SortedMap<Long, Double>  varianceInfos;
-    
-    
-    
+
+
+
     /* *********************************************************************
      * CONSTRUCTORS ********************************************************
      * *********************************************************************/
-    
+
     public VarianceGraph(SlaveManagementFacade slaveManagement) {
-	
+
 	varianceInfosProvider = new VarianceInfosProvider(slaveManagement);
 	varianceInfos = null;
     }
-    
-    
-    
+
+
+
     /* *********************************************************************
      * GETTERS/SETTERS *****************************************************
      * *********************************************************************/
-    
+
     @Override
     public AbstractInfosProvider getInfosProvider() {
 	return varianceInfosProvider;
     }
 
-    
-    
+
+
     /* *********************************************************************
      * IMPORTANTS **********************************************************
      * *********************************************************************/
-    
+
     @Override
     public void updatePanel() throws Exception {
-	
-	varianceInfos = varianceInfosProvider.getVarianceInfos();
-	
+
+	varianceInfos = varianceInfosProvider.computeExpectedValueAndVarianceInfos();
+
 	if(varianceInfos == null ||  varianceInfos.isEmpty()) {
 	    createDefaultVarianceValues();
 	}
-	
+
 
 	Iterator<Long> varianceIterator = 
 		varianceInfos.keySet().iterator();
@@ -71,18 +71,21 @@ public class VarianceGraph extends AbstractGraphPanel {
 	String[] xAxisLabels= new String[varianceInfos.size()];
 	double[] values= new double[varianceInfos.size()];
 	Long tmp = null;
-	
+
 	while(varianceIterator.hasNext()){
-	    
+
 	    tmp = varianceIterator.next();
 	    xAxisLabels[i] = tmp.toString();
 	    values[i] = varianceInfos.get(tmp);
 	    i++;
 	}
-	
-	String xAxisTitle= "time(ms)";
+
+	String xAxisTitle= "approximative delay (ms)";
 	String yAxisTitle= "% of total request";
-	String title= "Variance";
+	String title= 
+		"Variance Infos (expected value for delay(proba. theory)="+
+			((int) (100*varianceInfosProvider.getExpectedValue()))/
+			100.0+"ms)";  //two decimal
 	DataSeries dataSeries = new DataSeries( xAxisLabels, xAxisTitle, yAxisTitle, title );
 
 	double[][] data= new double[][]{ values };
@@ -98,7 +101,7 @@ public class VarianceGraph extends AbstractGraphPanel {
 	//AxisProperties axisProperties= new AxisProperties( true );
 	AxisProperties axisProperties= new AxisProperties();
 	LegendProperties legendProperties= new LegendProperties();
-	AxisChart axisChart= new AxisChart( dataSeries, chartProperties, axisProperties, legendProperties, 650, 600 );
+	AxisChart axisChart= new AxisChart( dataSeries, chartProperties, axisProperties, legendProperties, 500, 450 );
 
 
 	axisChart.setGraphics2D((Graphics2D) this.getGraphics());
@@ -110,7 +113,7 @@ public class VarianceGraph extends AbstractGraphPanel {
      * give us nothing to display.
      */
     public void createDefaultVarianceValues() {
-	
+
 	varianceInfos = new TreeMap<>();
 	varianceInfos.put(new Long(10), 0.0);
     }

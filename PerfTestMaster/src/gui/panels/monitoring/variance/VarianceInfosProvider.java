@@ -13,35 +13,69 @@ public class VarianceInfosProvider extends AbstractInfosProvider {
     /**
      * in millisec
      */
-    private final long BANDWIDTH = 5;
+    private final static long BANDWIDTH = 1;
+    private double expectedValue;
 
     private SortedMap<Long, Long> varianceInfos;
 
+    
+    
+    /* *********************************************************************
+     * CONSTRUCTORS ********************************************************
+     * *********************************************************************/
+    
     public VarianceInfosProvider(SlaveManagementFacade slaveManagementFacade) {
 	super(slaveManagementFacade);
 
 	varianceInfos = new TreeMap<>();
+	expectedValue = -1;
     }
 
-    public SortedMap<Long, Double> getVarianceInfos() {
+    
+    /* *********************************************************************
+     * GETTERS/SETTERS *****************************************************
+     * *********************************************************************/
+    
+    /**
+     * Return request's delay-expected-value(as defined in  probability theory).
+     * computeEsperanceAndVarianceInfos  must have been called before you get 
+     * it.
+     * @return A double that represent the expected value
+     */
+    public double getExpectedValue() {
+
+	return expectedValue;
+    }
+    
+    
+    /* *********************************************************************
+     * IMPORTANTS **********************************************************
+     * *********************************************************************/
+    
+    /**
+     * Compute the expected value (as defined in probability theory) and 
+     * variance infos.
+     * @return the variances infos. Use getExpectedValue for the expected value.
+     */
+    public SortedMap<Long, Double> computeExpectedValueAndVarianceInfos() {
 
 	SortedMap<Long, Double> variance = new TreeMap<>();
 
-	
-	refreshInfos();
 
-	
+	refreshInfos();
+	expectedValue = 0.0;
+
 	for(Long key : varianceInfos.keySet()) {
 	    Long value = varianceInfos.get(key);
 
 	    //we compute % from total requests
-	    variance.put(
-		    key, 
-		    new Double(
-			    value /
-			    (super.getTotalMiss()+super.getTotalSuccess())
-			    )
-		    );
+	    Double probForKey = 
+		    new Double(value) / 
+		    (super.getTotalMiss()+super.getTotalSuccess());
+	    
+	    expectedValue += key*probForKey;
+	    
+	    variance.put(key, 100.0*probForKey);
 	}
 
 
@@ -51,13 +85,12 @@ public class VarianceInfosProvider extends AbstractInfosProvider {
     private void refreshInfos() {
 
 	List<RawData> rawData = super.getData();
-	long absoluteTimeOrigin = super.getAbsoluteTimeOrigin();
 
 
 	for(RawData r : rawData) {
 
-	    long relativeSendTime = r.getSendTimeMillis()-absoluteTimeOrigin;
-	    long bandID = relativeSendTime / BANDWIDTH;
+	    long delay = r.getReceptionTimeMillis() - r.getSendTimeMillis();
+	    long bandID = delay / BANDWIDTH;
 	    Long l = varianceInfos.get(bandID);
 
 	    varianceInfos.put(bandID, l==null? 1 : l + 1);

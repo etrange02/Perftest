@@ -28,8 +28,8 @@ public abstract class AbstractDisplayer extends JFrame implements Runnable {
 
     public void initComponents() {
 
-	this.setSize( 800, 600 );
-	graph.setSize( 500, 500 );
+	this.setSize( 550, 500 );
+	graph.setSize( 550, 500 );
 	this.getContentPane().add( graph );
 	this.setVisible( true );
 	this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	

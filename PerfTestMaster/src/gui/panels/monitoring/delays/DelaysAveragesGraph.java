@@ -34,7 +34,6 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
      * default graph when we got no value from infos providers.
      */
     private Long lastTime;
-    private int nbSectoDisplay;
 
 
     
@@ -59,7 +58,6 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 		new DelaysInfosProvider(slaveManagementFacade, nbSecToDisplay);
 	this.requestBySecAverages = null;
 	this.lastTime = new Long(0);
-	this.nbSectoDisplay=nbSecToDisplay;
     }
 
 
@@ -95,15 +93,17 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	Long tmp = null;
 	while(requestBySecAveragesIterator.hasNext()) {
-	    
+
 	    tmp = requestBySecAveragesIterator.next();
-	    xAxisLabels[i] = tmp.toString();
+	    
+	  //display second instead of millis
+	    xAxisLabels[i] = new Double(tmp/1000.0).toString(); 
 	    values[i] = requestBySecAverages.get(tmp);
 	    i++;
 	}
 	lastTime = tmp;
 
-	String xAxisTitle= "time(ms)";
+	String xAxisTitle= "time(s)";
 	String yAxisTitle= "delay average(ms)";
 	String title= 
 		"Delays averages. Total success: "+delaysInfosProvider.getTotalSuccess()+
@@ -113,7 +113,7 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	double[][] data= new double[][] { values };
 
-	String[] legendLabels= { "delays averages" };
+	String[] legendLabels= { "delay average" };
 	Paint[] paints= TestDataGenerator.getRandomPaints( 1 );
 
 	Stroke[] strokes= { LineChartProperties.DEFAULT_LINE_STROKE };
@@ -132,7 +132,7 @@ public class DelaysAveragesGraph extends AbstractGraphPanel {
 
 	AxisChart axisChart= new AxisChart( 
 		dataSeries, chartProperties, 
-		axisProperties, legendProperties, 650, 600 );
+		axisProperties, legendProperties, 500, 450 );
 
 	axisChart.setGraphics2D((Graphics2D) this.getGraphics());
 	axisChart.render();

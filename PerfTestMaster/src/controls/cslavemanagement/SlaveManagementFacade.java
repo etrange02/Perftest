@@ -5,6 +5,7 @@ package controls.cslavemanagement;
 
 import gui.interfaces.SlaveListener;
 import gui.panels.monitoring.delays.DelaysAverageDisplayer;
+import gui.panels.monitoring.variance.VarianceDisplayer;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -40,9 +41,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	private List<SlaveListener> slaveListeners;
 	private AbstractMonitoredTest monitoredTest;
 	private Thread updaterThread;
-
-	//DELETEME, DEBUG PURPOSE
 	private Thread delaysDisplayer;
+	private Thread varianceDisplayer;
+	
+	
 
 	public SlaveManagementFacade() {
 		this.slave = new ArrayList<Slave>();
@@ -268,8 +270,11 @@ public class SlaveManagementFacade implements ISlaveManagement {
 				    updaterThread = new Thread(new DatasUpdater(this));
 				    delaysDisplayer = new Thread(
 					    new DelaysAverageDisplayer(this));
+				    varianceDisplayer = new Thread(
+					    new VarianceDisplayer(this));
 				    updaterThread.start();
 				    delaysDisplayer.start();
+				    varianceDisplayer.start();
 				}
 				catch(Exception e) {
 				    e.printStackTrace();
@@ -303,16 +308,19 @@ public class SlaveManagementFacade implements ISlaveManagement {
 
 		if(updaterThread==null) {
 			try {
-				updaterThread = new Thread(new DatasUpdater(this));
-				delaysDisplayer = new Thread(
-					new DelaysAverageDisplayer(this));
-				updaterThread.start();
-				delaysDisplayer.start();
+			    updaterThread = new Thread(new DatasUpdater(this));
+			    delaysDisplayer = new Thread(
+				    new DelaysAverageDisplayer(this));
+			    varianceDisplayer = new Thread(
+				    new VarianceDisplayer(this));
+			    updaterThread.start();
+			    delaysDisplayer.start();
+			    varianceDisplayer.start();
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+			    e.printStackTrace();
 			}
-		}
+		    }
 
 		return true;
 	}
@@ -329,8 +337,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		if(updaterThread!=null) {
 			updaterThread.interrupt();
 			delaysDisplayer.interrupt();
+			varianceDisplayer.interrupt();
 			updaterThread=null;
 			delaysDisplayer=null;
+			varianceDisplayer=null;
 		}
 
 		return true;
