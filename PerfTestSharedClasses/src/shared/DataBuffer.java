@@ -43,6 +43,9 @@ public class DataBuffer implements ISendableResponsePack {
 		this.receptionTimeMilis = receptionTimeMilis;
 		this.nbSuccess = nbSuccess;
 		this.nbMiss = nbMiss;
+		
+		System.out.println("DataBuffer.constructor(): nbMiss="+nbMiss);
+		System.out.println("DataBuffer.constructor(): nbSuccess="+nbSuccess);
 	}
 
 
@@ -85,13 +88,4 @@ public class DataBuffer implements ISendableResponsePack {
 	public int getNbMiss() {
 		return nbMiss;
 	}
-	
-//	public int countReceivedInstructions() {
-//		int sum = 0;
-//		Iterator<DataBuffer> iter = this.tCPDataBuffer.iterator();
-//		while (iter.hasNext()) {
-//			sum += iter.next().getReceptionTimeMilis().length;
-//		}
-//		return sum;
-//	}
 }
