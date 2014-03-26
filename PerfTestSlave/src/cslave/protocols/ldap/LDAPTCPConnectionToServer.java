@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
+import controls.protocols.ldap.instructions.LDAPInstructionConnect;
 import shared.Constants;
 import shared.SendableTest;
 import shared.interfaces.IInstruction;
@@ -61,7 +62,15 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 		byte[] answer = null;
 		
 		out.write(instruction.getBinaryRequest());
-		answer = read(in);		
+		answer = read(in);
+		
+		if(instruction instanceof LDAPInstructionConnect) {
+		    
+		    //TODO We don't care about this type of instruction ?
+		    
+		    return instruction.getBinaryResponse();
+		}
+		
 		return answer;
 	}
 
