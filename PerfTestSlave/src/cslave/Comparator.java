@@ -3,7 +3,6 @@
  */
 package cslave;
 
-import java.util.Arrays;
 import java.util.List;
 
 import shared.DataBuffer;
@@ -54,11 +53,7 @@ public abstract class Comparator {
 	 * 
 	 * @return true if the binary response is the one expected, else false.
 	 */
-	public boolean isExpectedResponse(IResponse response) {
-		return Arrays.equals(
-				response.getExpectedBinaryResponse(),
-				response.getServerBinaryResponse());
-	}
+	public abstract boolean isExpectedResponse(IResponse response);
 
 	/**
 	 * Tests if the given protocol name is the one implemented by the comparator

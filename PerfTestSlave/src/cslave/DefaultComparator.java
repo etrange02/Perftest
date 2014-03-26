@@ -3,6 +3,7 @@
  */
 package cslave;
 
+import cslave.interfaces.IResponse;
 import cslave.interfaces.ITCPConnectionToTestedServer;
 
 /**
@@ -29,5 +30,11 @@ public class DefaultComparator extends Comparator {
 	public String getProtocolName() {
 	    // TODO Auto-generated method stub
 	    return null;
+	}
+
+	@Override
+	public boolean isExpectedResponse(IResponse response) {
+	    // TODO Auto-generated method stub
+	    return false;
 	}
 }
