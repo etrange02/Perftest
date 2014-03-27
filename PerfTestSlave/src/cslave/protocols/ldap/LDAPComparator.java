@@ -2,6 +2,7 @@ package cslave.protocols.ldap;
 
 import java.util.Arrays;
 
+import shared.Utils;
 import shared.protocols.ldap.LDAPConstants;
 import cslave.Comparator;
 import cslave.interfaces.IResponse;
@@ -28,9 +29,22 @@ public class LDAPComparator extends Comparator {
     @Override
     public boolean isExpectedResponse(IResponse response) {
 
-	return Arrays.equals(
-		response.getExpectedBinaryResponse(),
-		response.getServerBinaryResponse()
-		);
+	byte[] expected = response.getExpectedBinaryResponse();
+	byte[] actual = response.getServerBinaryResponse();
+
+	//TODO It seem that the answer can finish by connection 
+	//informations that we don't care. Check that we really don't
+	//care about them.
+
+	for(int i = actual.length; i > 0; i--){
+
+	    if(Arrays.equals(
+		    expected, 
+		    Arrays.copyOf(actual, i))) {
+		return true;
+	    }
+	}
+
+	return false;
     }
 }

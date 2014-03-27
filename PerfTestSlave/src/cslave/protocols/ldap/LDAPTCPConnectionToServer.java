@@ -56,8 +56,10 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
 
 	Socket clientSocket = null;
 	
+	close();
 	super.restart();
 
+	
 	clientSocket = super.getClientSocket();
 	this.in = clientSocket.getInputStream();
 	this.out = new DataOutputStream(clientSocket.getOutputStream());

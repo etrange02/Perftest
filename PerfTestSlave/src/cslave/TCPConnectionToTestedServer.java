@@ -62,6 +62,8 @@ implements ITCPConnectionToTestedServer {
     }
     
     public void restart() throws UnknownHostException, IOException {
+	
+	close();
 	this.clientSocket = super.startConnection(hostname, port);
     }
 
