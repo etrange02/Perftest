@@ -51,6 +51,12 @@ public class LDAPInstructionConnect extends LDAPInstruction {
 		return password;
 	}
 
+	
+	
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
+	
 	@Override
 	public String writeJSONString() {
 	    // TODO Auto-generated method stub

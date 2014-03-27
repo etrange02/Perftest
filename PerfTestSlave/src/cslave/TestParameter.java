@@ -22,7 +22,7 @@ import cslave.interfaces.ITestParameter;
  */
 public class TestParameter implements ITestParameter {
 
-    private final int POOL_MAX_SIZE = 1; //TODO remove the pool ?
+    private final int POOL_MAX_SIZE = 32; //TODO what is the best number ? 
 
     private int port;
     private String ipAddress;
