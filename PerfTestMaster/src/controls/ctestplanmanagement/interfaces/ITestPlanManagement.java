@@ -25,14 +25,6 @@ import controls.ctestplanmanagement.WorkloadTest;
  */
 public interface ITestPlanManagement extends TestPlanListenable, TestListenable, TestPlanPanelListenable {
 
-    //	/**
-    //	 * Creates and adds an instruction to the test named testName
-    //	 * @param testName a test name
-    //	 * @param instructionName an instruction name
-    //	 * @return an instruction. null is returned if the test does not exist
-    //	 */
-    //	public IInstruction addNewInstruction(String testName,
-    //			String instructionName);
     /**
      * Creates and adds an instruction to the test named testName
      * @param test an existing test

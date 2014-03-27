@@ -4,10 +4,8 @@ import gui.panels.AbstractTestPlanPanel;
 import gui.panels.protocols.ldap.LDAPTestPlanPanel;
 
 import java.io.IOException;
-import java.util.List;
 
 import shared.AbstractInstruction;
-import shared.interfaces.IInstruction;
 import shared.interfaces.ITest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
@@ -69,9 +67,9 @@ public class LDAPProtocolParser extends ProtocolParser {
     @Override
     public TCPProxy createNewTCPProxy(
 	    String hostname, int port,
-	    List<IInstruction>instructions) throws IOException {
+	    ITest test) throws IOException {
 
-	return new LDAP_TCPProxy(hostname,port,instructions);
+	return new LDAP_TCPProxy(hostname,port,test);
     }
 
     @Override

@@ -224,9 +224,8 @@ public class SlaveManagementFacade implements ISlaveManagement {
 		this.monitoredTest = test;
 		Iterator<Slave> iter = this.slave.iterator();
 		Slave slave = null;
-
-		System.out.println("SlaveManagement.sendTest(): looking for slave");
-
+		int nbSend = 0;
+		
 		while (iter.hasNext()) {
 
 			slave = iter.next();
@@ -236,7 +235,12 @@ public class SlaveManagementFacade implements ISlaveManagement {
 
 
 			slave.getTCPClientSlave().send(test, protocolName);
+			
+			nbSend++;
 		}
+		
+		
+		System.out.println("SlaveManagement.sendTest(): sended to "+nbSend+" slaves");
 
 		this.monitoredTest.setStatus(Status.DEPLOYED);		
 		return true;

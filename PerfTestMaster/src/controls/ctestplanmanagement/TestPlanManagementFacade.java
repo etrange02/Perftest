@@ -133,29 +133,6 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	this.TCPProxy = TCPProxy;
     }
 
-    //	public IInstruction addNewInstruction(String testName, String instructionType) {
-    //		if (null == getTestPlan() || null == testName || null == instructionType || testName.isEmpty() || instructionType.isEmpty())
-    //			return null;
-    //		
-    //		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
-    //		boolean continu = true;
-    //		AbstractMonitoredTest test = null;
-    //		while (iter.hasNext() && continu) {
-    //			test = iter.next();
-    //			if (testName.equals(test.getName())) {
-    //				continu = false;
-    //			}
-    //		}
-    //		if (false == continu && null != this.usedProtocolParser) {
-    //			AbstractInstruction instruction = this.usedProtocolParser.createNewInstruction(instructionType);
-    //			//instruction.setName(instructionName);
-    //			test.getInstructions().add(instruction);
-    //			test.updateDataListeners();
-    //			return instruction;
-    //		}
-    //		return null;
-    //	}
-
     @Override
     public IInstruction addNewInstruction(
 	    AbstractMonitoredTest test,
@@ -276,8 +253,6 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 
     public boolean deployTest(String name) {
 
-	System.out.println("TestPlanManagementFacade.deployTest() BEGIN");
-
 	if (null == getSlaveManagement())
 	    return false;
 
@@ -336,10 +311,9 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	TCPProxy = usedProtocolParser.createNewTCPProxy(
 		target, 
 		testPlan.getPort(), 
-		test.getInstructions());
+		test);
 	clientForBlanktest = usedProtocolParser
-		.createNewClientForBlankTest(
-			testPlan, target, test);
+		.createNewClientForBlankTest(testPlan, target, test);
 
 	TCPProxy.setTestPlanManagementFacade(this);
 
@@ -605,22 +579,6 @@ public class TestPlanManagementFacade implements ITestPlanManagement {
 	    return;
 	this.testPlan.set(key, value);
     }
-
-    //	@Override
-    //	public boolean sendTest(String testName) {
-    //		if (null == getTestPlan() || null == testName || testName.isEmpty())
-    //			return false;
-    //
-    //		AbstractMonitoredTest test = null;
-    //		Iterator<AbstractMonitoredTest> iter = this.getTestPlan().getTests().iterator();
-    //		while (iter.hasNext()) {
-    //			test = iter.next();
-    //			if (testName.equals(test.getName()))
-    //				break;
-    //		}
-    //
-    //		return getSlaveManagement().sendTest(test, this.usedProtocolParser.getProtocolName());
-    //	}
 
     @Override
     public void setDelayBetweenInstructions(AbstractMonitoredTest test, int delay) {

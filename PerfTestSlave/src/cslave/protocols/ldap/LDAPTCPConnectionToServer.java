@@ -75,17 +75,18 @@ public class LDAPTCPConnectionToServer extends TCPConnectionToTestedServer {
     protected byte[] runInst(IInstruction instruction) throws Exception {
 
 	byte[] answer = null;
+	byte[] expected = instruction.getBinaryResponse();
 
+	
 	out.write(instruction.getBinaryRequest());
-	answer = read(in);
-
-	if(instruction instanceof LDAPInstructionConnect) {
-
-	    //TODO We don't care about this type of instruction ?
-
-	    return instruction.getBinaryResponse();
+	
+	
+	if(expected==null||expected.length==0) {
+	    return expected;
 	}
-
+	
+	
+	answer = read(in);
 	return answer;
     }
 
