@@ -43,9 +43,6 @@ public class DataBuffer implements ISendableResponsePack {
 		this.receptionTimeMilis = receptionTimeMilis;
 		this.nbSuccess = nbSuccess;
 		this.nbMiss = nbMiss;
-		
-		System.out.println("DataBuffer.constructor(): nbMiss="+nbMiss);
-		System.out.println("DataBuffer.constructor(): nbSuccess="+nbSuccess);
 	}
 
 
