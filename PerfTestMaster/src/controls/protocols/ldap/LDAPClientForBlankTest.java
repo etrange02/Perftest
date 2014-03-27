@@ -45,8 +45,6 @@ import controls.protocols.ldap.instructions.LDAPInstructionUpdate;
 
 public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 
-	private static final boolean DEBUG=true;//TODO ERASEME
-
 	private DirContext dirContext;
 	private ITest test;
 
@@ -244,10 +242,6 @@ public class LDAPClientForBlankTest extends AbstractClientForBlankTest {
 				else if (inst instanceof LDAPInstructionDisconnect) {
 
 					disconnect();
-				}
-				else if(DEBUG) {
-					System.out.println("LDAPCLientForBlankTest.run(): DEBUG.searchTest ");
-					searchTest("", "(cn=admin)");
 				}
 				else if(inst instanceof LDAPInstructionCreate) {
 

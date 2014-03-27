@@ -22,7 +22,7 @@ public class AbstractInfosProvider implements SlaveListener {
     private int nbMiss;
     private int nbSuccess;
     private SlaveManagementFacade slaveManagement;
-    
+
 
 
     /* *********************************************************************
@@ -102,7 +102,7 @@ public class AbstractInfosProvider implements SlaveListener {
 
 	synchronized(rawData) {
 
-	    
+
 	    rawData.clear();
 
 
@@ -150,7 +150,12 @@ public class AbstractInfosProvider implements SlaveListener {
 	List<DataBuffer> dataBuffers = new ArrayList<>();
 
 	for(DataBuffer dataBuffer : slaveManagement.getLastReceivedData()) {
-	    dataBuffers.add(dataBuffer);
+
+	    //TODO slave disconnection can provoc null pointer, fixme ?
+	    
+	    if(dataBuffer != null && dataBuffer.getSendTimeMillis() != null) {
+		dataBuffers.add(dataBuffer);
+	    }
 	}
 
 

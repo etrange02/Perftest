@@ -11,6 +11,7 @@ import shared.AbstractInstruction;
  * @version 1.0
  */
 public class LDAPInstruction extends AbstractInstruction {
+    
 	private static final long serialVersionUID = 1L;
 	
 	public String writeJSONString() {

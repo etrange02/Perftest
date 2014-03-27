@@ -44,8 +44,8 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	 * 
 	 * @param dnEntry
 	 */
-	public LDAPInstructionCreate(String dnEntry){
-		this.dnEntry = dnEntry;
+	public LDAPInstructionCreate(){
+		this.dnEntry = null;
 		basicAttributes = new BasicAttributes(false);
 	}
 
@@ -61,6 +61,14 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	 */
 	public String getDNEntry() {
 		return dnEntry;
+	}
+	
+	/**
+	 * 
+	 * @param dnEntry
+	 */
+	public void setDNEntry(String dnEntry) {
+	    this.dnEntry = dnEntry;
 	}
 
 	/**
@@ -101,5 +109,9 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	 */
 	public BasicAttributes getBasicAttributes() {
 		return basicAttributes;
+	}
+	
+	public void removeAllAttributes() {
+	    basicAttributes = new BasicAttributes(false);
 	}
 }

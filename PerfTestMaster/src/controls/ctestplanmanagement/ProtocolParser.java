@@ -43,7 +43,7 @@ public abstract class ProtocolParser {
 	 * protocol
 	 * @return a new instruction
 	 */
-	public abstract AbstractInstruction createNewInstruction();
+	public abstract AbstractInstruction createNewInstruction(String instructionType);
 
 	/**
 	 * Returns a new instance of plan test which is specified to the implemented
