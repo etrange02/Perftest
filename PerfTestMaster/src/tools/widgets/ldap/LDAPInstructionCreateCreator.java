@@ -30,7 +30,6 @@ public class LDAPInstructionCreateCreator extends InstructionCreator {
     private JTextField dnEntry;
     private JTable basicAttributes;
     private ButtonEditor editor;
-    private boolean sendData;
     private JFrame frame;
 
 
@@ -289,20 +288,5 @@ public class LDAPInstructionCreateCreator extends InstructionCreator {
 	    
 	    ((PerfTestTableModel) basicAttributes.getModel()).removeRow(selectedLines[i]);
 	}
-    }
-
-
-    /* *********************************************************************
-     * OTHERS **************************************************************
-     * *********************************************************************/
-
-    /**
-     * Show the dialog
-     * @return true if the user clicks on OK
-     */
-    public boolean showDialog() {
-	this.sendData = false;
-	this.setVisible(true);
-	return sendData; 
     }
 } 
