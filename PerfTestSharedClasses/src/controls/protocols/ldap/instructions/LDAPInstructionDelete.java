@@ -40,4 +40,10 @@ public class LDAPInstructionDelete extends LDAPInstruction {
 	public void setToDelete(String toDelete) {
 	    this.toDelete = toDelete;
 	}
+
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

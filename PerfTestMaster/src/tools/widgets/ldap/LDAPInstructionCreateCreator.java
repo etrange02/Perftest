@@ -23,7 +23,6 @@ import javax.swing.JTextField;
 
 import shared.interfaces.IInstruction;
 import tools.widgets.InstructionCreator;
-import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.protocols.ldap.instructions.LDAPInstructionCreate;
 
 public class LDAPInstructionCreateCreator extends InstructionCreator {

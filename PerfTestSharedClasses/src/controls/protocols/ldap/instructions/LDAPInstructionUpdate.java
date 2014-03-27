@@ -187,4 +187,10 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 			modificationsTypes.add(REMOVE_MODIFICATION);
 		}
 	}
+
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

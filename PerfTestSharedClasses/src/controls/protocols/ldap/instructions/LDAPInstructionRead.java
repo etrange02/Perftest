@@ -57,4 +57,16 @@ public class LDAPInstructionRead extends LDAPInstruction {
 	public void setSearchFilter(String searchFilter) {
 	    this.searchFilter = searchFilter;
 	}
+	
+	
+	
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
+	
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

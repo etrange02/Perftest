@@ -114,4 +114,16 @@ public class LDAPInstructionCreate extends LDAPInstruction {
 	public void removeAllAttributes() {
 	    basicAttributes = new BasicAttributes(false);
 	}
+	
+	
+	
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
+	
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

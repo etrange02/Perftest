@@ -26,7 +26,6 @@ import tools.widgets.InstructionAdder;
 import tools.widgets.InstructionCreator;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
-import controls.protocols.ldap.instructions.LDAPInstructionCreate;
 
 /**
  * 

@@ -50,4 +50,10 @@ public class LDAPInstructionConnect extends LDAPInstruction {
 	public String getPassword() {
 		return password;
 	}
+
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
+	}
 }

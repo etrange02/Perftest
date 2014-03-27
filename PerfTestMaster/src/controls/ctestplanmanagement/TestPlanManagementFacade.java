@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import shared.AbstractInstruction;
 import shared.interfaces.IInstruction;
-import shared.interfaces.ITest;
 import tools.Factory;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.interfaces.ITestPlan;

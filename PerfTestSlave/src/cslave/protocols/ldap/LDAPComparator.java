@@ -2,7 +2,6 @@ package cslave.protocols.ldap;
 
 import java.util.Arrays;
 
-import shared.Utils;
 import shared.protocols.ldap.LDAPConstants;
 import cslave.Comparator;
 import cslave.interfaces.IResponse;

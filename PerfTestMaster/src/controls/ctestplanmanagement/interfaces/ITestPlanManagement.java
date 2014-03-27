@@ -10,7 +10,6 @@ import gui.interfaces.TestPlanPanelListenable;
 import java.util.List;
 
 import shared.interfaces.IInstruction;
-import shared.interfaces.ITest;
 import controls.cslavemanagement.interfaces.ISlaveManagement;
 import controls.ctestplanmanagement.AbstractMonitoredTest;
 import controls.ctestplanmanagement.AbstractTestPlan;
