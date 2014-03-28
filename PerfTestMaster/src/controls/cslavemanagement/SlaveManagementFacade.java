@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.corba.se.impl.orbutil.threadpool.TimeoutException;
-
 import shared.Constants;
 import shared.DataBuffer;
 import shared.Status;
@@ -186,8 +184,10 @@ public class SlaveManagementFacade implements ISlaveManagement {
 	TCPConnection tcpConnection = null;
 
 	try {
+	    System.out.println("BEFORE");
 	    tcpConnection = Factory.createTCPConnection();
 	    tcpConnection.connect(ipAddress, Constants.SOCKET_COMMAND_PORT, Constants.SOCKET_OBJECT_PORT);
+	    System.out.println("AFTER");
 	} catch (SocketException|SocketTimeoutException e) {
 	    tcpConnection.close();
 	    System.out.println("Echec : " + ipAddress);

@@ -24,7 +24,7 @@ import shared.tcp.TCPStringClient;
  */
 public class TCPConnection {
 
-    	private final int SLAVE_DETECT_TIMEOUT = 250;
+    	private final int SLAVE_DETECT_TIMEOUT = -1;
     
 	private Slave slave;
 	private TCPStringClient commandTCPConnectionToSlave;
@@ -66,10 +66,13 @@ public class TCPConnection {
 	 */
 	public void connect(String address, int commandPort, int objectPort) throws UnknownHostException, IOException {
 
+	    System.out.println("1");
 		this.commandTCPConnectionToSlave
 		.startStringConnection(address, commandPort, SLAVE_DETECT_TIMEOUT);
+		System.out.println("2");
 		this.objectTCPConnectionToSlave
 		.startObjectConnection(address, objectPort, SLAVE_DETECT_TIMEOUT);
+		System.out.println("3");
 	}
 
 

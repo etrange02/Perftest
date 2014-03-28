@@ -38,21 +38,12 @@ public class AbstractTCPClient implements Closeable {
     protected Socket startConnection(String hostname, int port, int timeout) 
 	    throws UnknownHostException, IOException {
 
-	SocketAddress socketAddress = new InetSocketAddress(hostname, port);
-
-	clientSocket = new Socket();
-
-	if(timeout > 0){
-	    clientSocket.connect(socketAddress, timeout);
-	}
-	else {
-	    clientSocket.connect(socketAddress);
-	}
-
+	System.out.println("BEFOCE connect");
 	clientSocket = 
 		new Socket(
 			InetAddress.getByName(hostname),
 			port);
+	System.out.println("AFTER connect");
 
 	return clientSocket;
     }
