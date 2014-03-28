@@ -54,7 +54,7 @@ implements ITCPConnectionToTestedServer {
 
 	this.hostname = hostname;
 	this.port = port;
-	this.clientSocket = super.startConnection(hostname, port);
+	this.clientSocket = super.startConnection(hostname, port, -1);
 
 	this.test = test;
 	this.scenario = scenario;
@@ -64,7 +64,7 @@ implements ITCPConnectionToTestedServer {
     public void restart() throws UnknownHostException, IOException {
 	
 	close();
-	this.clientSocket = super.startConnection(hostname, port);
+	this.clientSocket = super.startConnection(hostname, port, -1);
     }
 
 
