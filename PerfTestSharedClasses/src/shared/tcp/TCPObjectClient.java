@@ -34,10 +34,10 @@ public class TCPObjectClient extends AbstractTCPClient {
 	 * @param port Targeted-server port
 	 * @throws IOException
 	 */
-	public void startObjectConnection(String hostname, int port) 
+	public void startObjectConnection(String hostname, int port, int timeout) 
 			throws IOException {
 
-		Socket clientSocket = super.startConnection(hostname, port);
+		Socket clientSocket = super.startConnection(hostname, port, timeout);
 
 		//init "out" before "in" because other-end ObjectInputStream wait 
 		//for ObjectOutputStream header informations.

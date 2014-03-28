@@ -35,9 +35,9 @@ public class TCPStringClient extends AbstractTCPClient {
 	 * @param port Targeted-server port
 	 * @throws IOException
 	 */
-	public void startStringConnection(String hostname, int port) throws IOException {
+	public void startStringConnection(String hostname, int port, int timeout) throws IOException {
 
-		Socket clientSocket = super.startConnection(hostname, port);
+		Socket clientSocket = super.startConnection(hostname, port, timeout);
 
 		in = 
 				new BufferedReader(
