@@ -34,9 +34,13 @@ import javax.naming.directory.ModificationItem;
  */
 public class LDAPInstructionUpdate extends LDAPInstruction {
 
+	public static final String ADD_MODIFICATION= "Add";
+	public static final String REPLACE_MODIFICATION = "Replace";
+	public static final String REMOVE_MODIFICATION= "Remove";
+    
 	private String dnEntry;
 	private List<ModificationItem> modifications;
-
+	private List<String> modificationsTypes;
 
 
 	/* *********************************************************************
@@ -47,8 +51,9 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 	 * 
 	 * @param dnEntry
 	 */
-	public LDAPInstructionUpdate(String dnEntry){
-		this.dnEntry = dnEntry;
+	public LDAPInstructionUpdate(){
+		this.dnEntry = null;
+		this.modificationsTypes = new ArrayList<>();
 		modifications = new ArrayList<>();
 	}
 
@@ -67,6 +72,14 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 	public String getDNEntry() {
 		return dnEntry;
 	}
+	
+	/**
+	 * 
+	 * @param dnEntry
+	 */
+	public void setDNEntry(String dnEntry) {
+	    this.dnEntry = dnEntry;
+	}
 
 	/**
 	 * 
@@ -74,6 +87,10 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 	 */
 	public ModificationItem[] getModificationItems() {
 		return modifications.toArray(new ModificationItem[0]);
+	}
+
+	public List<String> getModificationsTypes() {
+	    return modificationsTypes;
 	}
 
 
@@ -110,6 +127,7 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 							attr
 							)
 					);
+			modificationsTypes.add(ADD_MODIFICATION);
 		}
 	}
 
@@ -140,6 +158,7 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 							attr
 							)
 					);
+			modificationsTypes.add(REPLACE_MODIFICATION);
 		}
 	}
 
@@ -165,6 +184,13 @@ public class LDAPInstructionUpdate extends LDAPInstruction {
 							attr
 							)
 					);
+			modificationsTypes.add(REMOVE_MODIFICATION);
 		}
+	}
+
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 }

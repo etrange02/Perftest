@@ -29,11 +29,21 @@ public class LDAPInstructionDelete extends LDAPInstruction {
 
 	private String toDelete;
 	
-	public LDAPInstructionDelete(String toDelete) {
-		this.toDelete = toDelete;
+	public LDAPInstructionDelete() {
+		this.toDelete = null;
 	}
 
 	public String getToDelete() {
 		return toDelete;
+	}
+
+	public void setToDelete(String toDelete) {
+	    this.toDelete = toDelete;
+	}
+
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 }

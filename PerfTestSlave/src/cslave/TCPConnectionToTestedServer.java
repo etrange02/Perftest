@@ -2,6 +2,7 @@ package cslave;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -17,6 +18,8 @@ public abstract class TCPConnectionToTestedServer
 extends AbstractTCPClient
 implements ITCPConnectionToTestedServer {
 
+    private String hostname;
+    private int port;
     private Socket clientSocket;
     private SendableTest test;
     private IScenario scenario;
@@ -49,11 +52,19 @@ implements ITCPConnectionToTestedServer {
 	    IScenario scenario) 
 		    throws IOException {
 
-	clientSocket = super.startConnection(hostname, port);
+	this.hostname = hostname;
+	this.port = port;
+	this.clientSocket = super.startConnection(hostname, port);
 
 	this.test = test;
 	this.scenario = scenario;
 	this.initialized = true;
+    }
+    
+    public void restart() throws UnknownHostException, IOException {
+	
+	close();
+	this.clientSocket = super.startConnection(hostname, port);
     }
 
 
@@ -121,6 +132,15 @@ implements ITCPConnectionToTestedServer {
 
 
 		    nextInstructionPos = (nextInstructionPos+1)%nbInstructions;
+		    
+		    if(nextInstructionPos==0) {
+			
+			//We have played all instructions, then disconnect.
+			//After this, connect to play instructions from 
+			//beginning.
+			
+			restart();
+		    }
 		}
 	    }
 	    catch(Exception e) {

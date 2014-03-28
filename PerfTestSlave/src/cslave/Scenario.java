@@ -82,7 +82,9 @@ public class Scenario implements IScenario {
 	    responses.put(nextPackKey, new ArrayList<IResponse>());
 	    nextPackKey++;
 
-	    return nextResponses;
+	    return nextResponses == null ?
+		    new ArrayList<IResponse>() :
+			nextResponses;
 	}
     }
 }

@@ -23,23 +23,50 @@ package controls.protocols.ldap.instructions;
 /**
  * 
  * @author Jean-Luc Amitousa-Mankoy jeanluc.amitousa.mankoy@gmail.com
- * @version 1.0
+ * @version 1.1
  */
 public class LDAPInstructionRead extends LDAPInstruction {
 	
 	private String searchBase;
 	private String searchFilter;
 	
-	public LDAPInstructionRead(String searchBase, String searchFilter) {
-		this.searchBase = searchBase;
-		this.searchFilter = searchFilter;
+	public LDAPInstructionRead() {
+		this.searchBase = null;
+		this.searchFilter = null;
 	}
 
+	
+	
+	/* *********************************************************************
+	 * GETTERS/SETTERS *****************************************************
+	 * *********************************************************************/
+	
 	public String getSearchBase() {
 		return searchBase;
+	}
+	
+	public void setSearchBase(String searchBase) {
+	    this.searchBase = searchBase;
 	}
 
 	public String getSearchFilter() {
 		return searchFilter;
+	}
+	
+
+	public void setSearchFilter(String searchFilter) {
+	    this.searchFilter = searchFilter;
+	}
+	
+	
+	
+	/* *********************************************************************
+	 * OTHERS **************************************************************
+	 * *********************************************************************/
+	
+	@Override
+	public String writeJSONString() {
+	    // TODO Auto-generated method stub
+	    return null;
 	}
 }

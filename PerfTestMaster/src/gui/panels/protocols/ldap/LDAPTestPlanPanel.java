@@ -7,6 +7,7 @@ import gui.interfaces.protocols.ldap.LDAPTestPlanPanelListener;
 import gui.panels.AbstractTestPlanPanel;
 
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
@@ -23,7 +24,7 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 	private static final long serialVersionUID = -2136761593193064428L;
 	private JTextField rootField;
 	private JTextField loginField;
-	private JTextField passwordField;
+	private JPasswordField passwordField;
 
 	public LDAPTestPlanPanel(ITestPlanManagement testPlanManagement) {
 		super(testPlanManagement);
@@ -36,7 +37,7 @@ public class LDAPTestPlanPanel extends AbstractTestPlanPanel implements LDAPTest
 		
 		this.rootField = new JTextField();
 		this.loginField = new JTextField();
-		this.passwordField = new JTextField();
+		this.passwordField = new JPasswordField();
 		
 		this.rootField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {

@@ -107,7 +107,7 @@ public class PerfTestTableModel extends AbstractTableModel {
 		Object[] temp = new Object[this.getRowCount()];
 		int index = 0;
 		for (Object[] o : this.data) {
-			temp[index] = o[columnIndex];
+			temp[index++] = o[columnIndex];
 		}
 		return temp;
 	}

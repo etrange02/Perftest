@@ -85,13 +85,4 @@ public class DataBuffer implements ISendableResponsePack {
 	public int getNbMiss() {
 		return nbMiss;
 	}
-	
-//	public int countReceivedInstructions() {
-//		int sum = 0;
-//		Iterator<DataBuffer> iter = this.tCPDataBuffer.iterator();
-//		while (iter.hasNext()) {
-//			sum += iter.next().getReceptionTimeMilis().length;
-//		}
-//		return sum;
-//	}
 }

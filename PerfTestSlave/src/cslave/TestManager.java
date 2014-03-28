@@ -238,7 +238,9 @@ public class TestManager extends Thread {
      */
     private void stopTest() throws IOException {
 
-	testRunner.interrupt();
+	if(testRunner != null) {
+	    testRunner.interrupt();
+	}
 
 	commandTCPConnectionToMaster.write(
 		Constants.OK_RESP+"/\n");
@@ -272,18 +274,18 @@ public class TestManager extends Thread {
 
 	    String protocolName = splittedCmd[1];
 
-	    
+
 	    setTestComparator(protocolName);
 
 	    if(testComparator != null) {
 
 		int i = 1;
 		SendableTest test = null;
-			
-		
+
+
 		commandTCPConnectionToMaster.write(
 			Constants.OK_RESP+"/\n");
-		
+
 		test = (SendableTest)objectTCPConnectionToMaster.read();
 		testParameter = new TestParameter();
 		testParameter.setTest(test);
@@ -303,7 +305,7 @@ public class TestManager extends Thread {
 		testParameter.setProtocolName(protocolName);
 		testParameter.setTcpConnectionClazz(
 			testComparator.getTcpConnectionClazz());
-		
+
 		commandTCPConnectionToMaster.write(
 			Constants.OK_RESP+"/\n"); 
 	    }
@@ -327,7 +329,7 @@ public class TestManager extends Thread {
 
 	String[] splittedCMD = cmd.split("/");
 
-	
+
 	if(testComparator != null && splittedCMD.length == 3) {
 
 

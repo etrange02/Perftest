@@ -4,10 +4,8 @@ import gui.panels.AbstractTestPlanPanel;
 import gui.panels.protocols.ldap.LDAPTestPlanPanel;
 
 import java.io.IOException;
-import java.util.List;
 
 import shared.AbstractInstruction;
-import shared.interfaces.IInstruction;
 import shared.interfaces.ITest;
 import controls.ctestplanmanagement.AbstractTestPlan;
 import controls.ctestplanmanagement.ProtocolParser;
@@ -15,7 +13,10 @@ import controls.ctestplanmanagement.TCPProxy;
 import controls.ctestplanmanagement.interfaces.ITestPlan;
 import controls.ctestplanmanagement.interfaces.ITestPlanManagement;
 import controls.protocols.AbstractClientForBlankTest;
-import controls.protocols.ldap.instructions.LDAPInstruction;
+import controls.protocols.ldap.instructions.LDAPInstructionCreate;
+import controls.protocols.ldap.instructions.LDAPInstructionDelete;
+import controls.protocols.ldap.instructions.LDAPInstructionRead;
+import controls.protocols.ldap.instructions.LDAPInstructionUpdate;
 
 /**
  * 
@@ -25,60 +26,83 @@ import controls.protocols.ldap.instructions.LDAPInstruction;
  */
 public class LDAPProtocolParser extends ProtocolParser {
 
-	@Override
-	public String getProtocolName() {
-		return shared.protocols.ldap.LDAPConstants.PROTOCOL_NAME;
-	}
+    public static final String CREATE_TYPE = "Create";
+    public static final String READ_TYPE = "Read";
+    public static final String UPDATE_TYPE = "Update";
+    public static final String DELETE_TYPE = "Delete";
 
-	@Override
-	public AbstractInstruction createNewInstruction() {
-		return new LDAPInstruction();
-	}
+    
+    
+    @Override
+    public String getProtocolName() {
+	return shared.protocols.ldap.LDAPConstants.PROTOCOL_NAME;
+    }
 
-	@Override
-	public AbstractTestPlan createNewPlanTest() {
-		return new LDAPPlanTest();
+    @Override
+    public AbstractInstruction createNewInstruction(String instructionType) {
+	
+	
+	if(CREATE_TYPE.compareTo(instructionType)==0) {
+	    return new LDAPInstructionCreate();
 	}
-
-	@Override
-	public TCPProxy createNewTCPProxy(
-			String hostname, int port,
-			List<IInstruction>instructions) throws IOException {
-		
-		return new LDAP_TCPProxy(hostname,port,instructions);
+	else if(READ_TYPE.compareTo(instructionType)==0){
+	    return new LDAPInstructionRead();
+	}
+	else if(UPDATE_TYPE.compareTo(instructionType)==0) {
+	    return new LDAPInstructionUpdate();
+	}
+	else if(DELETE_TYPE.compareTo(instructionType)==0) {
+	    return new LDAPInstructionDelete();
 	}
 	
-	@Override
-	public AbstractClientForBlankTest createNewClientForBlankTest(
-			ITestPlan testPlan, String hostname, ITest test) {
+	
+	return null;
+    }
 
-		if(testPlan instanceof LDAPPlanTest) {
-			return new LDAPClientForBlankTest(
-					(LDAPPlanTest)testPlan, hostname, test);
-		}
-		
-		return null;
+    @Override
+    public AbstractTestPlan createNewPlanTest() {
+	return new LDAPPlanTest();
+    }
+
+    @Override
+    public TCPProxy createNewTCPProxy(
+	    String hostname, int port,
+	    ITest test) throws IOException {
+
+	return new LDAP_TCPProxy(hostname,port,test);
+    }
+
+    @Override
+    public AbstractClientForBlankTest createNewClientForBlankTest(
+	    ITestPlan testPlan, String hostname, ITest test) {
+
+	if(testPlan instanceof LDAPPlanTest) {
+	    return new LDAPClientForBlankTest(
+		    (LDAPPlanTest)testPlan, hostname, test);
 	}
 
-	@Override
-	public AbstractTestPlan readJSONFileTestPlan(Object values) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	return null;
+    }
 
-	@Override
-	public AbstractInstruction readJSONStringInstruction(Object values) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public AbstractTestPlan readJSONFileTestPlan(Object values) {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
-	@Override
-	public int getDefaultProtocolPort() {
-		return LDAPConstants.LDAP_DEFAULT_PORT;
-	}
+    @Override
+    public AbstractInstruction readJSONStringInstruction(Object values) {
+	// TODO Auto-generated method stub
+	return null;
+    }
 
-	@Override
-	public AbstractTestPlanPanel createNewTestPlanPanel(ITestPlanManagement testPlanManagement) {
-		return new LDAPTestPlanPanel(testPlanManagement);
-	}
+    @Override
+    public int getDefaultProtocolPort() {
+	return LDAPConstants.LDAP_DEFAULT_PORT;
+    }
+
+    @Override
+    public AbstractTestPlanPanel createNewTestPlanPanel(ITestPlanManagement testPlanManagement) {
+	return new LDAPTestPlanPanel(testPlanManagement);
+    }
 }
